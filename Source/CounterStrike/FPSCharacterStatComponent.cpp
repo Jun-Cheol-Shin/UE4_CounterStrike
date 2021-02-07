@@ -60,6 +60,7 @@ void UFPSCharacterStatComponent::BeginPlay()
 void UFPSCharacterStatComponent::SetArrayWeapon(AWBase* Weapon)
 {
 	WeaponArray.AddUnique(Weapon);
+	UGameplayStatics::SpawnSoundAttached(GunPickupSound, Weapon->WeaponComponent);
 }
 
 AWBase* UFPSCharacterStatComponent::GetSelectWeapon(EWeaponNum Number)

@@ -29,6 +29,7 @@ class UFPSHUDWidget;
 class USpringArmComponent;
 class USceneCaptureComponent2D;
 class UCameraComponent;
+class UFPSCharacterAnimInstance;
 
 UCLASS()
 class COUNTERSTRIKE_API AFPSCharacter : public ACharacter
@@ -36,6 +37,11 @@ class COUNTERSTRIKE_API AFPSCharacter : public ACharacter
 	GENERATED_BODY()
 
 private:
+	
+	float RotatingHipValue;
+
+	UAnimInstance* Instance;
+	UFPSCharacterAnimInstance* animInstance;
 	EWeaponNum CurrentGrenade = EWeaponNum::E_Knife;
 	UInputComponent* InputComponent;
 	FVector MoveDirection;
@@ -78,7 +84,10 @@ protected:
 
 	UFPSHUDWidget* FPSUIWidget;
 
-public:	
+public:
+	UPROPERTY(EditAnywhere)
+		USoundBase* StartSound;
+
 	AFPSCharacter(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(BlueprintReadOnly)
@@ -127,11 +136,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		USceneCaptureComponent2D* CaptureCamera;
 
-
 	UPROPERTY(EditAnywhere, Category = Sens)
-		float X_Sensitive;
-	UPROPERTY(EditAnywhere, Category = Sens)
-		float Y_Sensitive;
+		float Sensitive;
 	UPROPERTY(EditAnywhere)
 		float InteractionDistance = 400.f;
 

@@ -24,6 +24,8 @@
 
 #include "Net/UnrealNetwork.h"
 
+#include "FPSCharacterAnimInstance.h"
+
 // Sets default values
 AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UFPSCharacterMovement>(ACharacter::CharacterMovementComponentName))
@@ -125,29 +127,28 @@ void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GetController()->GetPawn()->bUseControllerRotationYaw = false;
+	UGameplayStatics::SpawnSoundAttached(StartSound, GetMesh());
 
 	IsAttackHeld = false;
 	IsActionHeld = false;
 
 	if (HUDWidgetClass)
 	{
-		HUDWidget = CreateWidget(Cast<APlayerController>(GetController()), HUDWidgetClass);
+		HUDWidget = CreateWidget(GetPlayerController(), HUDWidgetClass);
 		if (HUDWidget)
 		{
 			HUDWidget->AddToViewport(1);
 		}
 	}
 
-	UFPSHUDWidget* FPSWidget = Cast<UFPSHUDWidget>(HUDWidget);
-	if (FPSWidget)
+	FPSUIWidget = Cast<UFPSHUDWidget>(HUDWidget);
+	if (FPSUIWidget)
 	{
-		FPSUIWidget = FPSWidget;
 		FPSUIWidget->GetImageSlot()->SetSize(FPSUIWidget->SettingViewPortSize());
-
 		FPSUIWidget->InitCharacterHealth(this);
 		FPSUIWidget->SetArmor(this);
 		FPSUIWidget->InitDollar(this);
+		FPSUIWidget->GetOwningPlayerPawn()->bUseControllerRotationYaw = false;
 	}
 
 	CreateObject(ECreatWeaponNum::EC_Knife);
@@ -167,6 +168,19 @@ void AFPSCharacter::BeginPlay()
 	//CreateObject(ECreatWeaponNum::EC_USP);
 	//CreateObject(ECreatWeaponNum::EC_GLOCK);
 	//CreateObject(ECreatWeaponNum::EC_DEAGLE);
+
+	Instance = GetMesh()->GetAnimInstance();
+
+	if (Instance)
+	{
+		animInstance = Cast<UFPSCharacterAnimInstance>(Instance);
+
+		if (animInstance)
+		{
+			animInstance->GetPlayer(this);
+			UE_LOG(LogTemp, Warning, TEXT("Get Player!"));
+		}
+	}
 }
 
 // Called every frame
@@ -174,11 +188,11 @@ void AFPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (StatComponent)
+	/*if (StatComponent)
 	{
 		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Yellow, TEXT("UpperState : ") + GetStateAsString(StatComponent->GetCharacterUpperState()));
 		GEngine->AddOnScreenDebugMessage(2, 5.0f, FColor::Yellow, TEXT("LowerState : ") + GetStateAsString(StatComponent->GetCharacterLowerState()));
-	}
+	}*/
 
 	SetCharacterState();
 
@@ -247,7 +261,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AFPSCharacter::Drop);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::Reload);
 
-	PlayerInputComponent->BindAction("Shop", IE_Pressed, this, &AFPSCharacter::Shop);
+	//PlayerInputComponent->BindAction("Shop", IE_Pressed, this, &AFPSCharacter::Shop);
 }
 
 void AFPSCharacter::Shop()
@@ -561,16 +575,15 @@ void AFPSCharacter::AddControllerYawInput(float Val)
 
 	Val = Val * BaseTurnRate * GetWorld()->GetDeltaSeconds();
 
-	float mulvalue = X_Sensitive * MULT - MULT;
+	float mulvalue = Val * Sensitive;
 
-	mulvalue = Val * mulvalue;
-
-	Super::AddControllerYawInput(Val);
+	Super::AddControllerYawInput(mulvalue);
 
 
-	if (CaculatingDot() < 0.05f)
+	if (CaculatingDot() <= 0.1f)
 	{
 		rotating = true;
+		//RotatingHipValue = GetController()->GetControlRotation().Yaw;
 	}
 }
 
@@ -586,11 +599,9 @@ void AFPSCharacter::AddControllerPitchInput(float Val)
 
 	Val = Val * BaseLookUpRate * GetWorld()->GetDeltaSeconds();
 
-	float mulvalue = Y_Sensitive * MULT - MULT;
+	float mulvalue = Sensitive * Val;
 
-	mulvalue = Val * mulvalue;
-
-	Super::AddControllerPitchInput(Val);
+	Super::AddControllerPitchInput(mulvalue);
 }
 
 void AFPSCharacter::ResetLowerHips(float DeltaTime)
@@ -953,20 +964,24 @@ FName AFPSCharacter::GetCurrentWeaponNumberName()
 
 float AFPSCharacter::GetRelevantAnimTime(FName MachineState, FName StateName)
 {
-	UAnimInstance* animInstance = GetMesh()->GetAnimInstance();
-
-	if (animInstance)
+	if (!Instance)
 	{
-		FAnimNode_StateMachine* machine = animInstance->GetStateMachineInstanceFromName(MachineState);
+		Instance = GetMesh()->GetAnimInstance();
+	}
+
+
+	if (Instance)
+	{
+		FAnimNode_StateMachine* machine = Instance->GetStateMachineInstanceFromName(MachineState);
 		if (machine)
 		{
 			IAnimClassInterface* iface = IAnimClassInterface::GetFromClass(animInstance->GetClass());
-			const FBakedAnimationStateMachine* baked = animInstance->GetMachineDescription(iface, machine);
+			const FBakedAnimationStateMachine* baked = Instance->GetMachineDescription(iface, machine);
 
 			if (baked)
 			{
 				int stateIdx = baked->FindStateIndex(StateName);
-				return animInstance->GetRelevantAnimTime(animInstance->GetStateMachineIndex(MachineState), stateIdx);
+				return animInstance->GetRelevantAnimTime(Instance->GetStateMachineIndex(MachineState), stateIdx);
 			}
 		}
 	}

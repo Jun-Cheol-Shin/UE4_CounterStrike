@@ -38,7 +38,7 @@ void UFPSCharacterMovement::TickComponent(float DeltaTime, enum ELevelTick TickT
 	PerformMovement(DeltaTime);
 
 		
-	GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, FString::Printf(TEXT("Velocity : %.1f"), FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y)));
+	//GEngine->AddOnScreenDebugMessage(0, 5.0f, FColor::Yellow, FString::Printf(TEXT("Velocity : %.1f"), FMath::Sqrt(Velocity.X * Velocity.X + Velocity.Y * Velocity.Y)));
 
 	//UE_LOG(LogTemp, Log, TEXT("Vel: %.1f %.1f %.1f"), Velocity.X, Velocity.Y, Velocity.Z);
 }

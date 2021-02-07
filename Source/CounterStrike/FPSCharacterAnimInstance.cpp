@@ -40,7 +40,10 @@ void UFPSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 void UFPSCharacterAnimInstance::NativeBeginPlay()
 {
 	Super::NativeBeginPlay();
-	MyChar = Cast<AFPSCharacter>(TryGetPawnOwner()->GetController()->GetCharacter());
+
+
+
+	//MyChar = Cast<AFPSCharacter>(TryGetPawnOwner()->GetController()->GetCharacter());
 
 	//if (MyChar)
 	//{

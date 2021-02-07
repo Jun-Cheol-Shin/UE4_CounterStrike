@@ -71,4 +71,7 @@ public:
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override;
 
 
+
+	void GetPlayer(AFPSCharacter* Player) { MyChar = Player; }
+
 };

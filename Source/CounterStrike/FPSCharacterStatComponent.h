@@ -23,6 +23,9 @@ class COUNTERSTRIKE_API UFPSCharacterStatComponent : public UActorComponent
 
 public:
 	UPROPERTY(EditAnywhere)
+		USoundBase* GunPickupSound;
+
+	UPROPERTY(EditAnywhere)
 		USoundBase* DeathSound;
 
 	UPROPERTY(EditAnywhere)
