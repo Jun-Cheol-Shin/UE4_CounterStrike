@@ -1,3 +1,1 @@
-# CounterStrike
-
-Developed with Unreal Engine 4
+# 언리얼 엔진으로 카운터 스트라이크 제작
