@@ -4,6 +4,7 @@
 #include "FPSCharacterMovement.h"
 #include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
+#include "FPSCharacter.h"
 
 
 UFPSCharacterMovement::UFPSCharacterMovement()
@@ -17,6 +18,13 @@ UFPSCharacterMovement::UFPSCharacterMovement()
 void UFPSCharacterMovement::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OwnerCharacter = Cast<AFPSCharacter>(GetCharacterOwner());
+
+	//if (OwnerCharacter)
+	//{
+	//	UE_LOG(LogTemp, Warning, TEXT("Get character!!!!!!"));
+	//}
 }
 
 bool UFPSCharacterMovement::ResolvePenetrationImpl(const FVector & Adjustment, const FHitResult & Hit, const FQuat & NewRotation)
@@ -114,11 +122,23 @@ void UFPSCharacterMovement::CheckFallDamaged()
 
 	if (StartJumpZValue - GetActorLocation().Z >= 280.f)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Fall Damaged!!")); 
-		UE_LOG(LogTemp, Warning, TEXT("%.1f, %.1f"), StartJumpZValue, GetActorLocation().Z);
-		UGameplayStatics::SpawnSoundAttached(FallSound, GetCharacterOwner()->GetMesh());
-
+		if (OwnerCharacter)
+		{
+			UGameplayStatics::SpawnSoundAttached(FallSound, OwnerCharacter->GetMesh());
+			if (OwnerCharacter->GetFPSUIWidget())
+			{
+				OwnerCharacter->GetFPSUIWidget()->SetDamageUI(EDamagedDirectionType::EDDT_ALL);
+			}
+		}
 		ResetSpeedRatio();
+	}
+
+	else if (StartJumpZValue - GetActorLocation().Z >= 50.f)
+	{
+		if (OwnerCharacter)
+		{
+			UGameplayStatics::SpawnSoundAttached(LandSound, OwnerCharacter->GetMesh());
+		}
 	}
 }
 

@@ -222,16 +222,17 @@ void AWGun::GunShotMethod()
 	{
 		if (Hit.GetActor())
 		{
-			float anotherDistance;
+			float anotherDistance = 0;
 
-			if (Hit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+			AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
+			if (DamagedCharacter)
 			{	
 				//UE_LOG(LogTemp, Warning, TEXT("%.1f"), Hit.ImpactPoint.Z - Hit.GetActor()->GetActorLocation().Z);
-				AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
+				//AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
 				if (ActorPool)
 				{
 					DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, GunDamage,
-						GunPenetration, DamagedCharacter->CheckHit(Hit.ImpactPoint.Z - Hit.GetActor()->GetActorLocation().Z), Hit.ImpactPoint, ActorPool->GetBloodParticle(), (End - Location).GetSafeNormal());
+						GunPenetration, DamagedCharacter->CheckHit(Hit.ImpactPoint.Z - Hit.GetActor()->GetActorLocation().Z), Hit.ImpactPoint, Player, (End - Location).GetSafeNormal());
 					SpawnDecal(Hit, EDecalPoolList::EDP_BLOOD);
 					anotherDistance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * 10.f;
 				}
@@ -421,7 +422,7 @@ void AWGun::PenetrationShot(FHitResult Point, FVector Direction, float Distance)
 
 					SpawnDecal(Hit, EDecalPoolList::EDP_BLOOD);
 					DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, GunDamage - 3 * PenetrateCount,
-						GunPenetration - DecreaseRatio * PenetrateCount, DamagedCharacter->CheckHit(Hit.ImpactPoint.Z - Hit.GetActor()->GetActorLocation().Z), Hit.ImpactPoint, ActorPool->GetBloodParticle());
+						GunPenetration - DecreaseRatio * PenetrateCount, DamagedCharacter->CheckHit(Hit.ImpactPoint.Z - Hit.GetActor()->GetActorLocation().Z), Hit.ImpactPoint, Player);
 					RemainDistance -= FVector::Dist(AnotherPoint.ImpactPoint, Hit.ImpactPoint) * 10.f;
 				}
 

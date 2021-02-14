@@ -10,10 +10,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/SceneCaptureComponent2D.h"
 
-#include "FPSHUDWidget.h"
 #include "FPSCharacterMovement.h"
 #include "Global.h"
-
+#include "FPSHUDWidget.h"
 #include "FPSCharacter.generated.h"
 
 class APlayerController;
@@ -37,14 +36,12 @@ class COUNTERSTRIKE_API AFPSCharacter : public ACharacter
 	GENERATED_BODY()
 
 private:
-	
 	float RotatingHipValue;
 
 	UAnimInstance* Instance;
 	UFPSCharacterAnimInstance* animInstance;
 	EWeaponNum CurrentGrenade = EWeaponNum::E_Knife;
 	UInputComponent* InputComponent;
-	FVector MoveDirection;
 	bool FirstView = true;
 	// Rotation hips variable..
 	bool rotating = false;
@@ -99,16 +96,17 @@ public:
 
 	bool bIsFlashBang = false;
 
-	float CurrentLowerHipsRotation = 0.f;
-	float LowerHipsRotation;
-	float MoveForwardValue;
+	float MoveForwardValue;		
 	float MoveRightValue;
+
+	float LowerHipsRotation;
+	float CurrentLowerHipsRotation = 0.f;
+
 	float AimOffsetPitch;
 	float AimOffsetYaw;
+
 	bool AttackAnimCall = false;
-
 	float ReloadStartTime = 0.f;
-
 	float DelayTime;
 
 	FORCEINLINE UFPSHUDWidget* GetFPSUIWidget() { return FPSUIWidget; }
@@ -133,8 +131,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		USpringArmComponent* SpringArmComponent;
 
-	UPROPERTY(EditAnywhere)
-		USceneCaptureComponent2D* CaptureCamera;
+	/*UPROPERTY(EditAnywhere)
+		USceneCaptureComponent2D* CaptureCamera;*/
 
 	UPROPERTY(EditAnywhere, Category = Sens)
 		float Sensitive;
@@ -145,9 +143,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
 	virtual void AddControllerYawInput(float Val) override;
 	virtual void AddControllerPitchInput(float Val) override;
-
 
 	// Camera Change...
 	UFUNCTION()
@@ -162,8 +160,11 @@ public:
 	// Jump
 	UFUNCTION()
 		void StartJump();
+
+
 	UFUNCTION()
 		void StopJump();
+
 
 	// Crouch
 	UFUNCTION()
@@ -230,10 +231,15 @@ public:
 	float GetRelevantAnimTime(FName MachineState, FName StateName);
 
 	void SmoothingCrouch(float DeltaTime);
-	void ResetLowerHips(float DeltaTime);
+
 	float CaculatingDot();
+
+	void ResetLowerHips(float DeltaTime);
 	void RotatingLowerHips(float DeltaTime);
+
 	void RotatingAimOffset(float DeltaTime);
+
+
 	void ShakeHand(float DelataTime);
 
 

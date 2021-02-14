@@ -187,14 +187,14 @@ void AWKnife::SetHit()
 					{
 						if (ActorPool)
 						{
-							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 90, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, ActorPool->GetBloodParticle(), KnifeAttackDirection[j].GetSafeNormal());
+							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 90, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, Player, KnifeAttackDirection[j].GetSafeNormal());
 						}
 					}
 					else
 					{
 						if (ActorPool)
 						{
-							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 40, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, ActorPool->GetBloodParticle(), KnifeAttackDirection[j].GetSafeNormal());
+							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 40, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, Player, KnifeAttackDirection[j].GetSafeNormal());
 						}
 					}
 
@@ -205,14 +205,14 @@ void AWKnife::SetHit()
 					{
 						if (ActorPool)
 						{
-							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 180, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, ActorPool->GetBloodParticle(), KnifeAttackDirection[j].GetSafeNormal());
+							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 180, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, Player, KnifeAttackDirection[j].GetSafeNormal());
 						}
 					}
 					else
 					{
 						if (ActorPool)
 						{
-							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 65, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, ActorPool->GetBloodParticle(), KnifeAttackDirection[j].GetSafeNormal());
+							DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, 65, Penetration, EBoneHit::EB_NONE, HitPoint[j].ImpactPoint, Player, KnifeAttackDirection[j].GetSafeNormal());
 						}
 					}
 

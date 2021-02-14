@@ -57,6 +57,6 @@ public:
 
 	FORCEINLINE void CancelTimer() { GetWorld()->GetTimerManager().ClearTimer(SniperTimerHandle); }
 
-	FORCEINLINE EScope GetSniperScopeState() { return EScopeState; }
-	FORCEINLINE void SetSniperScopeState(EScope State) { EScopeState = State; }
+	EScope GetSniperScopeState();
+	void SetSniperScopeState(EScope State);
 };

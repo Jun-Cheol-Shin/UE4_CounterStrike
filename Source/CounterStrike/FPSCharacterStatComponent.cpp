@@ -2,13 +2,19 @@
 
 
 #include "FPSCharacterStatComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Particles/ParticleSystem.h"
-#include "FPSCharacter.h"
+
 #include "Components/ArrowComponent.h"
 #include "Components/CapsuleComponent.h"
+
 #include "Math/Vector.h"
+#include "Particles/ParticleSystem.h"
+
 #include "Kismet/KismetMathLibrary.h"
+#include "Kismet/GameplayStatics.h"
+
+#include "FPSCharacter.h"
+#include "Global.h"
+#include "FPSHUDWidget.h"
 
 // Sets default values for this component's properties
 UFPSCharacterStatComponent::UFPSCharacterStatComponent()
@@ -82,7 +88,38 @@ void UFPSCharacterStatComponent::RemoveSelectWeapon(EWeaponNum Number)
 }
 
 
-void UFPSCharacterStatComponent::GetDamage(AActor* DamagedActor, int16 Damage, float Penetration, EBoneHit HitType, FVector HitPoint, UParticleSystem* ParticleEffect, FVector Direction)
+EDamagedDirectionType UFPSCharacterStatComponent::CheckDirection(AFPSCharacter* DamagedActor, FVector Direction)
+{
+	float DeathValue = FVector::DotProduct(Direction, DamagedActor->FPSCameraComponent->GetForwardVector());
+
+	if (DeathValue > 0.7f)
+	{
+		// back..
+		return EDamagedDirectionType::EDDT_BACK;
+	}
+
+	else if (DeathValue < -0.7f)
+	{
+		//	front..
+		return EDamagedDirectionType::EDDT_FRONT;
+	}
+
+	FVector CrossVac = FVector::CrossProduct(DamagedActor->FPSCameraComponent->GetForwardVector(), -Direction);
+
+	if (CrossVac.Z > 0)
+	{
+		return EDamagedDirectionType::EDDT_RIGHT;
+	}
+
+	else
+	{
+		return EDamagedDirectionType::EDDT_LEFT;
+	}
+
+	return EDamagedDirectionType::EDDT_ALL;
+}
+
+void UFPSCharacterStatComponent::GetDamage(AActor* DamagedActor, int16 Damage, float Penetration, EBoneHit HitType, FVector HitPoint, AActor* Causer, FVector Direction)
 {
 
 	CurrentKevlar -= FMath::RoundToInt(Damage * 0.5f);
@@ -141,15 +178,18 @@ void UFPSCharacterStatComponent::GetDamage(AActor* DamagedActor, int16 Damage, f
 	UE_LOG(LogTemp, Warning, TEXT("HP : %d"), CurrentHP);
 
 	AFPSCharacter* Damaged = Cast<AFPSCharacter>(DamagedActor);
-
 	if (Damaged)
 	{
+		if (Damaged->GetFPSUIWidget())
+		{
+			Damaged->GetFPSUIWidget()->SetDamageUI(CheckDirection(Damaged, Direction));
+		}
 		Damaged->GetFPSCharacterMovement()->ResetSpeedRatio();
 		if (CurrentHP <= 0)
 		{
 			if (!bIsDead)
 			{
-				Death(Damaged, Direction, HitType);
+				Death(Damaged, Direction, HitType, Causer);
 			}
 		}
 
@@ -169,25 +209,27 @@ void UFPSCharacterStatComponent::GetDamage(AActor* DamagedActor, int16 Damage, f
 
 	FTransform transform;
 	transform.SetLocation(HitPoint);
-	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ParticleEffect, transform, true);
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BloodParticle, transform, true);
 
 
 	//UE_LOG(LogTemp, Warning, TEXT("%d %d"), CurrentHP, CurrentKevlar);
 }
 
 
-void UFPSCharacterStatComponent::CheckDeath(AFPSCharacter* DeadActor, FVector Direction, EBoneHit HitType)
+void UFPSCharacterStatComponent::CheckDeath(AFPSCharacter* DeadActor, FVector Direction, EBoneHit HitType, AActor* Causer)
 {
-	float DeathValue = FVector::DotProduct(Direction, DeadActor->FPSCameraComponent->GetForwardVector());
+
+	EDamagedDirectionType DirecitonType = CheckDirection(DeadActor, Direction);
+
+	//float DeathValue = FVector::DotProduct(Direction, DeadActor->FPSCameraComponent->GetForwardVector());
 
 	UGameplayStatics::SpawnSoundAttached(DeathSound, DeadActor->GetMesh());
 
-	UE_LOG(LogTemp, Warning, TEXT("Deathvalue = %.1f"), DeathValue);
+	//UE_LOG(LogTemp, Warning, TEXT("Deathvalue = %.1f"), DeathValue);
 
 	if (HitType == EBoneHit::EB_HEAD)
 	{
-		DeadActor->SetActorRotation(
-			FRotator(0, -UKismetMathLibrary::FindLookAtRotation(DeadActor->GetActorLocation(), Direction).Yaw, 0));
+		DeadActor->SetActorRotation(FRotator(0, UKismetMathLibrary::FindLookAtRotation(DeadActor->GetActorLocation(), Causer->GetActorLocation()).Yaw, 0));
 
 		DeathNum = EKindOfDeath::EKOD_HEAD;
 		UE_LOG(LogTemp, Warning, TEXT("HEAD!!!"));
@@ -196,7 +238,7 @@ void UFPSCharacterStatComponent::CheckDeath(AFPSCharacter* DeadActor, FVector Di
 	}
 
 
-	if (DeathValue > 0.7f)
+	if (DirecitonType == EDamagedDirectionType::EDDT_BACK)
 	{
 		// need Crouch,, gut,,, Head,,,
 
@@ -222,7 +264,7 @@ void UFPSCharacterStatComponent::CheckDeath(AFPSCharacter* DeadActor, FVector Di
 		}
 	}
 
-	else if (DeathValue < -0.7f)
+	else if (DirecitonType == EDamagedDirectionType::EDDT_FRONT)
 	{
 		DeathNum = EKindOfDeath::EKOD_BACK;
 
@@ -230,16 +272,16 @@ void UFPSCharacterStatComponent::CheckDeath(AFPSCharacter* DeadActor, FVector Di
 		return;
 	}
 
-	FVector CrossVac = FVector::CrossProduct(DeadActor->FPSCameraComponent->GetForwardVector(), -Direction);
+	//FVector CrossVac = FVector::CrossProduct(DeadActor->FPSCameraComponent->GetForwardVector(), -Direction);
 
-	if (CrossVac.Z > 0)
+	else if (DirecitonType == EDamagedDirectionType::EDDT_RIGHT)
 	{
 		DeathNum = EKindOfDeath::EKOD_LEFT;
 		UE_LOG(LogTemp, Warning, TEXT("Left!!!"));
 		return;
 	}
 
-	else
+	else if(DirecitonType == EDamagedDirectionType::EDDT_LEFT)
 	{
 		DeathNum = EKindOfDeath::EKOD_RIGHT;
 		UE_LOG(LogTemp, Warning, TEXT("Right!!!"));
@@ -248,13 +290,13 @@ void UFPSCharacterStatComponent::CheckDeath(AFPSCharacter* DeadActor, FVector Di
 }
 
 
-void UFPSCharacterStatComponent::Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType)
+void UFPSCharacterStatComponent::Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType, AActor* Causer)
 {
 	bIsDead = true;
 	DeathActor->ChangeViewCamera();
 	DeathActor->GetCapsuleComponent()->SetCollisionProfileName("Dead");
 	DeathActor->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Ignore);
-	CheckDeath(DeathActor, Direction, HitType);
+	CheckDeath(DeathActor, Direction, HitType, Causer);
 }
 
 
@@ -262,7 +304,7 @@ void UFPSCharacterStatComponent::Revive(AFPSCharacter* ReviveActor)
 {
 	bIsDead = false;
 	DeathNum = EKindOfDeath::EKOD_NONE;
-	ReviveActor->GetCapsuleComponent()->SetCollisionProfileName("BlockAll");
+	ReviveActor->GetCapsuleComponent()->SetCollisionProfileName("Alive");
 	ReviveActor->GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
 }

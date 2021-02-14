@@ -21,6 +21,9 @@
 #include "Components/Button.h"
 
 #include "Blueprint/WidgetTree.h"
+#include "FPSCharacter.h"
+
+#include "Global.h"
 
 
 
@@ -38,19 +41,15 @@ void UFPSHUDWidget::NativeConstruct()
 	CanvasPanel = this->WidgetTree->ConstructWidget<UCanvasPanel>(UCanvasPanel::StaticClass(), FName("Canvas"));
 
 	CanvasSlot = dynamic_cast< UCanvasPanelSlot* >(Crosshair->Slot);
-	ImageSlot = dynamic_cast <UCanvasPanelSlot*> (MainRenderImage->Slot);
+	//ImageSlot = dynamic_cast <UCanvasPanelSlot*> (MainRenderImage->Slot);
 	UISlot =  dynamic_cast<UCanvasPanelSlot*> (UIOverlay->Slot);
+	DamageSlot = dynamic_cast<UCanvasPanelSlot*>(DamageOverlay->Slot);
 
-	if (UISlot)
-	{
-		UISlot->SetSize(FVector2D(SettingViewPortSize().X, 50.0f));
-	}
-
-	AK47Button = Cast<UButton>(GetWidgetFromName(TEXT("AK47Button")));
-	if (nullptr != AK47Button)
-	{
-		AK47Button->OnClicked.AddDynamic(this, &UFPSHUDWidget::OnClick);
-	}
+	//AK47Button = Cast<UButton>(GetWidgetFromName(TEXT("AK47Button")));
+	//if (nullptr != AK47Button)
+	//{
+	//	AK47Button->OnClicked.AddDynamic(this, &UFPSHUDWidget::OnClick);
+	//}
 }
 
 void UFPSHUDWidget::OnClick()
@@ -331,4 +330,70 @@ bool UFPSHUDWidget::OpenShop()
 	}
 
 	return bShopisOpen;
+}
+
+
+void UFPSHUDWidget::Init(AFPSCharacter* ThisCharacter)
+{
+	if (UISlot)
+	{
+		UISlot->SetSize(FVector2D(SettingViewPortSize().X, 50.0f));
+	}
+
+	if (DamageSlot)
+	{
+		DamageSlot->SetSize(SettingViewPortSize());
+	}
+
+	//if (ImageSlot)
+	//{
+	//	ImageSlot->SetSize(SettingViewPortSize());
+	//}
+
+	InitCharacterHealth(ThisCharacter);
+	SetArmor(ThisCharacter);
+	InitDollar(ThisCharacter);
+	GetOwningPlayerPawn()->bUseControllerRotationYaw = false;
+}
+
+void UFPSHUDWidget::SetDamageUI(EDamagedDirectionType Type)
+{
+	switch (Type)
+	{
+	default:
+		BackDamage->SetVisibility(ESlateVisibility::Visible);
+		FrontDamage->SetVisibility(ESlateVisibility::Visible);
+		LeftDamage->SetVisibility(ESlateVisibility::Visible);
+		RightDamage->SetVisibility(ESlateVisibility::Visible);
+		break;
+
+	case EDamagedDirectionType::EDDT_BACK:
+		BackDamage->SetVisibility(ESlateVisibility::Visible);
+		break;
+
+	case EDamagedDirectionType::EDDT_FRONT:
+		FrontDamage->SetVisibility(ESlateVisibility::Visible);
+		break;
+
+	case EDamagedDirectionType::EDDT_LEFT:
+		LeftDamage->SetVisibility(ESlateVisibility::Visible);
+		break;
+
+	case EDamagedDirectionType::EDDT_RIGHT:
+		RightDamage->SetVisibility(ESlateVisibility::Visible);
+		break;
+	}
+
+
+	FTimerHandle Handle;
+
+	
+	GetWorld()->GetTimerManager().SetTimer(Handle, [this]() {
+		BackDamage->SetVisibility(ESlateVisibility::Hidden);
+		FrontDamage->SetVisibility(ESlateVisibility::Hidden);
+		LeftDamage->SetVisibility(ESlateVisibility::Hidden);
+		RightDamage->SetVisibility(ESlateVisibility::Hidden);
+
+	}, 0.5f, false);
+
 }

@@ -13,7 +13,6 @@
 class AWBase;
 class ADecalActor;
 class AStaticMeshActor;
-class UParticleSystem;
 class AFPSAICharacter;
 
 
@@ -32,10 +31,6 @@ class COUNTERSTRIKE_API AActorPool : public AActor
 	GENERATED_BODY()
 
 private:
-	//ADecalActor* retval = nullptr;
-	UPROPERTY(EditAnywhere)
-		UParticleSystem* BloodParticle;
-
 	UPROPERTY(EditAnywhere)
 		USoundBase* ShellSound;
 
@@ -76,8 +71,5 @@ public:
 	void CreateStaticMesh(FName Path, FString ArrayName);
 	AStaticMeshActor* GetMesh(EShellPoolList Type);
 	void ReturnMesh(AStaticMeshActor* Actor, EShellPoolList Type);
-	
-
-	UParticleSystem* GetBloodParticle() { return BloodParticle; }
 
 };

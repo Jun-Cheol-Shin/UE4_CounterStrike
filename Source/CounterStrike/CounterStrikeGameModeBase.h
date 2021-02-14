@@ -29,6 +29,7 @@ private:
 		uint8 GameTime = 116;
 	
 public:
+	ACounterStrikeGameModeBase();
 	FDele_Single_OneParam Fuc_DeleSingle_OneParam;
 
 	virtual void StartPlay() override;

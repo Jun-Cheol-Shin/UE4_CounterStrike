@@ -23,6 +23,9 @@ class COUNTERSTRIKE_API UFPSCharacterStatComponent : public UActorComponent
 
 public:
 	UPROPERTY(EditAnywhere)
+		UParticleSystem* BloodParticle;
+
+	UPROPERTY(EditAnywhere)
 		USoundBase* GunPickupSound;
 
 	UPROPERTY(EditAnywhere)
@@ -77,13 +80,15 @@ public:
 	void PurchaseKavlarAndHelmet();
 
 
-	void GetDamage(AActor* DamagedActor, int16 Damage, float Penetration, EBoneHit HitType, FVector HitPoint, UParticleSystem* ParticleEffect, FVector Direction = FVector::ZeroVector);
-	void CheckDeath(AFPSCharacter* DeadActor, FVector Direction, EBoneHit HitType);
+	EDamagedDirectionType CheckDirection(AFPSCharacter* DamagedActor, FVector Direction);
+
+	void GetDamage(AActor* DamagedActor, int16 Damage, float Penetration, EBoneHit HitType, FVector HitPoint, AActor* Causer, FVector Direction = FVector::ZeroVector);
+	void CheckDeath(AFPSCharacter* DeadActor, FVector Direction, EBoneHit HitType, AActor* Causer);
 
 	EKindOfDeath GetDeathNum() { return DeathNum; }
 
 
-	void Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType);
+	void Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType, AActor* Causer);
 	void Revive(AFPSCharacter* ReviveActor);
 
 protected:

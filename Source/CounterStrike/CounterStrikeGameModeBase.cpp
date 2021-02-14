@@ -4,6 +4,15 @@
 #include "CounterStrikeGameModeBase.h"
 #include "Engine/World.h"
 
+ACounterStrikeGameModeBase::ACounterStrikeGameModeBase()
+{
+	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("Blueprint'/Game/BluePrint/Character/BP_FPSCharacter.BP_FPSCharacter_C'"));
+	if (PlayerPawnBPClass.Class != NULL)
+	{
+		DefaultPawnClass = PlayerPawnBPClass.Class;
+	}
+}
+
 void ACounterStrikeGameModeBase::StartPlay()
 {
 	Super::StartPlay();

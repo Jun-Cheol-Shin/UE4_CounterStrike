@@ -21,6 +21,16 @@ AWSniperRifle::AWSniperRifle()
 	RunSpeedRatio = 0.75f;
 }
 
+EScope AWSniperRifle::GetSniperScopeState()
+{
+	return EScopeState; 
+}
+
+void AWSniperRifle::SetSniperScopeState(EScope State)
+{
+	EScopeState = State;
+}
+
 void AWSniperRifle::RecoilEndVec()
 {
 	if (EScope::NOSCOPE == EScopeState)
@@ -82,7 +92,8 @@ void AWSniperRifle::CancelScope()
 {
 	Player->ChangeViewPort(false);
 	Player->FPSCameraComponent->FieldOfView = 90.f;
-	Player->GetFPSCharacterMovement()->IsWalkHeld = false;
+
+	//Player->StopWalk();
 }
 
 void AWSniperRifle::ScopeFunction()
@@ -92,22 +103,21 @@ void AWSniperRifle::ScopeFunction()
 	switch (EScopeState)
 	{
 	case EScope::NOSCOPE:
-		Player->StopWalk();
 		CancelScope();
 		break;
 	case EScope::SCOPE:
-		if (ScopeWalk)
-		{
-			Player->StartWalk();
-		}
+		//if (ScopeWalk)
+		//{
+		//	Player->StartWalk();
+		//}
 		Player->ChangeViewPort(true);
 		Player->FPSCameraComponent->FieldOfView = 45.f;
 		break;
 	case EScope::DOUBLESCOPE:
-		if (ScopeWalk)
-		{
-			Player->StartWalk();
-		}
+		//if (ScopeWalk)
+		//{
+		//	Player->StartWalk();
+		//}
 		Player->ChangeViewPort(true);
 		Player->FPSCameraComponent->FieldOfView = 22.5f;
 		break;

@@ -17,11 +17,14 @@ class COUNTERSTRIKE_API UFPSCharacterMovement : public UCharacterMovementCompone
 	GENERATED_BODY()
 
 protected:
-
+	AFPSCharacter* OwnerCharacter;
 	FTimerHandle DamagedTimer;
 
 	UPROPERTY(EditAnywhere)
 		USoundBase* FallSound;
+
+	UPROPERTY(EditAnywhere)
+		USoundBase* LandSound;
 
 	float speed;
 
@@ -91,7 +94,7 @@ public:
 
 
 	UPROPERTY(EditAnywhere, Category = "Flux")
-		float JumpSpeed = 500;
+		float JumpSpeed = 550;
 
 	UPROPERTY(EditAnywhere, Category = "Flux")
 		float Gravity;
@@ -109,7 +112,7 @@ public:
 		float MMass = 50.0;
 
 	UPROPERTY(EditAnywhere, Category = "Flux")
-		float RunSpeed = 609.6f;
+		float RunSpeed = 600.f;
 
 	UPROPERTY(EditAnywhere, Category = "Flux")
 		float WalkAccel = 5000;

@@ -11,7 +11,7 @@
 #include "Components/CanvasPanelSlot.h"
 #include "GameFramework/GameUserSettings.h"
 #include "Components/Overlay.h"
-
+#include "Global.h"
 #include "FPSHUDWidget.generated.h"
 
 /**
@@ -38,12 +38,13 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 		class UCanvasPanel* CanvasPanel;
 
-	UPROPERTY(meta = (BindWidget))
-		class UImage* MainRenderImage;
+	//UPROPERTY(meta = (BindWidget))
+	//	class UImage* MainRenderImage;
 
 	UCanvasPanelSlot* CanvasSlot = nullptr;
-	UCanvasPanelSlot* ImageSlot;
+	//UCanvasPanelSlot* ImageSlot;
 	UCanvasPanelSlot* UISlot;
+	UCanvasPanelSlot* DamageSlot = nullptr;
 
 protected:
 	UPROPERTY(meta = (BindWidget))
@@ -81,6 +82,10 @@ protected:
 		class UOverlay* UIOverlay;
 	UPROPERTY(meta = (BindWidget))
 		class UOverlay* ShopOverlay;
+	UPROPERTY(meta = (BindWidget))
+		class UOverlay* DamageOverlay;
+	UPROPERTY(meta = (BindWidget))
+		class UOverlay* MinimapOverlay;
 
 	// crosshair...
 
@@ -109,17 +114,24 @@ protected:
 		UTextBlock* DollarText;
 
 	UPROPERTY(meta = (BindWidget))
-		UImage* PlusImage;
-	UPROPERTY(meta = (BindWidget))
-		UImage* MinusImage;
-	UPROPERTY(meta = (BindWidget))
-		UTextBlock* AddDollar;
-
-	UPROPERTY(meta = (BindWidget))
 		UImage* Scope;
 
 	UPROPERTY(meta = (BindWidget))
 		class UImage* Flash;
+
+
+	UPROPERTY(meta = (BindWidget))
+		class UImage* FrontDamage;
+	UPROPERTY(meta = (BindWidget))
+		class UImage* BackDamage;
+	UPROPERTY(meta = (BindWidget))
+		class UImage* RightDamage;
+	UPROPERTY(meta = (BindWidget))
+		class UImage* LeftDamage;
+
+
+	UPROPERTY(meta = (BindWidget))
+		class UImage* MinimapImage;
 
 public:
 
@@ -188,14 +200,16 @@ public:
 
 
 public:
+	void Init(AFPSCharacter* ThisCharacter);
 	bool OpenShop();
-
-
 	bool GetbIsShopOpen() { return bShopisOpen; }
 	UOverlay* GetCrosshair() { return Crosshair; }
 	UImage* GetScope() { return Scope; }
-	UImage* GetFPSRender() { return MainRenderImage; }
+	//UImage* GetFPSRender() { return MainRenderImage; }
 
-	UCanvasPanelSlot* GetImageSlot() { return ImageSlot; }
+	//UCanvasPanelSlot* GetImageSlot() { return ImageSlot; }
 	FVector2D SettingViewPortSize();
+
+
+	void SetDamageUI(EDamagedDirectionType Type);
 };

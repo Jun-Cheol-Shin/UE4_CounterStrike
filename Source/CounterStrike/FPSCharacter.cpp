@@ -20,11 +20,15 @@
 #include "CounterStrikeGameModeBase.h"
 
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/Controller.h"
 #include "GameFramework/PlayerController.h"
+#include "FPSCharacterAnimInstance.h"
+
+#include "Components/SceneCaptureComponent2D.h"
+#include "GenericPlatform/GenericPlatformMath.h"
 
 #include "Net/UnrealNetwork.h"
 
-#include "FPSCharacterAnimInstance.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
@@ -32,11 +36,9 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	GetCapsuleComponent()->InitCapsuleSize(35.f, 80.0f);
+	GetCapsuleComponent()->InitCapsuleSize(55.f, 80.0f);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Block);
 	GetCapsuleComponent()->bReturnMaterialOnMove = true;
-
 
 	//set our turn rates for input
 	BaseTurnRate = 30.0f;
@@ -45,6 +47,7 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
+	SpringArmComponent->TargetArmLength = 0.f;
 
 	FPSCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	FPSCameraComponent->SetupAttachment(SpringArmComponent);
@@ -52,9 +55,14 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 
 	StatComponent = CreateDefaultSubobject<UFPSCharacterStatComponent>(TEXT("CharacterStatComponent"));
 
-	CaptureCamera = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("CaptureCamera"));
-	CaptureCamera->SetupAttachment(FPSCameraComponent);
-	CaptureCamera->SetRelativeLocation(FVector(0.f, 0, 0.f));
+	//CaptureCamera = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("CaptureCamera"));
+	//CaptureCamera->SetRelativeLocation(FVector(0, 0, 100.f));
+	//CaptureCamera->SetRelativeRotation(FRotator(-90.0f, 0, 0));
+	//CaptureCamera->ProjectionType = ECameraProjectionMode::Orthographic;
+
+	//CaptureCamera->SetupAttachment(RootComponent);
+
+	//CaptureCamera->HideComponent(GetMesh());
 
 	for (int i = 0; i < HANDCOUNT; ++i)
 	{
@@ -63,11 +71,10 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 		FName MeshName = FName(*FString::Printf(TEXT("FPSMesh_%d"), i + 1));
 		HandMesh = CreateDefaultSubobject<USkeletalMeshComponent>(MeshName);
 		HandMesh->SetupAttachment(FPSCameraComponent);
-		//HandMesh->bCastDynamicShadow = false;
-		//HandMesh->CastShadow = false;
+		HandMesh->SetCastShadow(false);
 
-		HandMesh->SetOnlyOwnerSee(false);
-		HandMesh->SetOwnerNoSee(true);
+		HandMesh->SetOnlyOwnerSee(true);
+		HandMesh->SetOwnerNoSee(false);
 
 		HandMesh->SetRelativeLocation(FVector(0.f, 0, 0.f));
 		HandMesh->SetRelativeRotation(FRotator(0, -90, 0));
@@ -75,8 +82,7 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 
 
 		HandMesh->SetVisibility(false);
-
-		CaptureCamera->ShowOnlyComponent(HandMesh);
+		//CaptureCamera->HideComponent(HandMesh);
 		FPSmesh.Add(HandMesh);
 
 	}
@@ -94,6 +100,8 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 		WeaponMesh->SetCollisionProfileName(TEXT("NoCollision"));
 		WeaponMesh->CanCharacterStepUp(false);
 		Thirdmesh.Add(WeaponMesh);
+
+		//CaptureCamera->HideComponent(WeaponMesh);
 	}
 
 	GetMesh()->SetOwnerNoSee(true);
@@ -103,10 +111,10 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 	//PlayerMovement = GetFPSCharacterMovement();
 
 	GetCapsuleComponent()->CanCharacterStepUpOn = ECanBeCharacterBase::ECB_Yes;
-	GetMesh()->SetRelativeLocation(FVector(0, 0, 50));
+	GetMesh()->SetRelativeLocation(FVector(-25.f, 0, 50));
 	GetMesh()->SetRelativeRotation(FRotator(0, -90.f, 0));
 	GetMesh()->SetRelativeScale3D(FVector(2.5f, 2.5f, 2.5f));
-	FPSCameraComponent->SetRelativeLocation(FVector(0, 0, 65));
+	FPSCameraComponent->SetRelativeLocation(FVector(0.f, 0, 65));
 
 	MeshHeight = GetMesh()->GetRelativeLocation().Z;
 
@@ -119,6 +127,17 @@ AFPSCharacter::AFPSCharacter(const FObjectInitializer& ObjectInitializer)
 	if (UI_HUD_C.Succeeded())
 	{
 		HUDWidgetClass = UI_HUD_C.Class;
+	}
+
+	GetCapsuleComponent()->SetCollisionProfileName("Alive");
+
+	SetReplicates(true);
+	//bNetUseOwnerRelevancy = true;
+	bAlwaysRelevant = true;
+
+	if (GetFPSCharacterMovement())
+	{
+		GetFPSCharacterMovement()->SetIsReplicated(true);
 	}
 }
 
@@ -144,11 +163,7 @@ void AFPSCharacter::BeginPlay()
 	FPSUIWidget = Cast<UFPSHUDWidget>(HUDWidget);
 	if (FPSUIWidget)
 	{
-		FPSUIWidget->GetImageSlot()->SetSize(FPSUIWidget->SettingViewPortSize());
-		FPSUIWidget->InitCharacterHealth(this);
-		FPSUIWidget->SetArmor(this);
-		FPSUIWidget->InitDollar(this);
-		FPSUIWidget->GetOwningPlayerPawn()->bUseControllerRotationYaw = false;
+		FPSUIWidget->Init(this);
 	}
 
 	CreateObject(ECreatWeaponNum::EC_Knife);
@@ -162,8 +177,8 @@ void AFPSCharacter::BeginPlay()
 	//CreateObject(ECreatWeaponNum::EC_MAC10);
 	//CreateObject(ECreatWeaponNum::EC_SCOUT);
 	//CreateObject(ECreatWeaponNum::EC_AWP);
-	//CreateObject(ECreatWeaponNum::EC_M4A1);
-	CreateObject(ECreatWeaponNum::EC_AK);
+	CreateObject(ECreatWeaponNum::EC_M4A1);
+	//CreateObject(ECreatWeaponNum::EC_AK);
 
 	//CreateObject(ECreatWeaponNum::EC_USP);
 	//CreateObject(ECreatWeaponNum::EC_GLOCK);
@@ -178,7 +193,7 @@ void AFPSCharacter::BeginPlay()
 		if (animInstance)
 		{
 			animInstance->GetPlayer(this);
-			UE_LOG(LogTemp, Warning, TEXT("Get Player!"));
+			//UE_LOG(LogTemp, Warning, TEXT("Get Player!"));
 		}
 	}
 }
@@ -196,14 +211,15 @@ void AFPSCharacter::Tick(float DeltaTime)
 
 	SetCharacterState();
 
+	// Server - Client
 	RotatingLowerHips(DeltaTime);
 	RotatingAimOffset(DeltaTime);
 
 	ResetLowerHips(DeltaTime);
 
-	ShakeHand(DeltaTime);
-
 	SmoothingCrouch(DeltaTime);
+
+	ShakeHand(DeltaTime);
 
 	if (FPSUIWidget)
 	{
@@ -563,97 +579,9 @@ void AFPSCharacter::Swap_Bomb()
 	ChangeWeapon(EWeaponNum::E_C4);
 }
 
-void AFPSCharacter::AddControllerYawInput(float Val)
-{
-	if (FPSUIWidget)
-	{
-		if (FPSUIWidget->GetbIsShopOpen())
-		{
-			return;
-		}
-	}
-
-	Val = Val * BaseTurnRate * GetWorld()->GetDeltaSeconds();
-
-	float mulvalue = Val * Sensitive;
-
-	Super::AddControllerYawInput(mulvalue);
-
-
-	if (CaculatingDot() <= 0.1f)
-	{
-		rotating = true;
-		//RotatingHipValue = GetController()->GetControlRotation().Yaw;
-	}
-}
-
-void AFPSCharacter::AddControllerPitchInput(float Val)
-{
-	if (FPSUIWidget)
-	{
-		if (FPSUIWidget->GetbIsShopOpen())
-		{
-			return;
-		}
-	}
-
-	Val = Val * BaseLookUpRate * GetWorld()->GetDeltaSeconds();
-
-	float mulvalue = Sensitive * Val;
-
-	Super::AddControllerPitchInput(mulvalue);
-}
-
-void AFPSCharacter::ResetLowerHips(float DeltaTime)
-{
-	if (!rotating)
-		return;
-
-	GetController()->GetPawn()->SetActorRotation(
-		FMath::RInterpTo(GetController()->GetPawn()->GetActorRotation(),
-			FRotator(0, GetController()->GetControlRotation().Yaw, 0),
-			DeltaTime, 20));
-
-	
-	if (GetController()->GetPawn()->GetActorRotation().Equals(FRotator(0, GetController()->GetControlRotation().Yaw, 0), 0.1f))
-	{
-		rotating = false;
-	}
-
-	//GetArrowComponent()->SetWorldRotation(FRotator(GetArrowComponent()->GetComponentRotation().Pitch, 
-	//	GetController()->GetControlRotation().Yaw, GetArrowComponent()->GetComponentRotation().Roll));
-}
-
 float AFPSCharacter::CaculatingDot()
 {
-	return FMath::Abs(FVector::DotProduct(GetArrowComponent()->GetForwardVector(), FPSCameraComponent->GetForwardVector()));
-}
-
-void AFPSCharacter::RotatingLowerHips(float DeltaTime)
-{
-	MoveForwardValue = GetInputAxisValue("MoveForward");
-	MoveRightValue = GetInputAxisValue("MoveRight");
-	LowerHipsRotation = MoveRightValue * 35.f;
-
-	if (FMath::IsNearlyZero(MoveForwardValue) && !FMath::IsNearlyZero(MoveRightValue))
-	{
-		MoveForwardValue = 1.f;
-		LowerHipsRotation = MoveRightValue * 60.f;
-		LowerHipsRotation *= MoveForwardValue;
-	}
-
-	LowerHipsRotation *= MoveForwardValue;
-	CurrentLowerHipsRotation = FMath::FInterpTo(CurrentLowerHipsRotation, LowerHipsRotation, DeltaTime, 5);
-	//UE_LOG(LogTemp, Warning, TEXT("%f"), CurrentLowerHipsRotation);
-}
-
-void AFPSCharacter::RotatingAimOffset(float DeltaTime)
-{
-	FRotator offset = FRotator(AimOffsetPitch, AimOffsetYaw, 0);
-	FRotator offsetResult = FMath::RInterpTo(offset, GetActorRotation() - GetControlRotation(), DeltaTime, 10);
-
-	AimOffsetYaw = FMath::ClampAngle(offsetResult.Yaw, -90, 90);
-	AimOffsetPitch = FMath::ClampAngle(offsetResult.Pitch, -90, 90);
+	return FMath::Abs(FVector::DotProduct(GetActorForwardVector(), FPSCameraComponent->GetForwardVector()));
 }
 
 void AFPSCharacter::ShakeHand(float DeltaTime)
@@ -791,7 +719,8 @@ void AFPSCharacter::ChangeViewCamera()
 
 		for (int i = 0; i < FPSmesh.Num(); ++i)
 		{
-			FPSmesh[i]->SetOnlyOwnerSee(false);
+			FPSmesh[i]->SetOwnerNoSee(false);
+			//FPSmesh[i]->SetOnlyOwnerSee(true);
 		}
 
 		for (int i = 0; i < Thirdmesh.Num(); ++i)
@@ -814,7 +743,7 @@ void AFPSCharacter::ChangeViewCamera()
 
 		for (int i = 0; i < FPSmesh.Num(); ++i)
 		{
-			FPSmesh[i]->SetOnlyOwnerSee(true);
+			FPSmesh[i]->SetOwnerNoSee(true);
 		}
 
 		for (int i = 0; i < Thirdmesh.Num(); ++i)
@@ -824,62 +753,26 @@ void AFPSCharacter::ChangeViewCamera()
 	}
 }
 
-void AFPSCharacter::MoveForward(float Value)
-{
-	if (Value != 0)
-	{
-		rotating = true;
-	}
-
-	// 어느 쪽이 전방인지 알아내어, 플레이어가 그 방향으로 이동하고자 한다고 기록합니다.
-	FRotator Val = Controller->GetControlRotation();
-	Val.Pitch = 0;
-
-	FVector Direction = FRotationMatrix(Val).GetScaledAxis(EAxis::X);
-	Direction.Z = .0f;
-	Direction.Normalize();
-
-	//MoveDirection += Direction * FMath::Clamp(Value, -1.0f, 1.0f);
-
-	AddMovementInput(Direction * Value * 1000);
-}
-
-void AFPSCharacter::MoveRight(float Value)
-{
-	if (Value != 0)
-	{
-		rotating = true;
-	}
-
-	// 어느 쪽이 오른쪽인지 알아내어, 플레이어가 그 방향으로 이동하고자 한다고 기록합니다.
-	FRotator Val = Controller->GetControlRotation();
-	Val.Pitch = 0;
-
-	FVector Direction = FRotationMatrix(Val).GetScaledAxis(EAxis::Y);
-	Direction.Z = .0f;
-	Direction.Normalize();
-
-	//MoveDirection += Direction * FMath::Clamp(Value, -1.0f, 1.0f);
-
-	AddMovementInput(Direction * Value * 1000);
-}
-
 void AFPSCharacter::StartJump()
 {
 	if (!StatComponent) return;
 	if (GetFPSCharacterMovement() && GetFPSCharacterMovement()->IsGrounded())
 	{
+
 		GetFPSCharacterMovement()->IsJumpHeld = true;
 		StatComponent->SetCharacterLowerState(LOWER_STATE::JUMP);
 	}
 }
 
+
 void AFPSCharacter::StopJump()
 {
 	if (GetFPSCharacterMovement()) {
+
 		GetFPSCharacterMovement()->IsJumpHeld = false;
 	}
 }
+
 
 void AFPSCharacter::StartCrouch()
 {
@@ -913,7 +806,6 @@ void AFPSCharacter::StopCrouch()
 	}
 }
 
-
 void AFPSCharacter::ChangeViewPort(bool ScopeOn)
 {
 	if (FPSUIWidget)
@@ -922,14 +814,14 @@ void AFPSCharacter::ChangeViewPort(bool ScopeOn)
 		{
 			FPSUIWidget->GetScope()->SetRenderOpacity(1.f);
 			FPSUIWidget->GetCrosshair()->SetRenderOpacity(0.f);
-			FPSUIWidget->GetFPSRender()->SetRenderOpacity(0.f);
+			//FPSUIWidget->GetFPSRender()->SetRenderOpacity(0.f);
 		}
 
 		else
 		{
 			FPSUIWidget->GetScope()->SetRenderOpacity(0.f);
 			FPSUIWidget->GetCrosshair()->SetRenderOpacity(1.f);
-			FPSUIWidget->GetFPSRender()->SetRenderOpacity(1.f);
+			//FPSUIWidget->GetFPSRender()->SetRenderOpacity(1.f);
 		}
 	}
 }
@@ -1037,21 +929,9 @@ void AFPSCharacter::StopWalk()
 {
 	if (!StatComponent) return;
 
-	if (GetFPSCharacterMovement() && GetFPSCharacterMovement()->IsWalkHeld) {
-		AWSniperRifle* Sniper = Cast<AWSniperRifle>(StatComponent->GetCurrentGunWeapon());
+	if (GetFPSCharacterMovement()) {
 
-		if (Sniper)
-		{
-			if (Sniper->GetSniperScopeState() == EScope::NOSCOPE)
-			{
-				GetFPSCharacterMovement()->IsWalkHeld = false;
-			}	
-		}
-
-		else
-		{
-			GetFPSCharacterMovement()->IsWalkHeld = false;
-		}
+		GetFPSCharacterMovement()->IsWalkHeld = false;
 	}
 }
 
@@ -1150,10 +1030,18 @@ void AFPSCharacter::SetNewWeaponMesh(AWBase * WeaponActor)
 
 	uint8 num = uint8(WeaponActor->eWeaponNum);
 
+
+	if (StatComponent->GetSelectWeapon(WeaponActor->eWeaponNum))
+	{
+		StatComponent->RemoveSelectWeapon(WeaponActor->eWeaponNum);
+	}
+
 	StatComponent->SetArrayWeapon(WeaponActor);
 	//WeaponArray[num - 1] = WeaponActor;
 
 	FPSmesh[num - 1]->SetSkeletalMesh(WeaponActor->FPSHandComponent->SkeletalMesh);
+	FPSmesh[num - 1]->SetCastInsetShadow(false);
+	FPSmesh[num - 1]->SetCastShadow(false);
 	Thirdmesh[num - 1]->SetStaticMesh(WeaponActor->WeaponComponent->GetStaticMesh());
 
 	// need Modify...
@@ -1311,7 +1199,6 @@ FString AFPSCharacter::GetStateAsString(LOWER_STATE Value)
 	}
 }
 
-
 void AFPSCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	Super::NotifyActorBeginOverlap(OtherActor);
@@ -1383,7 +1270,6 @@ void AFPSCharacter::TakeWeapon(AActor* Actor)
 	}
 }
 
-
 USkeletalMeshComponent* AFPSCharacter::GetCurrentFPSMesh()
 {
 	if (StatComponent)
@@ -1450,7 +1336,6 @@ void AFPSCharacter::DropWeapon(EWeaponNum WeaponNum)
 	StatComponent->RemoveSelectWeapon(Weapon->eWeaponNum);
 }
 
-
 void AFPSCharacter::RestBackWeapon() 
 {
 	if (!StatComponent)
@@ -1509,3 +1394,138 @@ EBoneHit AFPSCharacter::CheckHit(float ZValue)
 		}
 	}
 }
+
+void AFPSCharacter::MoveForward(float Value)
+{
+
+	MoveForwardValue = Value;
+
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		rotating = true;
+		// 어느 쪽이 전방인지 알아내어, 플레이어가 그 방향으로 이동하고자 한다고 기록합니다.
+		FRotator Val = Controller->GetControlRotation();
+		Val.Pitch = 0;
+		Val.Roll = 0;
+
+		FVector Direction = FRotationMatrix(Val).GetUnitAxis(EAxis::X);
+		Direction.Normalize();
+
+		AddMovementInput(Direction, Value);
+	}
+}
+
+void AFPSCharacter::MoveRight(float Value)
+{
+	MoveRightValue = Value;
+
+	if ((Controller != NULL) && (Value != 0.0f))
+	{
+		MoveForwardValue = 1.f;
+		rotating = true;
+		// 어느 쪽이 오른쪽인지 알아내어, 플레이어가 그 방향으로 이동하고자 한다고 기록합니다.
+		FRotator Val = Controller->GetControlRotation();
+		Val.Pitch = 0;
+		Val.Roll = 0;
+
+		FVector Direction = FRotationMatrix(Val).GetUnitAxis(EAxis::Y);
+		//Direction.Z = .0f;
+		Direction.Normalize();
+
+		AddMovementInput(Direction, Value);
+	}
+}
+
+void AFPSCharacter::AddControllerYawInput(float Val)
+{
+	if (FPSUIWidget)
+	{
+		if (FPSUIWidget->GetbIsShopOpen())
+		{
+			return;
+		}
+	}
+
+	Val = Val * BaseTurnRate * GetWorld()->GetDeltaSeconds();
+
+	float mulvalue = Val * Sensitive;
+
+	Super::AddControllerYawInput(mulvalue);
+
+	if (CaculatingDot() <= 0.05f)
+	{
+		rotating = true;
+		//RotatingHipValue = GetController()->GetControlRotation().Yaw;
+	}
+}
+
+void AFPSCharacter::AddControllerPitchInput(float Val)
+{
+	if (FPSUIWidget)
+	{
+		if (FPSUIWidget->GetbIsShopOpen())
+		{
+			return;
+		}
+	}
+
+	Val = Val * BaseLookUpRate * GetWorld()->GetDeltaSeconds();
+
+	float mulvalue = Sensitive * Val;
+
+	Super::AddControllerPitchInput(mulvalue);
+}
+
+// Aim offset..
+void AFPSCharacter::RotatingAimOffset(float DeltaTime)
+{
+	FRotator offset = FRotator(AimOffsetPitch, AimOffsetYaw, 0);
+	FRotator offsetResult = FMath::RInterpTo(offset, GetActorRotation() - GetControlRotation(), DeltaTime, 10);
+
+	AimOffsetYaw = FMath::ClampAngle(offsetResult.Yaw, -90, 90);
+	AimOffsetPitch = FMath::ClampAngle(offsetResult.Pitch, -90, 90);
+}
+
+// While Moving.. Rotating Lower Hip Replication..
+
+void AFPSCharacter::RotatingLowerHips(float DeltaTime)
+{
+	if (!FMath::IsNearlyZero(MoveRightValue) && FMath::IsNearlyZero(GetInputAxisValue("MoveForward")))
+	{
+		LowerHipsRotation = MoveRightValue * 60.f;
+		//LowerHipsRotation *= MoveForwardValue;
+	}
+
+	else
+	{
+		LowerHipsRotation = MoveRightValue * 35.f;
+	}
+
+	CurrentLowerHipsRotation = FMath::FInterpTo(CurrentLowerHipsRotation, LowerHipsRotation, DeltaTime, 5);
+}
+// .........
+void AFPSCharacter::ResetLowerHips(float DeltaTime)
+{
+	if (!rotating)
+		return;
+
+	GetController()->GetPawn()->SetActorRotation(
+		FMath::RInterpTo(GetController()->GetPawn()->GetActorRotation(),
+			FRotator(0, GetController()->GetControlRotation().Yaw, 0),
+			DeltaTime, 20));
+
+
+	if (GetController()->GetPawn()->GetActorRotation().Equals(FRotator(0, GetController()->GetControlRotation().Yaw, 0), 0.1f))
+	{
+		rotating = false;
+	}
+}
+
+
+//void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+//{
+//	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+//
+//	//DOREPLIFETIME(AFPSCharacter, Owner);
+//	//DOREPLIFETIME_ACTIVE_OVERRIDE(AFPSCharacter, CharacterMovement, bReplicateMovement);
+//}

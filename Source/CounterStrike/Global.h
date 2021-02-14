@@ -11,6 +11,15 @@
 #define MULT 0.25f
 #define HANDCOUNT 7
 
+enum class EDamagedDirectionType : uint8
+{
+	EDDT_ALL = 0,
+	EDDT_FRONT = 1,
+	EDDT_BACK = 2,
+	EDDT_LEFT = 3,
+	EDDT_RIGHT = 4,
+};
+
 enum class EKindOfDeath : uint8
 {
 	EKOD_NONE = 0,

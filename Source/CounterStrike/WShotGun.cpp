@@ -130,14 +130,14 @@ void AWShotGun::GunShotMethod()
 			if (Hit.GetActor())
 			{
 				float anotherDistance;
-
-				if (Hit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+				AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
+				if (DamagedCharacter)
 				{
-					AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
+					//AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
 					if (ActorPool)
 					{
 						DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, GunDamage,
-							GunPenetration, DamagedCharacter->CheckHit(Hit.ImpactPoint.Z - Hit.GetActor()->GetActorLocation().Z), Hit.ImpactPoint, ActorPool->GetBloodParticle(), (End - Location).GetSafeNormal());
+							GunPenetration, DamagedCharacter->CheckHit(Hit.ImpactPoint.Z - Hit.GetActor()->GetActorLocation().Z), Hit.ImpactPoint, Player, (End - Location).GetSafeNormal());
 						SpawnDecal(Hit, EDecalPoolList::EDP_BLOOD);
 					}
 					anotherDistance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * 10.f;

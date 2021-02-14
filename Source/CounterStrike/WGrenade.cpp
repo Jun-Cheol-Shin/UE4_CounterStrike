@@ -60,7 +60,7 @@ void AWGrenade::Explosion()
 
 					if (ActorPool)
 					{
-						DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, GetDistance(DamagedCharacter), 1.f, EBoneHit::EB_NONE, FVector::ZeroVector, ActorPool->GetBloodParticle());
+						DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(DamagedCharacter, GetDistance(DamagedCharacter), 1.f, EBoneHit::EB_NONE, FVector::ZeroVector, Player);
 					}
 				}
 			}

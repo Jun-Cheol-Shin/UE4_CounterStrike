@@ -72,6 +72,8 @@ public:
 
 
 
+	void SetForwardVal(float Value) { fForwardVal = Value; }
+
 	void GetPlayer(AFPSCharacter* Player) { MyChar = Player; }
 
 };
