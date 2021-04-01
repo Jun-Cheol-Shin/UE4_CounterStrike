@@ -95,9 +95,9 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113293428-b471c400-9330-11eb-8ec3-926d43a51118.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113296331-4cbd7800-9334-11eb-87a6-05cbf7f44aef.gif" width = "450">
 :-------------------------:|:-------------------------:
 
-* 총을 쏠 때마다 ShotCount가 하나씩 추가되며 ShotCount의 숫자에 따라 switch문을 따라간다.
+* 총을 쏠 때마다 ShotCount가 하나씩 추가되며 ShotCount의 숫자에 따라 switch문을 따라
 * Pitch값이 정해진 RealHitImpactLimit값을 초과 할 수 없으며 초과한 경우 Pitch값은 더 이상 올라가지 않음
-* Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬.
+* Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬
 
 ```c++
 	switch (ShotCount)
@@ -158,8 +158,8 @@ ___
 
 * 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (**빨간 선**)
 * 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)
-* 총알 쐈던 **반대 방향**으로 Trace를 실행시킨다. 만약 맞았다면 관통에 성공했으므로 데칼을 생성한다.
-* 데칼을 생성한 지점에서 다시 Trace를 실행시킨다. (**파란 선**)
+* 총알 쐈던 **반대 방향**으로 Trace를 실행 만약 맞았다면 관통에 성공했으므로 데칼을 생성
+* 데칼을 생성한 지점에서 다시 Trace를 실행 (**파란 선**)
 
 ```c++
 bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
@@ -206,7 +206,7 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113302987-952c6400-933b-11eb-8ea1-d4e0e4d66337.PNG" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/113303023-9e1d3580-933b-11eb-8b2d-724164e5ec53.PNG" width = "500">
 :-------------------------:|:-------------------------:
 
-* enum을 이용하여 총 4부위를 지정했다. (몸통, 머리, 하체, 급소)
+* enum을 이용하여 총 4부위를 지정 (몸통, 머리, 하체, 급소)
 ```c++
 UENUM(BlueprintType)
 enum class EBoneHit : uint8
@@ -217,7 +217,7 @@ enum class EBoneHit : uint8
 	EB_GUTS = 3			UMETA(DisplayName = "GUTS_HIT"),
 };
 ```
-* 캐릭터가 맞았다면 **Hit의 BoneName**을 ToString으로 String 비교 체크를 한다.
+* 캐릭터가 맞았다면 **Hit의 BoneName**을 ToString으로 String 비교 체크
 ```
 	if (HitBoneName.Equals(TEXT("Bip01-Head")))
 	{
@@ -265,3 +265,5 @@ ___
 
 ### 근접 공격 구현
 <img src="https://user-images.githubusercontent.com/77636255/113316751-a8dec700-9349-11eb-84c6-d55cd08bca8d.gif" width = "600">
+* 부채꼴 형태로 10개의 벡터를 생성해서 Trace를 실행
+* 
