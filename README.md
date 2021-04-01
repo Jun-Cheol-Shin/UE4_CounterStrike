@@ -23,3 +23,4 @@
 * [기타 UI 및 애니메이션](#기타-UI-및-애니메이션)
 
 ### 총기 클래스 구조
+![UML](https://user-images.githubusercontent.com/77636255/113281699-e1b67600-9320-11eb-960b-094108508016.PNG)
