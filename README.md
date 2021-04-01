@@ -174,9 +174,18 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 	// 관통 성공.. 동시에 물체의 반대편에 데칼 생성
 	if (bSuccess)
 	{
-		if (FinalHit.GetActor() && !FinalHit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+		if (FinalHit.GetActor())
 		{
-			SpawnDecal(FinalHit, EDecalPoolList::EDP_BULLETHOLE);
+			if (!FinalHit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+			{
+				SpawnDecal(FinalHit, EDecalPoolList::EDP_BULLETHOLE);
+			}
+
+			else
+			{
+				SpawnDecal(FinalHit, EDecalPoolList::EDP_BLOOD);
+			}
+
 			return true;
 		}
 	}
@@ -184,4 +193,7 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 	return false;
 }
 ```
-
+* 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (빨간 선)
+* 수치를 지정해서(thickness) 수치 만큼 이동한 벡터를 생성 (Start)
+* 총알 쐈던 반대 방향으로 Trace를 실행시킨다. 만약 맞았다면 관통에 성공했으므로 데칼을 생성한다.
+* 데칼을 생성한 지점에서 다시 Trace를 실행시킨다. (파란 선)
