@@ -95,6 +95,10 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113293428-b471c400-9330-11eb-8ec3-926d43a51118.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113296331-4cbd7800-9334-11eb-87a6-05cbf7f44aef.gif" width = "450">
 :-------------------------:|:-------------------------:
 
+* 총을 쏠 때마다 ShotCount가 하나씩 추가되며 ShotCount의 숫자에 따라 switch문을 따라간다.
+* Pitch값이 정해진 RealHitImpactLimit값을 초과 할 수 없으며 초과한 경우 Pitch값은 더 이상 올라가지 않음
+* Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬.
+
 ```c++
 	switch (ShotCount)
 	{
@@ -145,14 +149,17 @@ ___
 		Player->AddControllerYawInput(a * 0.15f);
 	}
 ```
-* 총을 쏠 때마다 ShotCount가 하나씩 추가되며 ShotCount의 숫자에 따라 switch문을 따라간다.
-* Pitch값이 정해진 RealHitImpactLimit값을 초과 할 수 없으며 초과한 경우 Pitch값은 더 이상 올라가지 않음
-* Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬.
+
 ___
 
 ### 월 샷 구현
 <img src="https://user-images.githubusercontent.com/77636255/113298891-4381da80-9337-11eb-877f-89cf31e546ba.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113298950-51cff680-9337-11eb-9041-a109eecea6c2.gif" width = "450">
 :-------------------------:|:-------------------------:
+
+* 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (**빨간 선**)
+* 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)
+* 총알 쐈던 **반대 방향**으로 Trace를 실행시킨다. 만약 맞았다면 관통에 성공했으므로 데칼을 생성한다.
+* 데칼을 생성한 지점에서 다시 Trace를 실행시킨다. (**파란 선**)
 
 ```c++
 bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
@@ -192,10 +199,7 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 	return false;
 }
 ```
-* 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (**빨간 선**)
-* 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)
-* 총알 쐈던 **반대 방향**으로 Trace를 실행시킨다. 만약 맞았다면 관통에 성공했으므로 데칼을 생성한다.
-* 데칼을 생성한 지점에서 다시 Trace를 실행시킨다. (**파란 선**)
+
 ___
 
 ### 히트박스 및 데미지 구현
