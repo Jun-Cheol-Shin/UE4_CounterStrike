@@ -25,9 +25,9 @@
 ### 총기 클래스 구조
 <img src="https://user-images.githubusercontent.com/77636255/113281699-e1b67600-9320-11eb-960b-094108508016.PNG" width = "800">
 
-* WBase라는 모든 무기 클래스에서 칼, 총, 폭탄으로 파생되어 생성 Base에는 무기에 따른 캐릭터 스피드, 무기 사정거리 등 존재
+* **WBase**라는 모든 무기 클래스에서 칼, 총, 폭탄으로 파생되어 생성 Base에는 무기에 따른 캐**릭터 스피드, 무기 사정거리 등** 존재
 * 총기류는 라이플, 샷건, 권총, 스나이퍼, SMG로 파생되고, 소음기가 달린 무기는 추가로 상속 (M4A1, USP)
-* 폭탄류는 데미지를 주는 Grenade와 섬광효과를 주는 Flash로 파생 (현재 WSmoke 클래스는 없는 것으로 수정됨)
+* 폭탄류는 데미지를 주는 Grenade와 섬광효과를 주는 Flash로 파생 (현재 WSmoke 클래스 )
 
 ### 총기 연사 및 단발 구현
 ```C++
@@ -85,7 +85,6 @@ GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]() {
 }, GetAttackDelay(), false);
 ```
 
-* 
 * **bCanAutoFire** 라는 bool 변수를 이용해 마우스를 꾹 눌러도 공격이 나가도록 설정
 * 타이머가 애니메이션 실행 후 특정 DelayTime에 실행되므로 **애니메이션 길이 - 딜레이 값**을 다음 애니메이션 실행 타이머 시간에 넣어준다.
 * 클릭을 하지 않거나 bCanAutoFire가 false인 무기인 경우 StopFire 후 Idle로 이동 혹은 Idle로 이동
