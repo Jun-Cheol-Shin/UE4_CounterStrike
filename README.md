@@ -214,7 +214,8 @@ enum class EBoneHit : uint8
 	EB_GUTS = 3			UMETA(DisplayName = "GUTS_HIT"),
 };
 ```
-* 만약 FHitResult가 nullptr이 아닐 경우 Hit의 BoneName을 따라가 체크한다.
+* 캐릭터가 맞았다면 **Hit의 BoneName**을 ToString으로 String 비교 체크를 한다.
+* 맞은 부위를 알아낸 후 CS의 데미지 공식에 따라 데미지를 적용
 ```
 	if (HitBoneName.Equals(TEXT("Bip01-Head")))
 	{
