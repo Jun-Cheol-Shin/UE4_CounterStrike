@@ -267,3 +267,49 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113316751-a8dec700-9349-11eb-84c6-d55cd08bca8d.gif" width = "600">
 
 * 부채꼴 형태로 10개의 벡터를 생성해서 Trace를 실행
+* 배열의 처음과 끝에 중앙으로 시작하는 Line을 넣어 중앙선이 맨 처음 충돌하도록 구현
+* 중복히트를 방지하기 위해 for문으로 같은 액터인지 체크
+```C++
+	// 찌르기는 오른쪽에서 왼쪽... 일반 공격은 왼쪽에서 오른쪽...
+	for (int i = 9; i >= 0; --i)
+	{
+		GetWorld()->LineTraceSingleByChannel(Hit, Location, vec[i], ECollisionChannel::ECC_Visibility, CollisionParams);
+
+		if (Hit.GetActor())
+		{
+			if (HitPoint.Num() > 0)
+			{
+				bool flag = false;
+				for (int j = 0; j < HitPoint.Num(); ++j)
+				{
+					if (HitPoint[j].GetActor() == Hit.GetActor())
+					{
+						flag = true;
+						if (flag)
+						{
+							break;
+						}
+					}
+				}
+				if (!flag)
+				{
+					HitPoint.Add(Hit);
+				}
+			}
+
+			else
+			{
+				HitPoint.Add(Hit);
+			}
+		}
+
+		//DrawDebugLine(GetWorld(), Location, vec[i], FColor::Red, false, 4.f, 0, 1.f);
+	}
+
+	if (HitPoint.Num() > 0)
+	{
+		// 만약 공격에 성공했다면 찌르는 애니메이션으로 재생시킨다.
+		Player->FPSmesh[uint8(Player->GetFPSCharacterStatComponent()->GetCurrentWeaponNumber()) - 1]->PlayAnimation(ActionHitAnim, false);
+	}
+```
+* 
