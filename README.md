@@ -197,3 +197,6 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 * 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)
 * 총알 쐈던 **반대 방향**으로 Trace를 실행시킨다. 만약 맞았다면 관통에 성공했으므로 데칼을 생성한다.
 * 데칼을 생성한 지점에서 다시 Trace를 실행시킨다. (**파란 선**)
+___
+
+### 히트박스 및 데미지 구현
