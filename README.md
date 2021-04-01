@@ -266,6 +266,25 @@ ___
 ### 근접 공격 구현
 <img src="https://user-images.githubusercontent.com/77636255/113316751-a8dec700-9349-11eb-84c6-d55cd08bca8d.gif" width = "600">
 
+* Anim Notify를 이용해 애니메이션 특정 구간에서 함수를 실행
+```c++
+void UKnifeCheckAttackAnimNotify::Notify(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation)
+{
+	Super::Notify(MeshComp, Animation);
+
+	player = Cast<AFPSCharacter>(MeshComp->GetOwner());
+
+	if (player)
+	{
+		Knife = Cast<AWKnife>(player->GetFPSCharacterStatComponent()->GetCurrentWeapon());
+
+		if (Knife)
+		{
+			Knife->CheckAttack();
+		}
+	}
+}
+```
 * 부채꼴 형태로 10개의 벡터를 생성해서 Trace를 실행
 * 배열의 처음과 끝에 중앙으로 시작하는 Line을 넣어 중앙선이 맨 처음 충돌하도록 구현
 * 중복히트를 방지하기 위해 for문으로 같은 액터인지 체크
