@@ -215,7 +215,6 @@ enum class EBoneHit : uint8
 };
 ```
 * 캐릭터가 맞았다면 **Hit의 BoneName**을 ToString으로 String 비교 체크를 한다.
-* 맞은 부위를 알아낸 후 CS의 데미지 공식에 따라 데미지를 적용
 ```
 	if (HitBoneName.Equals(TEXT("Bip01-Head")))
 	{
@@ -239,5 +238,23 @@ enum class EBoneHit : uint8
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Leg or Arm Shot!"));
 		return EBoneHit::EB_LEG;
+	}
+```
+* 맞은 부위를 알아낸 후 CS의 데미지 공식에 따라 데미지를 적용
+```
+	switch (HitType)
+	{
+		case EBoneHit::EB_HEAD:
+			CurrentHP -= FMath::RoundToInt(Damage * Penetration * 4.f);
+			//UE_LOG(LogTemp, Warning, TEXT("%d"), FMath::RoundToInt(Damage * Penetration * 4.f));
+			break;
+		case EBoneHit::EB_LEG:
+			CurrentHP -= FMath::RoundToInt(Damage * Penetration * 0.75f);
+			//UE_LOG(LogTemp, Warning, TEXT("%d"), FMath::RoundToInt(Damage * Penetration * 0.75f));
+			break;
+		default:
+			CurrentHP -= FMath::RoundToInt(Damage * Penetration);
+			//UE_LOG(LogTemp, Warning, TEXT("%d"), FMath::RoundToInt(Damage * Penetration));
+			break;
 	}
 ```
