@@ -358,3 +358,7 @@ PenetrationResult = CheckWall(Hit, -Hit.GetActor()->GetActorUpVector() * 1000.f,
 			FMath::RandRange(PenetrationResult.ImpactPoint.Y - 50.f, PenetrationResult.ImpactPoint.Y + 50.f), PenetrationResult.ImpactPoint.Z);
 	}
 ```
+___
+
+### RPC을 이용한 이펙트 표현
+
