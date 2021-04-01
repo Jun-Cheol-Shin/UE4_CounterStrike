@@ -97,52 +97,52 @@ ___
 :-------------------------:|:-------------------------:
 
 ```c++
-switch (ShotCount)
-{
-case 0:
-	Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
-	break;
-case 1:
-case 2:
-case 3:
-	RandomRecoil = FMath::RandRange(0.8f, 1.15f);
-	Rotation.Pitch += RandomRecoil;
-	RandomRecoil += RecoilWeight;
-	Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
-	break;
-
-default:
-	if (RandomRecoil < RealHitImpactLimit)
+	switch (ShotCount)
 	{
+	case 0:
+		Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
+		break;
+	case 1:
+	case 2:
+	case 3:
+		RandomRecoil = FMath::RandRange(0.8f, 1.15f);
+		Rotation.Pitch += RandomRecoil;
 		RandomRecoil += RecoilWeight;
-		RecoilWeight += .1f;
+		Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
+		break;
 
-		if (RandomRecoil > RealHitImpactLimit)
+	default:
+		if (RandomRecoil < RealHitImpactLimit)
 		{
-			RandomRecoil = RealHitImpactLimit;
+			RandomRecoil += RecoilWeight;
+			RecoilWeight += .1f;
+
+			if (RandomRecoil > RealHitImpactLimit)
+			{
+				RandomRecoil = RealHitImpactLimit;
+			}
+
+			Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
 		}
 
-		Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
+
+		if (Player->IsCrouchHeld)
+		{
+			Rotation.Pitch += RandomRecoil * 0.6f;
+		}
+
+		else
+		{
+			Rotation.Pitch += RandomRecoil;
+		}
+
+		break;
 	}
 
-
-	if (Player->IsCrouchHeld)
+	if (ShotCount > 1)
 	{
-		Rotation.Pitch += RandomRecoil * 0.6f;
+		float a = RandomHorizontalDirection();
+		Rotation.Yaw += a;
+		Player->AddControllerYawInput(a * 0.15f);
 	}
-
-	else
-	{
-		Rotation.Pitch += RandomRecoil;
-	}
-
-	break;
-}
-
-if (ShotCount > 1)
-{
-	float a = RandomHorizontalDirection();
-	Rotation.Yaw += a;
-	Player->AddControllerYawInput(a * 0.15f);
-}
 ```
