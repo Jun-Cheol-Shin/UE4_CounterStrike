@@ -23,4 +23,4 @@
 * [기타 UI 및 애니메이션](#기타-UI-및-애니메이션)
 
 ### 1. 총기 클래스 구조
-<img src="https://user-images.githubusercontent.com/77636255/113281699-e1b67600-9320-11eb-960b-094108508016.PNG" width = "450">
+<img src="https://user-images.githubusercontent.com/77636255/113281699-e1b67600-9320-11eb-960b-094108508016.PNG" width = "800">
