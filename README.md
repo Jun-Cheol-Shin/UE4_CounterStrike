@@ -200,3 +200,5 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 ___
 
 ### 히트박스 및 데미지 구현
+<img src="https://user-images.githubusercontent.com/77636255/113302663-47176080-933b-11eb-98da-15dc0d6a6c46.PNG" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113302630-3d8df880-933b-11eb-809c-d808e9024cee.PNG" width = "450">
+:-------------------------:|:-------------------------:
