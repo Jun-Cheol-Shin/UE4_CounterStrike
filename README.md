@@ -214,3 +214,29 @@ enum class EBoneHit : uint8
 	EB_GUTS = 3			UMETA(DisplayName = "GUTS_HIT"),
 };
 ```
+* 만약 FHitResult가 nullptr이 아닐 경우 Hit의 BoneName을 따라가 체크한다.
+```
+	if (HitBoneName.Equals(TEXT("Bip01-Head")))
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,TEXT("Head Shot!"));
+		return EBoneHit::EB_HEAD;
+	}
+
+	else if (HitBoneName.Equals(TEXT("Bip01-Spine1")))
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Shot!"));
+		return EBoneHit::EB_NONE;
+	}
+
+	else if (HitBoneName.Equals(TEXT("Bip01-Pelvis")))
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Guts Shot!"));
+		return EBoneHit::EB_GUTS;
+	}
+
+	else
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Leg or Arm Shot!"));
+		return EBoneHit::EB_LEG;
+	}
+```
