@@ -340,3 +340,4 @@ void UKnifeCheckAttackAnimNotify::Notify(USkeletalMeshComponent * MeshComp, UAni
 ___
 
 ### 데칼 표현
+<img src="https://user-images.githubusercontent.com/77636255/113320590-a0888b00-934d-11eb-96dd-96e01d14b567.gif" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/113320629-aaaa8980-934d-11eb-9cbe-a1d53570b388.gif" width = "500">
