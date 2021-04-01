@@ -95,3 +95,54 @@ ___
 ### 스프레이 패턴 구현
 <img src="https://user-images.githubusercontent.com/77636255/113293428-b471c400-9330-11eb-8ec3-926d43a51118.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113296331-4cbd7800-9334-11eb-87a6-05cbf7f44aef.gif" width = "450">
 :-------------------------:|:-------------------------:
+
+```c++
+switch (ShotCount)
+{
+case 0:
+	Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
+	break;
+case 1:
+case 2:
+case 3:
+	RandomRecoil = FMath::RandRange(0.8f, 1.15f);
+	Rotation.Pitch += RandomRecoil;
+	RandomRecoil += RecoilWeight;
+	Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
+	break;
+
+default:
+	if (RandomRecoil < RealHitImpactLimit)
+	{
+		RandomRecoil += RecoilWeight;
+		RecoilWeight += .1f;
+
+		if (RandomRecoil > RealHitImpactLimit)
+		{
+			RandomRecoil = RealHitImpactLimit;
+		}
+
+		Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
+	}
+
+
+	if (Player->IsCrouchHeld)
+	{
+		Rotation.Pitch += RandomRecoil * 0.6f;
+	}
+
+	else
+	{
+		Rotation.Pitch += RandomRecoil;
+	}
+
+	break;
+}
+
+if (ShotCount > 1)
+{
+	float a = RandomHorizontalDirection();
+	Rotation.Yaw += a;
+	Player->AddControllerYawInput(a * 0.15f);
+}
+```
