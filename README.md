@@ -333,5 +333,6 @@ void UKnifeCheckAttackAnimNotify::Notify(USkeletalMeshComponent * MeshComp, UAni
 		Player->FPSmesh[uint8(Player->GetFPSCharacterStatComponent()->GetCurrentWeaponNumber()) - 1]->PlayAnimation(ActionHitAnim, false);
 	}
 ```
+___
 
-### 
+### 데칼 표현
