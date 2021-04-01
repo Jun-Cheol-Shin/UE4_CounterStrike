@@ -203,7 +203,7 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113302987-952c6400-933b-11eb-8ea1-d4e0e4d66337.PNG" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/113303023-9e1d3580-933b-11eb-8b2d-724164e5ec53.PNG" width = "500">
 :-------------------------:|:-------------------------:
 
-* enum을 이용하여 총 4부위를 지정했다. (몸통, 머리, 하체, 중요부분)
+* enum을 이용하여 총 4부위를 지정했다. (몸통, 머리, 하체, 급소)
 ```c++
 UENUM(BlueprintType)
 enum class EBoneHit : uint8
