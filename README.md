@@ -24,3 +24,4 @@
 
 ### a. 총기 클래스 구조
 <img src="https://user-images.githubusercontent.com/77636255/113281699-e1b67600-9320-11eb-960b-094108508016.PNG" width = "800">
++ WBase라는 모든 무기 클래스에서 칼, 총, 폭탄으로 파생되어 생성 Base에는 무기에 따른 캐릭터 스피드, 
