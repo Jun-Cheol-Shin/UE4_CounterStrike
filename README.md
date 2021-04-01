@@ -184,3 +184,4 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 	return false;
 }
 ```
+
