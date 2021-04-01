@@ -346,18 +346,15 @@ ___
 * 총에 맞은 액터를 기점으로 총알이 날라온 방향으로 CheckWall 함수를 발동
 * CheckWall 함수는 FHitResult, FVector, bool을 받아 Trace를 실행시켜 FHitResult를 반환한다.
 ```
-	FHitResult PenetrationResult = CheckWall(Hit, (End - Location).GetSafeNormal() * 200.f, true);
+FHitResult PenetrationResult = CheckWall(Hit, (End - Location).GetSafeNormal() * 200.f, true);
 ```
 
 * Result값이 없는 경우 다시 한 번 바닥 방향으로 CheckWall을 실행 바닥이 있는 경우 바닥에 랜덤값으로 데칼 호출
 ```
-	PenetrationResult = CheckWall(Hit, -Hit.GetActor()->GetActorUpVector() * 1000.f, true);
-		if (PenetrationResult.GetActor())
-		{
-			FVector Vec = FVector(FMath::RandRange(PenetrationResult.ImpactPoint.X - 50.f, PenetrationResult.ImpactPoint.X + 50.f),
-				FMath::RandRange(PenetrationResult.ImpactPoint.Y - 50.f, PenetrationResult.ImpactPoint.Y + 50.f), PenetrationResult.ImpactPoint.Z);
-
-			Player->SyncClientSpawnDecal(GetActorPool()->GetBloodDecal(), Vec + (End - Location).GetSafeNormal() * 100.f,
-				PenetrationResult.ImpactNormal.Rotation());
-		}
+PenetrationResult = CheckWall(Hit, -Hit.GetActor()->GetActorUpVector() * 1000.f, true);
+	if (PenetrationResult.GetActor())
+	{
+		FVector Vec = FVector(FMath::RandRange(PenetrationResult.ImpactPoint.X - 50.f, PenetrationResult.ImpactPoint.X + 50.f),
+			FMath::RandRange(PenetrationResult.ImpactPoint.Y - 50.f, PenetrationResult.ImpactPoint.Y + 50.f), PenetrationResult.ImpactPoint.Z);
+	}
 ```
