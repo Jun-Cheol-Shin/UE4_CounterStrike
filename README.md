@@ -147,6 +147,7 @@ ___
 	}
 ```
 * 총을 쏠 때마다 ShotCount가 하나씩 추가되며 ShotCount의 숫자에 따라 switch문을 따라간다.
-* Pitch값이 정해진 RealHitImpactLimit값을 초과 할 수 없으며 초과한 경우 Pitch값은 더 이상 올라가지 않으며 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬.
+* Pitch값이 정해진 RealHitImpactLimit값을 초과 할 수 없으며 초과한 경우 Pitch값은 더 이상 올라가지 않음
+* Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬
 * 각 총기 클래스마다 ShotCount에 따라 Yaw값의 이동 방향을 다르게 하였다.
 ___
