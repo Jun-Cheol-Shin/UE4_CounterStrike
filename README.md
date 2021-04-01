@@ -282,6 +282,7 @@ ___
 				bool flag = false;
 				for (int j = 0; j < HitPoint.Num(); ++j)
 				{
+					// 다단히트 방지를 위해 액터 체크
 					if (HitPoint[j].GetActor() == Hit.GetActor())
 					{
 						flag = true;
@@ -291,6 +292,7 @@ ___
 						}
 					}
 				}
+				// 처음 충돌한 액터라면 배열에 삽입
 				if (!flag)
 				{
 					HitPoint.Add(Hit);
