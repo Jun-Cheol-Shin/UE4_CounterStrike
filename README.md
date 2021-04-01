@@ -154,3 +154,33 @@ ___
 ### 월 샷 구현
 <img src="https://user-images.githubusercontent.com/77636255/113298891-4381da80-9337-11eb-877f-89cf31e546ba.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113298950-51cff680-9337-11eb-9041-a109eecea6c2.gif" width = "450">
 :-------------------------:|:-------------------------:
+
+```c++
+bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
+{
+	// 총알이 물체 맞았다면 실행...
+
+	// 물체의 크기가 정해진 두께보다 얇다면...
+	float thickness = Point.GetActor()->GetActorScale3D().Size2D() * 150.f;
+	FHitResult FinalHit;
+	FVector Start = Point.ImpactPoint + Direction * thickness;
+
+	bool bSuccess = false;
+
+	bSuccess = GetWorld()->LineTraceSingleByChannel(FinalHit,
+		Start, Start - Direction * thickness,
+		ECollisionChannel::ECC_Visibility, FCollisionQueryParams());
+
+	// 관통 성공.. 동시에 물체의 반대편에 데칼 생성
+	if (bSuccess)
+	{
+		if (FinalHit.GetActor() && !FinalHit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+		{
+			SpawnDecal(FinalHit, EDecalPoolList::EDP_BULLETHOLE);
+			return true;
+		}
+	}
+
+	return false;
+}
+```
