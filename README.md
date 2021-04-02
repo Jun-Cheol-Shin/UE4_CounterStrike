@@ -289,7 +289,7 @@ void UKnifeCheckAttackAnimNotify::Notify(USkeletalMeshComponent * MeshComp, UAni
 }
 ```
 * 부채꼴 형태로 10개의 벡터를 생성해서 Trace를 실행
-* 공격 방향에 따라 for문이 0 혹은 9로 
+* 공격 방향에 따라 for문이 0 혹은 9부터 시작한다.
 * 배열의 처음과 끝에 중앙으로 시작하는 Line을 넣어 중앙선이 맨 처음 충돌하도록 구현
 * 중복히트를 방지하기 위해 for문으로 같은 액터인지 체크
 ```C++
