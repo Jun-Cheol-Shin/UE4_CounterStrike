@@ -509,3 +509,15 @@ ___
 		}
 	}
 ```
+
+* 보정값을 전부 계산한 벡터를 **SetRenderTranslation** 함수를 이용하여 이미지를 이동시키도록 함
+```
+	Top->SetRenderTranslation(FMath::Vector2DInterpTo(Top->RenderTransform.Translation,
+		TopVec, DeltaTime, 200.f));
+	Bottom->SetRenderTranslation(FMath::Vector2DInterpTo(Bottom->RenderTransform.Translation,
+		BottomVec, DeltaTime, 200.f));
+	Left->SetRenderTranslation(FMath::Vector2DInterpTo(Left->RenderTransform.Translation,
+		LeftVec, DeltaTime, 200.f));
+	Right->SetRenderTranslation(FMath::Vector2DInterpTo(Right->RenderTransform.Translation,
+		RightVec, DeltaTime, 200.f));
+```
