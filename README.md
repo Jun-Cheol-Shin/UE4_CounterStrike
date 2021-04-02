@@ -34,9 +34,10 @@ ___
 ___
 
 ### 총기 연사 및 단발 구현
-* **bCanAutoFire** 라는 bool 변수를 이용해 마우스를 꾹 눌러도 공격이 나가도록 설정
+* **bCanAutoFire** bool 변수를 이용하여 연사 무기와 단발 무기를 분류
+* 타이머를 이용해 클릭을 유지 했을 경우 계속 공격이 나가도록 구현
 * 타이머가 애니메이션 실행 후 특정 DelayTime에 실행되므로 **애니메이션 길이 - 딜레이 값**을 다음 애니메이션 실행 타이머 시간에 넣어준다.
-* 클릭을 하지 않거나 bCanAutoFire가 false인 무기인 경우 StopFire 후 Idle로 이동 혹은 Idle로 이동
+* 클릭을 하지 않거나 단발 무기인 경우 StopFire 후 Idle로 이동 혹은 Idle로 이동
 ```C++
 GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]() {
 	// 타이머 초기화
