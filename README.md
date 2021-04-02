@@ -481,3 +481,31 @@ ___
 
 <img src="https://user-images.githubusercontent.com/77636255/113447185-53331900-9434-11eb-8d09-45701fbbf8e6.gif" width = "500">  움직임 보정| <img src="https://user-images.githubusercontent.com/77636255/113447207-5c23ea80-9434-11eb-988b-d793165640ea.gif" width = "500">  사격 보정
 :-------------------------:|:-------------------------:
+
+* 움직임 보정은 캐릭터의 CharacterMovement 컴포넌트의 Velocity값을 참조하여 보정
+```
+	if (bUseMoveDynamic)
+	{
+		TopVec = FVector2D(0, -Player->GetMovementComponent()->Velocity.Size() * 0.1f);
+		BottomVec = FVector2D(0, Player->GetMovementComponent()->Velocity.Size() * 0.1f);
+		RightVec = FVector2D(Player->GetMovementComponent()->Velocity.Size() * 0.1f, 0);
+		LeftVec = FVector2D(-Player->GetMovementComponent()->Velocity.Size() * 0.1f, 0);
+	}
+```
+
+* 사격 보정은 캐릭터의 현재 무기의 ShotCount를 참조하여 보정 (**StopFire 시 ShotCount가 초기화**) 
+```
+	if (bUseShootDynamic)
+	{
+		if (Player->GetFPSCharacterStatComponent())
+		{
+			if (Player->GetFPSCharacterStatComponent()->GetCurrentGunWeapon())
+			{
+				TopVec += FVector2D(0, -Player->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->GetShotCount() * 2);
+				BottomVec += FVector2D(0, Player->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->GetShotCount() * 2);
+				RightVec += FVector2D(Player->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->GetShotCount() * 2, 0);
+				LeftVec += FVector2D(-Player->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->GetShotCount() * 2, 0);
+			}
+		}
+	}
+```
