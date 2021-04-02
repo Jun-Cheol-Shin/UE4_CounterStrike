@@ -521,3 +521,5 @@ ___
 	Right->SetRenderTranslation(FMath::Vector2DInterpTo(Right->RenderTransform.Translation,
 		RightVec, DeltaTime, 200.f));
 ```
+
+### 기타 UI 및 애니메이션
