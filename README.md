@@ -389,13 +389,12 @@ ___
 
 #### ⓑ 멀티캐스트를 이용한 데미지 함수 구현
 
-* 멀티캐스트로 함수를 호출 그리고 FConstPlayerControllerIterator를 이용해 PlayerController를 찾아낸다.
-* 피격된 클라이언트에게 피격 효과 및 체력 감소, 방어구 감소를 적용시킨다.
-
+* 멀티캐스트 함수를 호출 FConstPlayerControllerIterator를 이용하여 해당 플레이어를 찾아낸다
+* 피격된 클라이언트에게 피격 효과 및 체력 감소, 방어구 감소를 적용
+* 모든 플레이어에게 DamagedCharacter가 데미지를 입었다는 것을 알림
 ```
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Go Method!!!"));
 		if (AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Iterator->Get()->GetCharacter()))
 		{
 			if (DamagedCharacter == Character && DamagedCharacter->GetFPSUIWidget())
