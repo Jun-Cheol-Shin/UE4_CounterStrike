@@ -349,7 +349,7 @@ ___
 FHitResult PenetrationResult = CheckWall(Hit, (End - Location).GetSafeNormal() * 200.f, true);
 ```
 
-* Result값이 없는 경우 다시 한 번 바닥 방향으로 CheckWall을 실행 바닥이 있는 경우 바닥에 랜덤값으로 데칼 호출
+* Result값이 없는 경우 다시 한 번 바닥 방향으로 CheckWall을 실행 바닥이 있는 경우 바닥에 랜덤한 위치로 데칼 호출
 ```
 PenetrationResult = CheckWall(Hit, -Hit.GetActor()->GetActorUpVector() * 1000.f, true);
 	if (PenetrationResult.GetActor())
