@@ -448,4 +448,16 @@ ___
 	Left->SetColorAndOpacity(color);
 	Right->SetColorAndOpacity(color);
 ```
+* 사이즈를 늘릴 때 5가지 컴포넌트를 가지고 있는 부모 Overlay의 사이즈도 같이 늘려준다.
+```
+	// 사이즈 늘리기 함수
+	vector.X = 6.f + Size;
+	vector.Y = 6.f + Size;
+	// Top, Bottom, Left, Right, Dot 이미지 컴포넌트를 자식으로 갖고 있는 부모 CanvasSlot의 사이즈도 같이 늘려준다.
+	CanvasSlot->SetSize(vector);
 
+	Top->Brush.ImageSize.Y = 3.f + Size * 0.5f;
+	Bottom->Brush.ImageSize.Y = 3.f + Size * 0.5f;
+	Left->Brush.ImageSize.X = 3.f + Size * 0.5f;
+	Right->Brush.ImageSize.X = 3.f + Size * 0.5f;
+```
