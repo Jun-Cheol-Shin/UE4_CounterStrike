@@ -438,6 +438,7 @@ ___
 	// 색깔 지정 함수
 	FLinearColor color;
 
+	// 사용자가 정해주는 4개의 float값을 color에 넣어준다.
 	color.A = Color_A;
 	color.R = Color_R;
 	color.G = Color_G;
@@ -453,12 +454,23 @@ ___
 
 * 사이즈를 늘릴 때 5가지 컴포넌트를 가지고 있는 부모 Overlay의 사이즈도 같이 늘려준다.
 ```
+	if (!CanvasSlot)
+	{
+		CanvasSlot = Cast< UCanvasPanelSlot >(Crosshair->Slot);
+	}
+
+	FVector2D vector;
+
 	// 사이즈 늘리기 함수
+	
+	// Size 변수는 사용자가 옵션에서 정하는 값
 	vector.X = 6.f + Size;
 	vector.Y = 6.f + Size;
+	
 	// Top, Bottom, Left, Right, Dot 이미지 컴포넌트를 자식으로 갖고 있는 부모 CanvasSlot의 사이즈도 같이 늘려준다.
 	CanvasSlot->SetSize(vector);
 
+	// 적절히 늘려준다.
 	Top->Brush.ImageSize.Y = 3.f + Size * 0.5f;
 	Bottom->Brush.ImageSize.Y = 3.f + Size * 0.5f;
 	Left->Brush.ImageSize.X = 3.f + Size * 0.5f;
