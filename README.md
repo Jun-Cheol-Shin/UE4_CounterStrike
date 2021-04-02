@@ -365,3 +365,22 @@ ___
 
 <img src="https://user-images.githubusercontent.com/77636255/113413058-be5cfb00-93f4-11eb-9601-2f824e7c677a.gif" width = "500"> 1인칭 시점| <img src="https://user-images.githubusercontent.com/77636255/113413085-cd43ad80-93f4-11eb-86fc-c34f4bcf8fba.gif" width = "500"> 상대방 시점
 :-------------------------:|:-------------------------:
+
+* IsLocallyControlled() 함수를 이용해 자신의 클라이언트에서는 1인칭 메쉬에서만 호출 되도록하며, 다른 플레이어가 보는 자신의 액터에서는 3인칭 메쉬에서 호출하도록 함.
+```
+	if (!IsLocallyControlled())
+	{
+		AStaticMeshActor* Shell = nullptr;
+		Shell = GetWorld()->SpawnActor<AStaticMeshActor>(ShellBlueprint);
+
+		if (Shell)
+		{
+			Shell->SetActorLocation(MeshComp->GetSocketLocation(TEXT("Shell")));
+			Shell->GetStaticMeshComponent()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+			Shell->GetStaticMeshComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+			Shell->GetStaticMeshComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
+			Shell->SetActorHiddenInGame(false);
+			Shell->GetStaticMeshComponent()->AddImpulse(Impulse);
+		}
+	}
+```
