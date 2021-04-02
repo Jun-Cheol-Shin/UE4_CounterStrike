@@ -290,7 +290,7 @@ void UKnifeCheckAttackAnimNotify::Notify(USkeletalMeshComponent * MeshComp, UAni
 ```
 * 부채꼴 형태로 10개의 벡터를 생성해서 Trace를 실행
 * 공격 방향에 따라 for문이 0 혹은 9부터 시작한다.
-* 배열의 처음과 끝에 중앙으로 시작하는 Line을 넣어 중앙선이 맨 처음 충돌하도록 구현
+* 배열의 처음과 끝에 중앙으로 시작하는 Line을 넣어 **중앙선이 맨 처음 충돌**하도록 구현
 * 중복히트를 방지하기 위해 for문으로 같은 액터인지 체크
 ```C++
 	// 찌르기는 오른쪽에서 왼쪽... 일반 공격은 왼쪽에서 오른쪽...
@@ -349,7 +349,7 @@ ___
 FHitResult PenetrationResult = CheckWall(Hit, (End - Location).GetSafeNormal() * 200.f, true);
 ```
 
-* Result값이 없는 경우 다시 한 번 바닥 방향으로 CheckWall을 실행 바닥이 있는 경우 바닥에 랜덤한 위치로 데칼 호출
+* Result값이 없는 경우 다시 한 번 **바닥 방향으로 CheckWall을 실행** 바닥이 있는 경우 바닥에 랜덤한 위치로 데칼 호출
 ```
 PenetrationResult = CheckWall(Hit, -Hit.GetActor()->GetActorUpVector() * 1000.f, true);
 	if (PenetrationResult.GetActor())
@@ -366,7 +366,7 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113413058-be5cfb00-93f4-11eb-9601-2f824e7c677a.gif" width = "500"> 1인칭 시점| <img src="https://user-images.githubusercontent.com/77636255/113413085-cd43ad80-93f4-11eb-86fc-c34f4bcf8fba.gif" width = "500"> 상대방 시점
 :-------------------------:|:-------------------------:
 
-* IsLocallyControlled() 함수를 이용해 자신의 클라이언트에서는 1인칭 메쉬에서만 호출 되도록하며, 다른 플레이어가 보는 자신의 액터에서는 3인칭 메쉬에서 호출하도록 함.
+* **IsLocallyControlled()** 함수를 이용해 자신의 클라이언트에서는 1인칭 메쉬에서만 호출 되도록하며, 다른 플레이어가 보는 자신의 액터에서는 3인칭 메쉬에서 호출하도록 함.
 * 정해진 소켓 위치에서 스폰 되도록 함. (1인칭 3인칭 메쉬마다 소켓이 따로 존재)
 ```
 	if (!IsLocallyControlled())
