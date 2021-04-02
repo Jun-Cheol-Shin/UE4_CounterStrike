@@ -425,3 +425,5 @@ ___
 
 ### 크로스헤어 구현
 
+* 순서대로 민감도, 색상 RGB값, 크기, 가운데 공간, 두께를 지정할 수 있다.
+<img src="https://user-images.githubusercontent.com/77636255/113444898-bb333080-942f-11eb-829f-21c25dffc24a.PNG">
