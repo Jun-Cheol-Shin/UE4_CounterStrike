@@ -493,7 +493,7 @@ ___
 	}
 ```
 
-* 사격 보정은 캐릭터의 현재 무기의 ShotCount를 참조하여 보정 (**StopFire 시 ShotCount가 초기화**) 
+* 사격 보정은 캐릭터의 현재 무기를 쏠 때마다 증가하는 ShotCount 변수를 참조하여 보정 (**StopFire 시 ShotCount가 초기화**) 
 ```
 	if (bUseShootDynamic)
 	{
