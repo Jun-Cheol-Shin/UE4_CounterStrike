@@ -388,3 +388,36 @@ ___
 ```
 
 #### ⓑ 멀티캐스트를 이용한 데미지 함수 구현
+
+* 멀티캐스트로 함수를 호출 그리고 FConstPlayerControllerIterator를 이용해 PlayerController를 찾아낸다.
+* 피격된 클라이언트에게 피격 효과 및 체력 감소, 방어구 감소를 적용시킨다.
+
+```
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Go Method!!!"));
+		if (AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Iterator->Get()->GetCharacter()))
+		{
+			if (DamagedCharacter == Character && DamagedCharacter->GetFPSUIWidget())
+			{
+				DamagedCharacter->GetFPSUIWidget()->SetDamageUI(DirectionType);
+				DamagedCharacter->GetFPSCharacterStatComponent()->SetHP(HP);
+				DamagedCharacter->GetFPSCharacterStatComponent()->SetKevlar(Kevlar);
+				DamagedCharacter->GetFPSUIWidget()->SetArmorAndHealth(DamagedCharacter);
+
+				if (HP <= 0)
+				{
+					DamagedCharacter->SyncClientDeath(DamagedCharacter, Direction, HitType, Causer);
+					DamagedCharacter->SyncClientRevive(DamagedCharacter, ReviveTime);
+
+					AFPSCharacter* CauserFPS = Cast<AFPSCharacter>(Causer);
+					if (CauserFPS)
+					{
+						CauserFPS->GetFPSCharacterStatComponent()->SetKillCount();
+						DamagedCharacter->DoSomethingOnServer(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
+					}
+				}
+			}
+		}
+	}
+```
