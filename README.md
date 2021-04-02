@@ -476,3 +476,7 @@ ___
 	Left->Brush.ImageSize.X = 3.f + Size * 0.5f;
 	Right->Brush.ImageSize.X = 3.f + Size * 0.5f;
 ```
+
+* 또한 움직임 보정, 사격 보정 옵션을 추가
+<img src="https://user-images.githubusercontent.com/77636255/113447185-53331900-9434-11eb-8d09-45701fbbf8e6.gif" width = "450"> 움직임 보정| <img src="https://user-images.githubusercontent.com/77636255/113447207-5c23ea80-9434-11eb-988b-d793165640ea.gif" width = "450" 사>
+:-------------------------:|:-------------------------:
