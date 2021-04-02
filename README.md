@@ -361,7 +361,7 @@ PenetrationResult = CheckWall(Hit, -Hit.GetActor()->GetActorUpVector() * 1000.f,
 ___
 
 ### RPC 함수
-#### 서버로 보내는 함수를 호출 한 뒤, 멀티캐스트 함수(모든 클라이언트 전송)를 서버에서 실행
+#### 서버로 보내는 함수를 호출 한 뒤, 멀티캐스트 함수(모든 클라이언트 전송)를 서버로 보내는 함수에서 실행
 * 이펙트 및 스태틱 액터 호출
 
 <img src="https://user-images.githubusercontent.com/77636255/113413058-be5cfb00-93f4-11eb-9601-2f824e7c677a.gif" width = "500"> 1인칭 시점| <img src="https://user-images.githubusercontent.com/77636255/113413085-cd43ad80-93f4-11eb-86fc-c34f4bcf8fba.gif" width = "500"> 상대방 시점
