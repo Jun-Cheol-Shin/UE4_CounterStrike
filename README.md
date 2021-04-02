@@ -433,3 +433,19 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113445182-5af0be80-9430-11eb-8722-98c6e181f3f0.PNG" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/113445209-68a64400-9430-11eb-9237-2524614ae281.PNG" width = "500">
 :-------------------------:|:-------------------------:
 
+* 크로스헤어는 Top,Bottom,Left,Right,Dot Image 컴포넌트로 이루어져 있다
+```
+	// 색깔 지정 함수
+	FLinearColor color;
+
+	color.A = Color_A;
+	color.R = Color_R;
+	color.G = Color_G;
+	color.B = Color_B;
+
+	Top->SetColorAndOpacity(color);
+	Bottom->SetColorAndOpacity(color);
+	Left->SetColorAndOpacity(color);
+	Right->SetColorAndOpacity(color);
+```
+
