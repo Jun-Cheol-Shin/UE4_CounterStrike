@@ -448,6 +448,9 @@ ___
 	Left->SetColorAndOpacity(color);
 	Right->SetColorAndOpacity(color);
 ```
+* 크로스 헤어 UI 컴포넌트 구성 (Overlay 컴포넌트가 5개의 Image 컴포넌트를 갖고 있음)
+<img src="https://user-images.githubusercontent.com/77636255/113446987-f2a3dc00-9433-11eb-8518-99aab1a36efa.PNG">
+
 * 사이즈를 늘릴 때 5가지 컴포넌트를 가지고 있는 부모 Overlay의 사이즈도 같이 늘려준다.
 ```
 	// 사이즈 늘리기 함수
