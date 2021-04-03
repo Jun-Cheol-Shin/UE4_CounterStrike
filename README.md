@@ -579,18 +579,7 @@ ___
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/77636255/113488965-51cd2380-94fc-11eb-9ba1-dfccb8d55233.gif"  width="500"> 공격 | <img src="https://user-images.githubusercontent.com/77636255/113488985-6c9f9800-94fc-11eb-8092-61c1438c3c41.gif"  width="500"> 무기 교체
 
-* 애니메이션에 필요한 모든 변수를 Replicated 시킨다. 헤더에서 변수 프로퍼티를 Replicated로 지정..
-```
-	UPROPERTY(Replicated)
-		bool IsWalkHeld = false;
-	UPROPERTY(Replicated)
-		bool IsCrouchHeld = false;
-
-	UPROPERTY(Replicated)
-		bool bIsReloading = false;
-```
-
-* GetLifetimeReplicatedProps 함수를 이용하여 변수 복제
+* 변수 리플렉션을 Replicated로 지정 후 GetLifetimeReplicatedProps 함수를 이용하여 변수 복제
 ```	
 void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -609,22 +598,6 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(AFPSCharacter, CurrentAnimationWeaponNumber);
 	DOREPLIFETIME(AFPSCharacter, DelayTime);
 }
-```
-
-* ACharacter 클래스의 BeginPlay에서 Character의 AnimInstance를 가져온다.
-```
-	Instance = GetMesh()->GetAnimInstance();
-
-	if (Instance)
-	{
-		animInstance = Cast<UFPSCharacterAnimInstance>(Instance);
-
-		if (animInstance)
-		{
-			animInstance->GetPlayer(this);
-			//UE_LOG(LogTemp, Warning, TEXT("Get Player!"));
-		}
-	}
 ```
 
 * AnimInstance의 NativeUpdateAnimation 함수를 이용해 ACharacter의 변수를 사용하여 애니메이션을 적용
