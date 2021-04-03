@@ -523,8 +523,8 @@ ___
 
 ### 기타 UI 및 애니메이션
 
-* 타격 방향에 따라 피격 UI 
+* 타격 방향에 따라 피격 UI
 <img src="https://user-images.githubusercontent.com/77636255/113484777-14a96700-94e5-11eb-95c3-cd1f3440f676.gif" width = "500"> 정면 피격| <img src="https://user-images.githubusercontent.com/77636255/113484783-1d01a200-94e5-11eb-80d4-f2ca9dcb9816.gif" width = "500"> 후면 피격
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/77636255/113484790-2559dd00-94e5-11eb-9ca5-b14a66323a44.gif" width = "500"> 측면 피격(왼쪽)| <img src="https://user-images.githubusercontent.com/77636255/113484799-2ee34500-94e5-11eb-9888-b5648b6a14be.gif" width = "500"> 측면 피격(오른쪽)
-:-------------------------:|:-------------------------:
+
