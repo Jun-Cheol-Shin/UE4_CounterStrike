@@ -529,3 +529,44 @@ ___
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/77636255/113484777-14a96700-94e5-11eb-95c3-cd1f3440f676.gif"  width="500"> 측면(왼쪽) | <img src="https://user-images.githubusercontent.com/77636255/113484783-1d01a200-94e5-11eb-80d4-f2ca9dcb9816.gif"  width="500"> 측면(오른쪽)
 
+* 내적으로 정면과 후면을 측정, 외적으로 측면(왼,오)을 알아낸다.
+* 매개변수로 총을 맞은 상대 액터의 ForwardVector와 총알의 방향을 준다.
+```c++
+	// 상대의 앞벡터와 총알의 방향 벡터를 내적 계산
+	float DeathValue = FVector::DotProduct(Direction, DamagedActor->GetActorForwardVector());
+
+	// 0.7보다 작거나, -0.7보다 작으면 왼쪽, 오른쪽으로 UI를 표시해야 하기 때문에 if문을 작성한다.
+	
+	// 양수일 경우 서로 평행이 되는 방향
+	if (DeathValue > 0.7f)
+	{
+		// back..
+		return EDamagedDirectionType::EDDT_BACK;
+	}
+
+	// 음수는 서로 교차가 되는 방향
+	else if (DeathValue < -0.7f)
+	{
+		//	front..
+		return EDamagedDirectionType::EDDT_FRONT;
+	}
+
+	// 그 외의 경우는 측면으로 결과값을 리턴한다.
+
+	// 측면은 외적으로 계산
+	FVector CrossVac = FVector::CrossProduct(DamagedActor->GetActorForwardVector(), -Direction);
+
+	// 외적의 오른손 법칙에 따라 양수면..
+	if (CrossVac.Z > 0)
+	{
+		return EDamagedDirectionType::EDDT_RIGHT;
+	}
+
+	// 음수면 왼쪽..
+	else
+	{
+		return EDamagedDirectionType::EDDT_LEFT;
+	}
+
+	return EDamagedDirectionType::EDDT_ALL;
+```
