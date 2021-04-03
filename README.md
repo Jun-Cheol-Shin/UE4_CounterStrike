@@ -574,3 +574,85 @@ ___
 ```
 
 #### 변수 Replicated 및 AnimInstance
+
+<img src="https://user-images.githubusercontent.com/77636255/113488942-395d0900-94fc-11eb-98ba-b575c6cd3079.gif"  width="500"> 앉기 | <img src="https://user-images.githubusercontent.com/77636255/113488950-437f0780-94fc-11eb-928d-de14a2418b5c.gif"  width="500"> 점프 |
+:-------------------------:|:-------------------------:
+<img src="https://user-images.githubusercontent.com/77636255/113488965-51cd2380-94fc-11eb-9ba1-dfccb8d55233.gif"  width="500"> 공격 | <img src="https://user-images.githubusercontent.com/77636255/113488985-6c9f9800-94fc-11eb-8092-61c1438c3c41.gif"  width="500"> 무기 교체
+
+* 애니메이션에 필요한 모든 변수를 Replicated 시킨다. 헤더에서 변수 프로퍼티를 Replicated로 지정..
+```
+	UPROPERTY(Replicated)
+		bool IsWalkHeld = false;
+	UPROPERTY(Replicated)
+		bool IsCrouchHeld = false;
+
+	UPROPERTY(Replicated)
+		bool bIsReloading = false;
+```
+
+* GetLifetimeReplicatedProps 함수를 이용하여 변수 복제
+```	
+void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	// float..
+	DOREPLIFETIME(AFPSCharacter, MoveForwardValue);
+	DOREPLIFETIME(AFPSCharacter, MoveRightValue);
+	DOREPLIFETIME(AFPSCharacter, AimOffsetPitch);
+	DOREPLIFETIME(AFPSCharacter, AimOffsetYaw);
+	DOREPLIFETIME(AFPSCharacter, IsWalkHeld);
+	DOREPLIFETIME(AFPSCharacter, IsCrouchHeld);
+	DOREPLIFETIME(AFPSCharacter, AttackAnimCall);
+	DOREPLIFETIME(AFPSCharacter, bIsReloading);
+	DOREPLIFETIME(AFPSCharacter, ReloadStartTime);
+	DOREPLIFETIME(AFPSCharacter, CurrentAnimationWeaponNumber);
+	DOREPLIFETIME(AFPSCharacter, DelayTime);
+}
+```
+
+* ACharacter 클래스의 BeginPlay에서 Character의 AnimInstance를 가져온다.
+```
+	Instance = GetMesh()->GetAnimInstance();
+
+	if (Instance)
+	{
+		animInstance = Cast<UFPSCharacterAnimInstance>(Instance);
+
+		if (animInstance)
+		{
+			animInstance->GetPlayer(this);
+			//UE_LOG(LogTemp, Warning, TEXT("Get Player!"));
+		}
+	}
+```
+
+* AnimInstance의 NativeUpdateAnimation 함수를 이용해 ACharacter의 변수를 사용하여 애니메이션을 적용
+```
+	if (MyChar)
+	{
+		bStartJump = MyChar->IsJumpHeld;
+		bCurrentFalling = MyChar->GetMovementComponent()->IsFalling();
+
+		bIsCrouching = MyChar->IsCrouchHeld;
+		bIsWalk = MyChar->IsWalkHeld;
+
+		fForwardVal = MyChar->MoveForwardValue;
+		fRightVal = MyChar->MoveRightValue;
+
+		fCurrentLowerRotation = MyChar->CurrentLowerHipsRotation;
+		fAimYaw = MyChar->AimOffsetYaw;
+		fAimPitch = MyChar->AimOffsetPitch;
+
+		ExitAnimDelayTime = MyChar->DelayTime;
+		bIsAttack = MyChar->AttackAnimCall;
+
+		bIsReload = MyChar->bIsReloading;
+
+		eGunNumber = MyChar->CurrentAnimationWeaponNumber;
+		fStartTime = MyChar->ReloadStartTime;
+
+		deathNum = uint8(MyChar->GetFPSCharacterStatComponent()->GetDeathNum());
+	}
+```
+___
