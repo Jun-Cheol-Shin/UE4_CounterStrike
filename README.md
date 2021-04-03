@@ -525,7 +525,7 @@ ___
 
 * 방향에 따른 피격 UI 표시
 
-<img src="https://user-images.githubusercontent.com/77636255/113484777-14a96700-94e5-11eb-95c3-cd1f3440f676.gif"  width="500"> 측면(왼쪽) | <img src="https://user-images.githubusercontent.com/77636255/113484783-1d01a200-94e5-11eb-80d4-f2ca9dcb9816.gif"  width="500"> 측면(오른쪽) | 
+<img src="https://user-images.githubusercontent.com/77636255/113484790-2559dd00-94e5-11eb-9ca5-b14a66323a44.gif"  width="500"> 후면 | <img src="https://user-images.githubusercontent.com/77636255/113484799-2ee34500-94e5-11eb-9888-b5648b6a14be.gif"  width="500"> 정면 |
 :-------------------------:|:-------------------------:
-<img src="https://user-images.githubusercontent.com/77636255/113484790-2559dd00-94e5-11eb-9ca5-b14a66323a44.gif"  width="450">    후면 | <img src="https://user-images.githubusercontent.com/77636255/113484799-2ee34500-94e5-11eb-9888-b5648b6a14be.gif"  width="450">    정면
+<img src="https://user-images.githubusercontent.com/77636255/113484777-14a96700-94e5-11eb-95c3-cd1f3440f676.gif"  width="500"> 측면(왼쪽) | <img src="https://user-images.githubusercontent.com/77636255/113484783-1d01a200-94e5-11eb-80d4-f2ca9dcb9816.gif"  width="500"> 측면(오른쪽)
 
