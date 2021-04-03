@@ -523,7 +523,7 @@ ___
 
 ### 기타 UI 및 애니메이션
 
-* 방향에 따른 피격 UI 표시
+#### 방향에 따른 피격 UI 표시
 
 <img src="https://user-images.githubusercontent.com/77636255/113484790-2559dd00-94e5-11eb-9ca5-b14a66323a44.gif"  width="500"> 후면 | <img src="https://user-images.githubusercontent.com/77636255/113484799-2ee34500-94e5-11eb-9888-b5648b6a14be.gif"  width="500"> 정면 |
 :-------------------------:|:-------------------------:
@@ -573,3 +573,4 @@ ___
 	return EDamagedDirectionType::EDDT_ALL;
 ```
 
+#### 변수 Replicated 및 AnimInstance
