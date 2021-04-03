@@ -530,9 +530,9 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113484777-14a96700-94e5-11eb-95c3-cd1f3440f676.gif"  width="500"> 측면(왼쪽) | <img src="https://user-images.githubusercontent.com/77636255/113484783-1d01a200-94e5-11eb-80d4-f2ca9dcb9816.gif"  width="500"> 측면(오른쪽)
 
 * 방향에 따른 enum class를 제작
-* 내적으로 **정면과 후면을 측정, 외적으로 측면(왼,오)**을 알아낸다
-* 매개변수로 총을 맞은 상대 액터의 **ForwardVector와 총알의 방향**을 준다.
-* 결과값에 따라 정해진 image를 SetVisibility 해준다.
+* **내적으로 정면과 후면** 측정, **외적으로 측면** 측정
+* 매개변수로 총을 맞은 상대 액터의 **ForwardVector와 총알의 방향** 전달
+* 결과값에 따라 정해진 image의 SetVisibility 함수를 실행
 ```c++
 	// 상대의 앞벡터와 총알의 방향 벡터를 내적 계산
 	float DeathValue = FVector::DotProduct(Direction, DamagedActor->GetActorForwardVector());
@@ -572,3 +572,4 @@ ___
 
 	return EDamagedDirectionType::EDDT_ALL;
 ```
+
