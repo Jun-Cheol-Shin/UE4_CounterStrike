@@ -573,7 +573,7 @@ ___
 	return EDamagedDirectionType::EDDT_ALL;
 ```
 
-#### 변수 Replicated 및 AnimInstance
+#### 변수 복제와 애님인스턴스
 
 <img src="https://user-images.githubusercontent.com/77636255/113488942-395d0900-94fc-11eb-98ba-b575c6cd3079.gif"  width="500"> 앉기 | <img src="https://user-images.githubusercontent.com/77636255/113488950-437f0780-94fc-11eb-928d-de14a2418b5c.gif"  width="500"> 점프 |
 :-------------------------:|:-------------------------:
