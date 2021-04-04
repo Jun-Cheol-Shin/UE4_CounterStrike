@@ -632,4 +632,11 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 <img src="https://user-images.githubusercontent.com/77636255/113499655-abf8d380-9552-11eb-93c6-8eef89630df7.gif"  width="500"> | <img src="https://user-images.githubusercontent.com/77636255/113499660-b61ad200-9552-11eb-8ad3-e46c51d6128d.gif"  width="500">
 :-------------------------:|:-------------------------:
+
+* 90도 이상 꺾일 시 액터를 회전시킨다.
+<img src="https://user-images.githubusercontent.com/77636255/113499790-b5367000-9553-11eb-9969-9393ab2d2cfd.gif"  width="500">
+:-------------------------:|:-------------------------:
+
+
+
 ___
