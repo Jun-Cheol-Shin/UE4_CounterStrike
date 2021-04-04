@@ -628,15 +628,15 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 		deathNum = uint8(MyChar->GetFPSCharacterStatComponent()->GetDeathNum());
 	}
 ```
-#### 에임 오프셋 적용
+#### 에임 오프셋 및 본 트랜스폼
 
+* 액터의 회전값과 카메라의 회전값을 이용함
 <img src="https://user-images.githubusercontent.com/77636255/113499655-abf8d380-9552-11eb-93c6-8eef89630df7.gif"  width="500"> | <img src="https://user-images.githubusercontent.com/77636255/113499660-b61ad200-9552-11eb-8ad3-e46c51d6128d.gif"  width="500">
 :-------------------------:|:-------------------------:
 
-* 90도 이상 꺾일 시 액터를 회전시킨다.
+* 90도 이상 꺾일 시 액터를 회전 (내적을 이용해 두 벡터가 수직일 경우 액터 회전)
 <img src="https://user-images.githubusercontent.com/77636255/113499790-b5367000-9553-11eb-9969-9393ab2d2cfd.gif"  width="500">
-:-------------------------:|:-------------------------:
 
-
-
+* 본 트랜스폼을 이용해 하나의 애니메이션으로 여러 방향이동을 표현
+<img src="https://user-images.githubusercontent.com/77636255/113499893-ac926980-9554-11eb-8ee1-bcf5f9dacb60.gif"  width="500"> 이동하는 모습 | <img src="https://user-images.githubusercontent.com/77636255/113499913-cd5abf00-9554-11eb-952a-9c81203298a3.PNG"  width="500"> 본을 정한 뒤 회전시킨다
 ___
