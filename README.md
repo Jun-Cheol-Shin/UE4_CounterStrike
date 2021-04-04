@@ -644,4 +644,21 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 <img src="https://user-images.githubusercontent.com/77636255/113499893-ac926980-9554-11eb-8ee1-bcf5f9dacb60.gif"  width="500"> 이동하는 모습 | <img src="https://user-images.githubusercontent.com/77636255/113499913-cd5abf00-9554-11eb-952a-9c81203298a3.PNG"  width="500"> 본을 정한 뒤 회전시킨다
 :-------------------------:|:-------------------------:
 
+```
+	// 측면 이동만 입력받은 경우
+	if (!FMath::IsNearlyZero(MoveRightValue) && FMath::IsNearlyZero(GetInputAxisValue("MoveForward")))
+	{
+		LowerHipsRotation = MoveRightValue * 60.f;
+	}
+
+	// 측면, 정면 입력을 같이 받은 경우
+	else
+	{
+		LowerHipsRotation = MoveRightValue * 35.f;
+		LowerHipsRotation *= MoveForwardValue;
+	}
+
+	CurrentLowerHipsRotation = FMath::FInterpTo(CurrentLowerHipsRotation, LowerHipsRotation, DeltaTime, 10);
+```
+
 ___
