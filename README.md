@@ -639,4 +639,5 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 
 * 본 트랜스폼을 이용해 하나의 애니메이션으로 여러 방향이동을 표현
 <img src="https://user-images.githubusercontent.com/77636255/113499893-ac926980-9554-11eb-8ee1-bcf5f9dacb60.gif"  width="500"> 이동하는 모습 | <img src="https://user-images.githubusercontent.com/77636255/113499913-cd5abf00-9554-11eb-952a-9c81203298a3.PNG"  width="500"> 본을 정한 뒤 회전시킨다
+:-------------------------:|:-------------------------:
 ___
