@@ -52,7 +52,7 @@ void AWRifle::StopFire()
 	RandomHorizontalRecoil = 0.f;
 	RecoilHorizontalWeight = 1.f;
 	Direction = true;
-	WeightSquare = false;
+	//WeightSquare = false;
 }
 
 void AWRifle::Reload()
@@ -68,7 +68,7 @@ void AWRifle::Reload()
 	RandomHorizontalRecoil = 0.f;
 	RecoilHorizontalWeight = 1.f;
 	Direction = false;
-	WeightSquare = false;
+	//WeightSquare = false;
 }
 
 void AWRifle::ChangeRecoilDirection()
@@ -76,7 +76,7 @@ void AWRifle::ChangeRecoilDirection()
 	// go left = true
 	// go right = false
 
-	if (ShotCount > 22)
+	if (ShotCount > 20)
 	{
 		Direction = false;
 	}
@@ -107,19 +107,19 @@ float AWRifle::RandomHorizontalDirection()
 
 	if (RandomRecoil < MouseFocusingLimit)
 	{
-		retval = FMath::RandRange(-1.5f, 1.5f);
+		retval = FMath::RandRange(-1.f, 1.f);
 	}
 
 	else
 	{
 		if (!Direction && RandomHorizontalRecoil < RealHitImpackHorizontalLimit)
 		{
-			RandomHorizontalRecoil += FMath::RandRange(HorizontalRandomValue * 2.f, HorizontalRandomValue * 3.f);
+			RandomHorizontalRecoil += FMath::RandRange(HorizontalRandomValue * 1.5f, HorizontalRandomValue * 1.7f);
 		}
 
 		else if(Direction && RandomHorizontalRecoil > -RealHitImpackHorizontalLimit)
 		{
-			RandomHorizontalRecoil -= FMath::RandRange(HorizontalRandomValue * 2.25f, HorizontalRandomValue * 3.45f);
+			RandomHorizontalRecoil -= FMath::RandRange(HorizontalRandomValue * 2.15f, HorizontalRandomValue * 2.5f);
 		}
 
 		retval = RandomHorizontalRecoil;
@@ -146,11 +146,11 @@ void AWRifle::RecoilEndVec()
 			RandomRecoil = FMath::RandRange(0.8f, 1.15f);
 			Rotation.Pitch += RandomRecoil;
 			RandomRecoil += RecoilWeight;
-			Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
+			Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
 			break;
 
 		default:
-			if (RandomRecoil < RealHitImpactLimit /*&& !WeightSquare*/)
+			if (RandomRecoil < RealHitImpactLimit)
 			{
 				RandomRecoil += RecoilWeight;
 				RecoilWeight += .1f;
@@ -160,13 +160,7 @@ void AWRifle::RecoilEndVec()
 					RandomRecoil = RealHitImpactLimit;
 				}
 
-				Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
-			}
-
-			else
-			{
-				WeightSquare = true;
-				//RandomRecoil = FMath::RandRange(RandomRecoil - 0.1f, RandomRecoil -0.2f);
+				Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
 			}
 
 
@@ -187,7 +181,7 @@ void AWRifle::RecoilEndVec()
 		{
 			float a = RandomHorizontalDirection();
 			Rotation.Yaw += a;
-			Player->AddControllerYawInput(a * 0.1f);
+			Player->AddControllerYawInput(a * 0.15f);
 		}
 	}
 

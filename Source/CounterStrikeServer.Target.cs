@@ -10,6 +10,10 @@ public class CounterStrikeServerTarget : TargetRules
 	{
 		Type = TargetType.Server;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
-		ExtraModuleNames.AddRange( new string[] { "CounterStrike" } );
+		ExtraModuleNames.AddRange( new string[] { "CounterStrikeServer" } );
+		bUsesSteam = true;
+		GlobalDefinitions.Add("UE4_PROJECT_STEAMGAMEDESC=\"Dedicated Server\"");
+		GlobalDefinitions.Add("UE4_PROJECT_STEAMPRODUCTNAME=\"ue_cs\"");
+		GlobalDefinitions.Add("UE4_PROJECT_STEAMGAMEDIR=\"ue_cs\"");
 	}
 }

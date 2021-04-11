@@ -180,22 +180,30 @@ void AWBase::Fire()
 
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this]() {
 
+			// 타이머 초기화
 			GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+
+			// 애니메이션 공격을 멈추도록 false
 			Player->AttackAnimCall = false;
 
+			// RPC 함수를 호출 다른 클라이언트들에게 보이는 공격 애니메이션 설정
 			if (Player->GetLocalRole() < ROLE_Authority && Player->IsLocallyControlled())
 			{
 				Player->SyncClientAttack(Player->AttackAnimCall, Player->DelayTime);
 			}
 
+			// 만약 마우스를 클릭하고 있다면...
 			if (Player->IsAttackHeld)
 			{
+				// 연사가 가능한 무기라면..
 				if (bCanAutoFire)
 				{
+					// 총을 들고 있고, 총의 현재탄약이 0이라면...
 					if ((eWeaponNum == EWeaponNum::E_Rifle ||
 						eWeaponNum == EWeaponNum::E_Sub) &&
 						Player->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->GetCurrentAmmoCount() == 0)
 					{
+						// 현재 재생하고있는 애니메이션 길이와 무기 공격 후 딜레이를 빼서 Idle 애니메이션이 자연스럽게 이어지도록 WaitTime을 설정
 						WaitTime = CurrentPlayingAnim->SequenceLength - GetAttackDelay();
 						Idle();
 					}
@@ -206,6 +214,7 @@ void AWBase::Fire()
 					}
 				}
 
+				// 아닌 경우..
 				else
 				{
 					StopFire();
@@ -214,6 +223,7 @@ void AWBase::Fire()
 				}
 			}
 
+			// 클릭을 하지 않고 있다면...
 			else
 			{
 				WaitTime = CurrentPlayingAnim->SequenceLength - GetAttackDelay();

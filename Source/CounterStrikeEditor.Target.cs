@@ -10,5 +10,6 @@ public class CounterStrikeEditorTarget : TargetRules
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V2;
 		ExtraModuleNames.AddRange( new string[] { "CounterStrike" } );
+		bUsesSteam = true;
 	}
 }

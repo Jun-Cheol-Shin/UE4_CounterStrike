@@ -14,6 +14,7 @@ AWM4A1::AWM4A1()
 	bIsSilence = false;
 
 	BackSocketName = "M4_Back";
+	HorizontalRandomValue = 0.5f;
 }
 
 void AWM4A1::ShuffleShotAnim()
@@ -68,18 +69,17 @@ void AWM4A1::ResetTimeHandle()
 
 void AWM4A1::ChangeRecoilDirection()
 {
-	// go right;
-	if (ShotCount > 18)
+	if (ShotCount > 17)
 	{
 		Direction = false;
 	}
 
-	else if (ShotCount > 12)
+	else if (ShotCount > 11)
 	{
 		Direction = true;
 	}
 
-	else if (ShotCount > 6)
+	else if (ShotCount > 5)
 	{
 		Direction = false;
 	}
@@ -162,12 +162,6 @@ void AWM4A1::Draw(AFPSCharacter* player)
 
 void AWM4A1::Reload()
 {
-	if (AmmoCount == 0 || CurrentOneMagazineAmmoCount == OneMagazineAmmoCount)
-	{
-		Idle();
-		return;
-	}
-
 	Super::Reload();
 
 	if (bIsSilence)

@@ -28,14 +28,11 @@ class COUNTERSTRIKE_API AWGun : public AWBase
 protected:
 
 	UPROPERTY(EditAnywhere)
-		bool InfinityAmmo = true;
+		bool InfinityAmmo = false;
 
 	UPROPERTY(EditAnywhere)
 		float PenatrateDecreaseDistanceRatio = 1.f;
 
-
-	FRotator FirstShotRot;
-	FRotator FirstShotRotBackUp;
 
 	AStaticMeshActor* SpawnedShell;
 	TSubclassOf<class AStaticMeshActor> BulletDecalBluePrint;
@@ -86,9 +83,6 @@ protected:
 	virtual void SpawnShell();
 
 public:
-
-	FRotator GetFirstRot() { return FirstShotRot; }
-
 	void InitAmmoCount();
 	// Áß¿ä..
 	uint8 GetCurrentAmmoCount() { return CurrentOneMagazineAmmoCount; }

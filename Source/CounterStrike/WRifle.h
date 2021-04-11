@@ -15,10 +15,11 @@ class COUNTERSTRIKE_API AWRifle : public AWGun
 {
 	GENERATED_BODY()
 private:
-	bool WeightSquare = false;
+	//bool WeightSquare = false;
 
+protected:
 	UPROPERTY(EditAnywhere)
-		float HorizontalRandomValue = 0.5f;
+		float HorizontalRandomValue = 0.7f;
 
 	UPROPERTY(EditAnywhere)
 		float RealHitImpactLimit = 6.f;
@@ -29,12 +30,11 @@ private:
 	UPROPERTY(EditAnywhere)
 		float MouseFocusingLimit = 6.f;
 
-	float RecoilWeight = 0.7f;
+	float RecoilWeight = 0.6f;
 	float RandomRecoil = 0.f;
 	float RandomHorizontalRecoil = 0.f;
 	float RecoilHorizontalWeight = 1.f;
 
-protected:
 	bool Direction = true;
 	virtual void SpawnShell() override;
 

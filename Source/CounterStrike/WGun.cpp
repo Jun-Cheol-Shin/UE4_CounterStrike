@@ -260,12 +260,9 @@ void AWGun::GunShotMethod()
 
 
 	SpawnShell();
-	UGameplayStatics::SpawnEmitterAttached(MuzzleParticle, Player->GetCurrentFPSMesh(), MuzzleSocketName);
 
-	if (Player->GetLocalRole() < ROLE_Authority && Player->IsLocallyControlled())
-	{
-		Player->SyncClientSpawnMuzzleEffect(MuzzleParticle, Player->GetCurrentThirdMesh(), MuzzleSocketName);
-	}
+	UGameplayStatics::SpawnEmitterAttached(MuzzleParticle, Player->GetCurrentFPSMesh(), MuzzleSocketName);
+	Player->SyncClientSpawnMuzzleEffect(MuzzleParticle, Player->GetCurrentThirdMesh(), MuzzleSocketName);
 
 	if (bSucess)
 	{
@@ -293,7 +290,7 @@ void AWGun::GunShotMethod()
 				Distance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * PenatrateDecreaseDistanceRatio;
 			}
 
-			DrawDebugLine(GetWorld(), Location, Hit.ImpactPoint, FColor::Red, false, 2, 0, 1);
+			//DrawDebugLine(GetWorld(), Location, Hit.ImpactPoint, FColor::Red, false, 2, 0, 1);
 			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, FString::Printf(TEXT("Remaining Distance : %.1f"), Distance));
 
 			if (Distance > 0 && !Hitweapon && flag)
@@ -512,58 +509,53 @@ void AWGun::SpawnDecal(FHitResult Hit, EDecalPoolList Type)
 
 void AWGun::PenetrationShot(FHitResult Point, FVector Direction, float Distance)
 {
+	// 관통에 성공했다면 실행되는 함수..
+
 	FHitResult Hit;
 	bool flag = false;
 	bool bSuccess = false;
 	float DecreaseRatio = 0.15;
 
-	//float RemainDistance = Distance;
-	//FHitResult AnotherPoint = Point;
-	//uint8 PenetrateCount = 1;
 	FCollisionQueryParams Param;
 	Param.AddIgnoredActor(Player);
-	//Param.AddIgnoredActor(AnotherPoint.GetActor());
 
 	bSuccess = GetWorld()->LineTraceSingleByChannel(Hit, Point.ImpactPoint + Direction, Point.ImpactPoint + Direction * Distance,
 		ECC_Visibility, Param);
 
-	DrawDebugLine(GetWorld(), Point.ImpactPoint, Point.ImpactPoint + Direction * Distance, FColor::Blue, false, 2, 0, 1);
+	//DrawDebugLine(GetWorld(), Point.ImpactPoint, Point.ImpactPoint + Direction * Distance, FColor::Blue, false, 2, 0, 1);
 
 	if (Hit.GetActor())
 	{
+		// 캐릭터에 맞았다면..
 		if (Hit.GetActor()->IsA(AFPSCharacter::StaticClass()))
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Character Hit!!!!"));
 			AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
 			SpawnDecal(Hit, EDecalPoolList::EDP_BLOOD);
+
+			// 무기마다 정해진 데미지, 방탄복 관통력을 감소시켜서 데미지를 적용시킨다.
 			DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(GunDamage - 3,
 				GunPenetration - DecreaseRatio, Player, DamagedCharacter->CheckHit(*Hit.BoneName.ToString()));
-			//RemainDistance -= FVector::Dist(AnotherPoint.ImpactPoint, Hit.ImpactPoint) * 10.f;
 		}
 
+		// 그 외 물체에 맞았다면..
 		else
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Wall Hit!!!!"));
 			SpawnDecal(Hit, EDecalPoolList::EDP_BULLETHOLE);
-			//flag = CheckPenetrationShot(Hit, Direction);
-			//RemainDistance -= FVector::Dist(AnotherPoint.ImpactPoint, Hit.ImpactPoint) * 20.f;
 		}
 
-		//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, FString::Printf(TEXT("Remaining Distance : %.1f"), Distance));
-		//DrawDebugLine(GetWorld(), Point.ImpactPoint, Hit.ImpactPoint, FColor::Blue, false, 2, 0, 1);
-
-
+		// 나이아가라 이펙트 호출
 		SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), Hit.ImpactPoint - Location);
-		//AnotherPoint = Hit;
 	}
-
-	//SpawnNiagra(Point.ImpactPoint, Hit.ImpactPoint);
-
 }
 
 
 bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 {
+	// 총알이 물체 맞았다면 실행...
+
+	// 물체의 크기가 정해진 두께보다 얇다면...
 	float thickness = Point.GetActor()->GetActorScale3D().Size2D() * 150.f;
 	FHitResult FinalHit;
 	FVector Start = Point.ImpactPoint + Direction * thickness;
@@ -574,29 +566,23 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 		Start, Start - Direction * thickness,
 		ECollisionChannel::ECC_Visibility, FCollisionQueryParams());
 
-	//DrawDebugLine(GetWorld(), Start, Start - Direction * thickness, FColor::Red, false, 2, 0, 1);
-
+	// 관통 성공.. 동시에 물체의 반대편에 데칼 생성
 	if (bSuccess)
 	{
-		if (FinalHit.GetActor() && !FinalHit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+		if (FinalHit.GetActor())
 		{
-			SpawnDecal(FinalHit, EDecalPoolList::EDP_BULLETHOLE);
-			//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Good! Decal Spawn!"));
+			if (!FinalHit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+			{
+				SpawnDecal(FinalHit, EDecalPoolList::EDP_BULLETHOLE);
+			}
+
+			else
+			{
+				SpawnDecal(FinalHit, EDecalPoolList::EDP_BLOOD);
+			}
 
 			return true;
 		}
-
-		else
-		{
-			//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Decal Spawn?"));
-		}
-
-		
-	}
-
-	else
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Not Decal Spawn!"));
 	}
 
 	return false;
@@ -647,11 +633,8 @@ void AWGun::SpawnShell()
 		SpawnedShell->SetActorHiddenInGame(false);
 		SpawnedShell->GetStaticMeshComponent()->AddImpulse(Player->FPSCameraComponent->GetRightVector() * Power);
 
-		if (Player->GetLocalRole() < ROLE_Authority && Player->IsLocallyControlled())
-		{
-			Player->SyncClientSpawnShell(BulletDecalBluePrint,
-				Player->FPSCameraComponent->GetRightVector() * Power, Player->GetCurrentThirdMesh());
-		}
+		Player->SyncClientSpawnShell(BulletDecalBluePrint,
+			Player->FPSCameraComponent->GetRightVector() * Power, Player->GetCurrentThirdMesh());
 
 		//Player->SyncClientSpawnShell(BulletDecalBluePrint,
 		//	Player->FPSCameraComponent->GetRightVector() * Power, Player->GetCurrentThirdMesh());

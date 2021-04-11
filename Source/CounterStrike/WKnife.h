@@ -26,8 +26,8 @@ class COUNTERSTRIKE_API AWKnife : public AWBase
 
 private:
 	
-	TArray<FVector> KnifeAttackDirection;
-	TArray<AActor*> HitResults;
+	//TArray<FVector> KnifeAttackDirection;
+	//TArray<AActor*> HitResults;
 	TArray<FHitResult> HitPoint;
 
 public:

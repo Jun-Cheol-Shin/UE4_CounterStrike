@@ -38,7 +38,7 @@ void AWShotGun::AmmoReload()
 
 void AWShotGun::Reload()
 {
-	if (AmmoCount == 0 || CurrentOneMagazineAmmoCount == OneMagazineAmmoCount)
+	if (CurrentAmmoCount == 0 || CurrentOneMagazineAmmoCount == OneMagazineAmmoCount)
 	{
 		Idle();
 		return;

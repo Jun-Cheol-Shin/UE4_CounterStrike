@@ -105,27 +105,37 @@ void UFPSCharacterStatComponent::RemoveSelectWeapon(EWeaponNum Number)
 
 EDamagedDirectionType UFPSCharacterStatComponent::CheckDirection(AFPSCharacter* DamagedActor, FVector Direction)
 {
+	// 상대의 앞벡터와 총알의 방향 벡터를 내적 계산
 	float DeathValue = FVector::DotProduct(Direction, DamagedActor->GetActorForwardVector());
 
+	// 0.7보다 작거나, -0.7보다 작으면 왼쪽, 오른쪽으로 UI를 표시해야 하기 때문에 if문을 작성한다.
+	
+	// 양수일 경우 서로 평행이 되는 방향
 	if (DeathValue > 0.7f)
 	{
 		// back..
 		return EDamagedDirectionType::EDDT_BACK;
 	}
 
+	// 음수는 서로 교차가 되는 방향
 	else if (DeathValue < -0.7f)
 	{
 		//	front..
 		return EDamagedDirectionType::EDDT_FRONT;
 	}
 
+	// 그 외의 경우는 측면으로 결과값을 리턴한다.
+
+	// 측면은 외적으로 계산
 	FVector CrossVac = FVector::CrossProduct(DamagedActor->GetActorForwardVector(), -Direction);
 
+	// 외적의 오른손 법칙에 따라 양수면..
 	if (CrossVac.Z > 0)
 	{
 		return EDamagedDirectionType::EDDT_RIGHT;
 	}
 
+	// 음수면 왼쪽..
 	else
 	{
 		return EDamagedDirectionType::EDDT_LEFT;
@@ -200,11 +210,15 @@ void UFPSCharacterStatComponent::GetDamage(int16 Damage, float Penetration, AAct
 			Death(Damaged, Direction, HitType, Causer);
 			Revive(Damaged, ReviveTime);
 
-			//AFPSCharacter* CauserFPS = Cast<AFPSCharacter>(Causer);
-			//if (CauserFPS)
-			//{
-			//	CauserFPS->GetFPSCharacterStatComponent()->SetKillCount();
-			//}
+			AFPSCharacter* CauserFPS = Cast<AFPSCharacter>(Causer);
+			if (CauserFPS)
+			{
+				if (CauserFPS->GetFPSCharacterStatComponent()->GetCurrentGunWeapon())
+				{
+					CauserFPS->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->InitAmmoCount();
+				}
+				CauserFPS->GetFPSUIWidget()->SetAmmoCount(CauserFPS);
+			}
 
 			//	//Damaged->DoSomethingOnServer(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
 			//	//Damaged->KillEvent(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);

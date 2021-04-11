@@ -82,44 +82,49 @@ void AWKnife::CheckAttack()
 	FCollisionQueryParams CollisionParams;
 	CollisionParams.AddIgnoredActor(Player);
 
-	KnifeAttackDirection.Empty();
+	//KnifeAttackDirection.Empty();
 
 	switch (Player->GetFPSCharacterStatComponent()->GetCharacterUpperState())
 	{
 		case UPPER_STATE::ACTION:
+			// 찌르기는 오른쪽에서 왼쪽... 일반 공격은 왼쪽에서 오른쪽...
 			for (int i = 9; i >= 0; --i)
 			{
 				GetWorld()->LineTraceSingleByChannel(Hit, Location, vec[i], ECollisionChannel::ECC_Visibility, CollisionParams);
 
 				if (Hit.GetActor())
 				{
-					if (HitResults.Num() > 0)
+					if (HitPoint.Num() > 0)
 					{
 						bool flag = false;
-						for (int j = 0; j < HitResults.Num(); ++j)
+						for (int j = 0; j < HitPoint.Num(); ++j)
 						{
-							if (HitResults[j] == Hit.GetActor())
+							if (HitPoint[j].GetActor() == Hit.GetActor())
 							{
 								flag = true;
+								if (flag)
+								{
+									break;
+								}
 							}
 						}
 						if (!flag)
 						{
-							HitResults.Add(Hit.GetActor());
+							//HitResults.Add(Hit.GetActor());
 							HitPoint.Add(Hit);
-							KnifeAttackDirection.Add(vec[i] - Location);
+							//KnifeAttackDirection.Add(vec[i] - Location);
 						}
 					}
 
 					else
 					{
-						HitResults.Add(Hit.GetActor());
+						//HitResults.Add(Hit.GetActor());
 						HitPoint.Add(Hit);
-						KnifeAttackDirection.Add(vec[i] - Location);
+						//KnifeAttackDirection.Add(vec[i] - Location);
 					}
 				}
 
-				//DrawDebugLine(GetWorld(), Location, vec[i], FColor::Blue, true, 2.f, 0, 2.f);
+				//DrawDebugLine(GetWorld(), Location, vec[i], FColor::Red, false, 4.f, 0, 1.f);
 			}
 
 			if (HitPoint.Num() > 0)
@@ -135,33 +140,37 @@ void AWKnife::CheckAttack()
 
 				if (Hit.GetActor())
 				{
-					if (HitResults.Num() > 0)
+					if (HitPoint.Num() > 0)
 					{
 						bool flag = false;
-						for (int j = 0; j < HitResults.Num(); ++j)
+						for (int j = 0; j < HitPoint.Num(); ++j)
 						{
-							if (HitResults[j] == Hit.GetActor())
+							if (HitPoint[j].GetActor() == Hit.GetActor())
 							{
 								flag = true;
+								if (flag)
+								{
+									break;
+								}
 							}
 						}
 						if (!flag)
 						{
-							HitResults.Add(Hit.GetActor());
+							//HitResults.Add(Hit.GetActor());
 							HitPoint.Add(Hit);
-							KnifeAttackDirection.Add(vec[i] - Location);
+							//KnifeAttackDirection.Add(vec[i] - Location);
 						}
 					}
 
 					else
 					{
-						HitResults.Add(Hit.GetActor());
+						//HitResults.Add(Hit.GetActor());
 						HitPoint.Add(Hit);
-						KnifeAttackDirection.Add(vec[i] - Location);
+						//KnifeAttackDirection.Add(vec[i] - Location);
 					}
 				}
 
-				//DrawDebugLine(GetWorld(), Location, vec[i], FColor::Blue, true, 2.f, 0, 2.f);
+				//DrawDebugLine(GetWorld(), Location, vec[i], FColor::Red, false, 4.f, 0, 1.f);
 			}
 			break;
 	}
@@ -210,7 +219,7 @@ void AWKnife::SetHit()
 				}
 
 				SpawnDecal(HitPoint[j], EDecalPoolList::EDP_BLOOD);
-				UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), GetActorPool()->GetBlood(), FTransform(HitPoint[j].ImpactPoint), true);
+				//UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), GetActorPool()->GetBlood(), FTransform(HitPoint[j].ImpactPoint), true);
 				if (Player && Player->GetLocalRole() < ROLE_Authority && Player->IsLocallyControlled())
 				{
 					Player->SyncClientSpawnHitEffect(GetActorPool()->GetBlood(), HitPoint[j].ImpactPoint);
@@ -229,7 +238,7 @@ void AWKnife::SetHit()
 	}
 
 
-	HitResults.Empty();
+	//HitResults.Empty();
 	HitPoint.Empty();
 }
 

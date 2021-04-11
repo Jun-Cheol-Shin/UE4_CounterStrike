@@ -317,10 +317,10 @@ void UFPSHUDWidget::Init(AFPSCharacter* ThisCharacter)
 		UISlot->SetSize(FVector2D(SettingViewPortSize().X, 50.0f));
 	}
 
-	if (DamageSlot)
+	/*if (DamageSlot)
 	{
 		DamageSlot->SetSize(SettingViewPortSize());
-	}
+	}*/
 
 	//if (ImageSlot)
 	//{

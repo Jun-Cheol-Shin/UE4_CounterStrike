@@ -1015,10 +1015,6 @@ void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(AFPSCharacter, ReloadStartTime);
 	DOREPLIFETIME(AFPSCharacter, CurrentAnimationWeaponNumber);
 	DOREPLIFETIME(AFPSCharacter, DelayTime);
-
-	//DOREPLIFETIME(AFPSCharacter, CurrentLowerHipsRotation);
-	//DOREPLIFETIME(AFPSCharacter, Thirdmesh);
-	//DOREPLIFETIME(AFPSCharacter, StatComponent);
 }
 
 void AFPSCharacter::StartWalk()
@@ -1864,8 +1860,6 @@ void AFPSCharacter::AddControllerPitchInput(float Val)
 // Aim offset..
 void AFPSCharacter::RotatingAimOffset(FRotator Actor, FRotator Control)
 {
-	FRotator offset = FRotator(AimOffsetPitch, AimOffsetYaw, 0);
-	//FRotator offsetResult = FMath::RInterpTo(offset, GetActorRotation() - GetControlRotation(), DeltaTime, 20);
 	FRotator offsetResult = Actor - Control;
 
 	AimOffsetYaw = FMath::ClampAngle(offsetResult.Yaw, -90, 90);
@@ -2031,19 +2025,6 @@ void AFPSCharacter::ServerSpawnShell_Implementation(TSubclassOf<class AStaticMes
 			Shell->GetStaticMeshComponent()->AddImpulse(Impulse);
 		}
 	}
-
-	/*AStaticMeshActor* Shell = nullptr;
-	Shell = GetWorld()->SpawnActor<AStaticMeshActor>(ShellBlueprint);
-
-	if (Shell)
-	{
-		Shell->SetActorLocation(MeshComp->GetSocketLocation(TEXT("Shell")));
-		Shell->GetStaticMeshComponent()->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
-		Shell->GetStaticMeshComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-		Shell->GetStaticMeshComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
-		Shell->SetActorHiddenInGame(false);
-		Shell->GetStaticMeshComponent()->AddImpulse(Impulse);
-	}*/
 }
 
 void AFPSCharacter::SyncClientSpawnHitEffect_Implementation(UParticleSystem* BloodParticle, FVector Hit)
@@ -2366,34 +2347,6 @@ void AFPSCharacter::SyncClientSendDamaged_Implementation(AFPSCharacter* Characte
 
 void AFPSCharacter::ServerGetDamaged_Implementation(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Causer, FVector Direction, float ReviveTime)
 {
-	if (!HasAuthority())
-	{
-		//for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
-		//{
-		//	//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Go Method!!!"));
-		//	if (AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Iterator->Get()->GetCharacter()))
-		//	{
-		//		if (DamagedCharacter == Character && DamagedCharacter->GetFPSUIWidget())
-		//		{
-		//			DamagedCharacter->GetFPSUIWidget()->SetDamageUI(DirectionType);
-		//			DamagedCharacter->GetFPSCharacterStatComponent()->SetHP(HP);
-		//			DamagedCharacter->GetFPSCharacterStatComponent()->SetKevlar(Kevlar);
-		//			DamagedCharacter->GetFPSUIWidget()->SetArmorAndHealth(DamagedCharacter);
-
-		//			if (HP <= 0)
-		//			{
-		//				if (DamagedCharacter->GetLocalRole() < ROLE_Authority && DamagedCharacter->IsLocallyControlled())
-		//				{
-		//					//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Go Method!!!"));
-		//					DamagedCharacter->SyncClientDeath(DamagedCharacter, Direction, HitType, Causer);
-		//					//DamagedCharacter->SyncClientRevive(DamagedCharacter, ReviveTime);
-		//				}
-		//			}
-		//		}
-		//	}
-		//}
-	}
-
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
 		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Go Method!!!"));
