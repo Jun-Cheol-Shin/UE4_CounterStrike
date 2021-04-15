@@ -240,7 +240,8 @@ ___
 ### 히트 박스와 애니메이션
 
 * MoveForward, MoveRight의 Value에 따라 CurrentLowerRotation 값을 수정시켜 Hips 본을 회전시킨다.
+
 <img src="https://user-images.githubusercontent.com/77636255/114875610-6d0f2b80-9e38-11eb-9ff5-6f0de5d53f75.gif" width = "500"> 이동방향에 따라 본 회전| <img src="https://user-images.githubusercontent.com/77636255/114875709-887a3680-9e38-11eb-8b2a-5c1b660ad13d.PNG" width = "500"> 애님 인스턴스 
 :-------------------------:|:-------------------------:
 
-
+___
