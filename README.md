@@ -244,4 +244,7 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/114875610-6d0f2b80-9e38-11eb-9ff5-6f0de5d53f75.gif" width = "500"> 이동방향에 따라 다리의 회전값이 달라진다. | <img src="https://user-images.githubusercontent.com/77636255/114875709-887a3680-9e38-11eb-8b2a-5c1b660ad13d.PNG" width = "500"> 애님 인스턴스 블루프린트
 :-------------------------:|:-------------------------:
 
+* 에임 오프셋
+
+<img src="https://user-images.githubusercontent.com/77636255/114878723-7fd72f80-9e3b-11eb-8485-4490deb31a02.gif" width = "500"> 좌우 | <img src="https://user-images.githubusercontent.com/77636255/114878777-8c5b8800-9e3b-11eb-804b-5c8664efdf9b.gif" width = "500"> 상하
 ___
