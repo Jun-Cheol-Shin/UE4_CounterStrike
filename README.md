@@ -255,4 +255,9 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/114883888-47862000-9e40-11eb-9b00-a38b765b8927.PNG" width = "500"> 본 셰이프 구성화면 | <img src="https://user-images.githubusercontent.com/77636255/114884231-90d66f80-9e40-11eb-9c87-4c4f0c708139.PNG" width = "500"> 스켈레톤 트리
 :-------------------------:|:-------------------------:
 
+* 부위마다 데스 모션을 다르게 실행
+
+<img src="https://user-images.githubusercontent.com/77636255/114885258-705ae500-9e41-11eb-8000-64ccc0eef6cf.gif" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/114885310-7b157a00-9e41-11eb-867b-b3c8f1636f26.gif" width = "500">
+:-------------------------:|:-------------------------:
+
 ___
