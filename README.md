@@ -233,7 +233,7 @@ ___
 * 크로스 헤어 UI 컴포넌트 구성 (Overlay 컴포넌트가 5개의 Image 컴포넌트를 갖고 있음)
 <img src="https://user-images.githubusercontent.com/77636255/113446987-f2a3dc00-9433-11eb-8518-99aab1a36efa.PNG">
 
-* 또한 움직임 보정, 사격 보정 옵션을 추가
+* 움직임 보정(CharacterMovement 컴포넌트의 Velocity를 이용), 사격 보정(WGun 클래스의 ShotCount 변수) 옵션을 추가
 
 <img src="https://user-images.githubusercontent.com/77636255/113447185-53331900-9434-11eb-8d09-45701fbbf8e6.gif" width = "500">  움직임 보정| <img src="https://user-images.githubusercontent.com/77636255/113447207-5c23ea80-9434-11eb-988b-d793165640ea.gif" width = "500">  사격 보정
 :-------------------------:|:-------------------------:
