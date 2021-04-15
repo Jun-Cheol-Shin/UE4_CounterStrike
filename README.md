@@ -250,16 +250,5 @@ ___
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/77636255/114878970-bd3bbd00-9e3b-11eb-9672-bc5e90d6640b.gif" width = "500"> 90도 회전 시 오프셋 초기화 | <img src="https://user-images.githubusercontent.com/77636255/114879367-16a3ec00-9e3c-11eb-92cc-d020dbd535c9.gif" width = "500"> 가상 본으로 무기 위치 조정
 
-* Actor와 Controller의 회전값 차를 구해 Offset값을 구한다.
-```
-void AFPSCharacter::RotatingAimOffset(FRotator Actor, FRotator Control)
-{
-	// ActorRotation과 ControlRotation을 받아온다.
-	FRotator offsetResult = Actor - Control;
-
-	AimOffsetYaw = FMath::ClampAngle(offsetResult.Yaw, -90, 90);
-	AimOffsetPitch = FMath::ClampAngle(offsetResult.Pitch, -90, 90);
-} 
-```
 
 ___
