@@ -250,5 +250,8 @@ ___
 :-------------------------:|:-------------------------:
 <img src="https://user-images.githubusercontent.com/77636255/114878970-bd3bbd00-9e3b-11eb-9672-bc5e90d6640b.gif" width = "500"> 90도 회전 시 오프셋 초기화 | <img src="https://user-images.githubusercontent.com/77636255/114879367-16a3ec00-9e3c-11eb-92cc-d020dbd535c9.gif" width = "500"> 가상 본으로 무기 위치 조정
 
+* 히트 박스
+
+<img src="https://user-images.githubusercontent.com/77636255/114883888-47862000-9e40-11eb-9b00-a38b765b8927.PNG" width = "500"> 본 셰이프 구성화면 | <img src="https://user-images.githubusercontent.com/77636255/114884231-90d66f80-9e40-11eb-9c87-4c4f0c708139.PNG" width = "500"> 스켈레톤 트리
 
 ___
