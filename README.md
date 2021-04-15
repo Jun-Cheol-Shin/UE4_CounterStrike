@@ -231,7 +231,7 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113445182-5af0be80-9430-11eb-8722-98c6e181f3f0.PNG" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/113445209-68a64400-9430-11eb-9237-2524614ae281.PNG" width = "500">
 :-------------------------:|:-------------------------:
 
-* 움직임 보정(CharacterMovement 컴포넌트의 Velocity를 이용), 사격 보정(WGun 클래스의 ShotCount) 옵션을 추가
+* [움직임 보정](https://github.com/Jun-Cheol-Shin/UE4_CounterStrike/blob/main/Source/CounterStrike/Private/FPSHUDWidget.cpp#L96), 사격 보정(WGun 클래스의 ShotCount) 옵션을 추가
 
 <img src="https://user-images.githubusercontent.com/77636255/113447185-53331900-9434-11eb-8d09-45701fbbf8e6.gif" width = "500">  움직임 보정| <img src="https://user-images.githubusercontent.com/77636255/113447207-5c23ea80-9434-11eb-988b-d793165640ea.gif" width = "500">  사격 보정
 :-------------------------:|:-------------------------:
