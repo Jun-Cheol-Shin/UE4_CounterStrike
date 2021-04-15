@@ -248,6 +248,6 @@ ___
 
 <img src="https://user-images.githubusercontent.com/77636255/114878723-7fd72f80-9e3b-11eb-8485-4490deb31a02.gif" width = "500"> 좌우 | <img src="https://user-images.githubusercontent.com/77636255/114878777-8c5b8800-9e3b-11eb-804b-5c8664efdf9b.gif" width = "500"> 상하
 :-------------------------:|:-------------------------:
-<img src="https://user-images.githubusercontent.com/77636255/114878970-bd3bbd00-9e3b-11eb-9672-bc5e90d6640b.gif" width = "500"> 90도 회전 시 Actor를 회전시켜 오프셋 초기화
+<img src="https://user-images.githubusercontent.com/77636255/114878970-bd3bbd00-9e3b-11eb-9672-bc5e90d6640b.gif" width = "500"> 90도 회전 시 오프셋 초기화 | <img src="https://user-images.githubusercontent.com/77636255/114879367-16a3ec00-9e3c-11eb-92cc-d020dbd535c9.gif" width = "500"> 가상 본으로 무기 위치 조정
 
 ___
