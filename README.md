@@ -1,5 +1,3 @@
-## 링크 https://github.com/Jun-Cheol-Shin/UE4_CounterStrike
-
 # 목차
 * [플레이 영상](https://youtu.be/MGhXNbpuY7g)
 * [소개](#소개)
