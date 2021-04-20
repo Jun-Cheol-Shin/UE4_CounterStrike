@@ -2,6 +2,7 @@
 * [플레이 영상](https://youtu.be/MGhXNbpuY7g)
 * [소개](#소개)
 * [구현 내용](#구현-내용)
+* [어려웠던 점](#어려웠던-점)
 
 ## 소개
 * 카운터 스트라이크 온라인 리소스를 이용해 UE4로 제작
@@ -259,5 +260,9 @@ ___
 
 <img src="https://user-images.githubusercontent.com/77636255/114885258-705ae500-9e41-11eb-8000-64ccc0eef6cf.gif" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/114885310-7b157a00-9e41-11eb-867b-b3c8f1636f26.gif" width = "500">
 :-------------------------:|:-------------------------:
+
+___
+
+### 어려웠던 점
 
 ___
