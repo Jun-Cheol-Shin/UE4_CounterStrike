@@ -103,54 +103,72 @@ ___
 * Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬
 
 ```c++
-	switch (ShotCount)
+	void AWRifle::RecoilEndVec()
+{
+
+	if(!RandomRecoilFlag)
 	{
-	case 0:
-		Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
-		break;
-	case 1:
-	case 2:
-	case 3:
-		RandomRecoil = FMath::RandRange(0.8f, 1.15f);
-		Rotation.Pitch += RandomRecoil;
-		RandomRecoil += RecoilWeight;
-		Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
-		break;
+		//FirstShotRot = FirstShotRotBackUp;
 
-	default:
-		if (RandomRecoil < RealHitImpactLimit)
+		switch (ShotCount)
 		{
+		case 0:
+			Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
+			break;
+		case 1:
+		case 2:
+		case 3:
+			RandomRecoil = FMath::RandRange(0.8f, 1.15f);
+			Rotation.Pitch += RandomRecoil;
 			RandomRecoil += RecoilWeight;
-			RecoilWeight += .1f;
+			Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
+			break;
 
-			if (RandomRecoil > RealHitImpactLimit)
+		default:
+			if (RandomRecoil < RealHitImpactLimit)
 			{
-				RandomRecoil = RealHitImpactLimit;
+				// 반동 값에 가중치를 더한다
+				RandomRecoil += RecoilWeight;
+				// 가중치가 증가
+				RecoilWeight += .1f;
+
+				// 일정 수치 초과 시 수직 반동이 없어짐.
+				if (RandomRecoil > RealHitImpactLimit)
+				{
+					RandomRecoil = RealHitImpactLimit;
+				}
+
+				Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
 			}
 
-			Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
+
+			// 카메라의 위치 값 조정
+			if (Player->IsCrouchHeld)
+			{
+				Rotation.Pitch += RandomRecoil * 0.6f;
+			}
+
+			else
+			{
+				Rotation.Pitch += RandomRecoil;
+			}
+
+			break;
 		}
 
-
-		if (Player->IsCrouchHeld)
+		if (ShotCount > 1)
 		{
-			Rotation.Pitch += RandomRecoil * 0.6f;
+			// RandomRecoil이 일정 수치를 초과 시 수평 반동의 방향을 결정 해 준다.
+			float a = RandomHorizontalDirection();
+			Rotation.Yaw += a;
+			// 카메라의 위치 값 조정
+			Player->AddControllerYawInput(a * 0.15f);
 		}
-
-		else
-		{
-			Rotation.Pitch += RandomRecoil;
-		}
-
-		break;
 	}
 
-	if (ShotCount > 1)
-	{
-		float a = RandomHorizontalDirection();
-		Rotation.Yaw += a;
-		Player->AddControllerYawInput(a * 0.15f);
-	}
+
+	Super::RecoilEndVec();
+}
 ```
 
 ___
