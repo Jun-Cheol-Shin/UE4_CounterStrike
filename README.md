@@ -28,7 +28,7 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/116535832-2bde4780-a91f-11eb-81ab-501891c2e218.png" width = "800">
 
 * 블루프린트 에디터에서 주로 사용되는 변수를 모두 빼내어 수정하기 용이하게 함. (매직넘버 최소화)
-<img src="https://user-images.githubusercontent.com/77636255/115403662-990b2200-a227-11eb-8543-f94128868086.PNG" width = "800">
+<img src="https://user-images.githubusercontent.com/77636255/116535884-41ec0800-a91f-11eb-8678-779d1cd531a1.png" width = "800">
 
 ___
 
