@@ -217,14 +217,18 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 ```
 	else if(!Hitweapon)
 	{
+		// 총알 자국 생성
 		SpawnDecal(Hit, EDecalPoolList::EDP_BULLETHOLE);
+		// 관통이 됐다면 관통된 곳을 리턴
 		pPoint = CheckPenetrationShot(Hit, (End - Location).GetSafeNormal());
+		// 총알을 쏜 장소에서 부딪힌 사물의 거리만큼 빼준다.
 		Distance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * PenatrateDecreaseDistanceRatio;
 	}
 
 	//DrawDebugLine(GetWorld(), Location, Hit.ImpactPoint, FColor::Red, false, 2, 0, 1);
 	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, FString::Printf(TEXT("Remaining Distance : %.1f"), Distance));
 
+	// 거리가 남았고 총에 맞지 않았다면 (총은 관통을 막아주도록 구현)
 	if (Distance > 0 && !Hitweapon)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Penetrate!!!!"));
