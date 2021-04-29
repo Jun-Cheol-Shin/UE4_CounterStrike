@@ -208,11 +208,33 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 	return false;
 }
 ```
+
 <img src="https://user-images.githubusercontent.com/77636255/116536517-fd14a100-a91f-11eb-80c5-172a0e8e1628.png" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/116536549-0b62bd00-a920-11eb-9e33-2ba7e61971b1.png" width = "450">
-
-
-
 :-------------------------:|:-------------------------:
+
+* 무기마다 정해진 **Weapondistance**에서 오브젝트 충돌 시 거리 값을 감소시켜 감소 시킨 거리 값 만큼 다시 총알이 나가도록 함.
+
+```
+	else if(!Hitweapon)
+	{
+		SpawnDecal(Hit, EDecalPoolList::EDP_BULLETHOLE);
+		pPoint = CheckPenetrationShot(Hit, (End - Location).GetSafeNormal());
+		Distance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * PenatrateDecreaseDistanceRatio;
+	}
+
+	//DrawDebugLine(GetWorld(), Location, Hit.ImpactPoint, FColor::Red, false, 2, 0, 1);
+	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, FString::Printf(TEXT("Remaining Distance : %.1f"), Distance));
+
+	if (Distance > 0 && !Hitweapon)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Penetrate!!!!"));
+		if (pPoint.GetActor())
+		{
+			PenetrationShot(pPoint, (End - Location).GetSafeNormal(), Distance);
+		}
+	}
+```
+
 ___
 
 ### 데칼 표현
