@@ -103,72 +103,60 @@ ___
 * Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬
 
 ```c++
-void AWRifle::RecoilEndVec()
-{
-
-	if(!RandomRecoilFlag)
+	switch (ShotCount)
 	{
-		//FirstShotRot = FirstShotRotBackUp;
+	case 0:
+		Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
+		break;
+	case 1:
+	case 2:
+	case 3:
+		RandomRecoil = FMath::RandRange(0.8f, 1.15f);
+		Rotation.Pitch += RandomRecoil;
+		RandomRecoil += RecoilWeight;
+		Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
+		break;
 
-		switch (ShotCount)
+	default:
+		if (RandomRecoil < RealHitImpactLimit)
 		{
-		case 0:
-			Player->AddControllerPitchInput(-RandomRecoil * 0.1f);
-			break;
-		case 1:
-		case 2:
-		case 3:
-			RandomRecoil = FMath::RandRange(0.8f, 1.15f);
-			Rotation.Pitch += RandomRecoil;
+			// 반동 값에 가중치를 더한다
 			RandomRecoil += RecoilWeight;
+			// 가중치가 증가
+			RecoilWeight += .1f;
+
+			// 일정 수치 초과 시 수직 반동이 없어짐.
+			if (RandomRecoil > RealHitImpactLimit)
+			{
+				RandomRecoil = RealHitImpactLimit;
+			}
+
 			Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
-			break;
-
-		default:
-			if (RandomRecoil < RealHitImpactLimit)
-			{
-				// 반동 값에 가중치를 더한다
-				RandomRecoil += RecoilWeight;
-				// 가중치가 증가
-				RecoilWeight += .1f;
-
-				// 일정 수치 초과 시 수직 반동이 없어짐.
-				if (RandomRecoil > RealHitImpactLimit)
-				{
-					RandomRecoil = RealHitImpactLimit;
-				}
-
-				Player->AddControllerPitchInput(-RandomRecoil * 0.15f);
-			}
-
-
-			// 카메라의 위치 값 조정
-			if (Player->IsCrouchHeld)
-			{
-				Rotation.Pitch += RandomRecoil * 0.6f;
-			}
-
-			else
-			{
-				Rotation.Pitch += RandomRecoil;
-			}
-
-			break;
 		}
 
-		if (ShotCount > 1)
+
+		// 카메라의 위치 값 조정
+		if (Player->IsCrouchHeld)
 		{
-			// RandomRecoil이 일정 수치를 초과 시 수평 반동의 방향을 결정 해 준다.
-			float a = RandomHorizontalDirection();
-			Rotation.Yaw += a;
-			// 카메라의 위치 값 조정
-			Player->AddControllerYawInput(a * 0.15f);
+			Rotation.Pitch += RandomRecoil * 0.6f;
 		}
+
+		else
+		{
+			Rotation.Pitch += RandomRecoil;
+		}
+
+		break;
 	}
 
-
-	Super::RecoilEndVec();
-}
+	if (ShotCount > 1)
+	{
+		// RandomRecoil이 일정 수치를 초과 시 수평 반동의 방향을 결정 해 준다.
+		float a = RandomHorizontalDirection();
+		Rotation.Yaw += a;
+		// 카메라의 위치 값 조정
+		Player->AddControllerYawInput(a * 0.15f);
+	}
 ```
 
 ___
