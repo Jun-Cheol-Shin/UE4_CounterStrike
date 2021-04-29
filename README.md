@@ -103,7 +103,7 @@ ___
 * Pitch가 일정 수치에 도달한 경우 Yaw값이 왼쪽 오른쪽으로 이동하도록 만듬
 
 ```c++
-	void AWRifle::RecoilEndVec()
+void AWRifle::RecoilEndVec()
 {
 
 	if(!RandomRecoilFlag)
