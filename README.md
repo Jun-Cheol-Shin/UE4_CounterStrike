@@ -25,7 +25,7 @@ ___
 * **WBase**라는 클래스에서 칼, 총, 폭탄으로 파생되고 무기에 따른 **단발,연발 유무, 무기 사정거리 등** 존재
 * 총기류는 라이플, 샷건, 권총, 스나이퍼, SMG로 파생되고, 소음기가 달린 무기는 추가로 상속 (M4A1, USP)
 * 폭탄류는 데미지를 주는 Grenade와 섬광효과를 주는 Flash로 파생 (**현재 WSmoke 클래스는 삭제**)
-<img src="https://user-images.githubusercontent.com/77636255/113281699-e1b67600-9320-11eb-960b-094108508016.PNG" width = "800">
+<img src="https://user-images.githubusercontent.com/77636255/116535832-2bde4780-a91f-11eb-81ab-501891c2e218.png" width = "800">
 
 * 블루프린트 에디터에서 주로 사용되는 변수를 모두 빼내어 수정하기 용이하게 함. (매직넘버 최소화)
 <img src="https://user-images.githubusercontent.com/77636255/115403662-990b2200-a227-11eb-8543-f94128868086.PNG" width = "800">
