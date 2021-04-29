@@ -331,6 +331,7 @@ EBoneHit AFPSCharacter::CheckHit(FString HitBoneName)
 		break;
 	}
 ```
+<img src="https://user-images.githubusercontent.com/77636255/116537270-fb97a880-a920-11eb-98e1-bd51b97abb3c.png" width = "800">
 
 * MoveForward, MoveRight의 Value에 따라 CurrentLowerRotation 값을 수정시켜 Hips 본을 회전시킨다.
 
