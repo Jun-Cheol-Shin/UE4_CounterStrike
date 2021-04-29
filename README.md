@@ -280,6 +280,58 @@ ___
 
 ### 그 외 구현 사항
 
+* 부위에 따른 데미지 처리
+<img src="https://user-images.githubusercontent.com/77636255/116537057-b1aec280-a920-11eb-8cea-3bca7374c717.png" width = "800">
+
+* 부위 판정 처리
+```
+EBoneHit AFPSCharacter::CheckHit(FString HitBoneName)
+{
+	if (HitBoneName.Equals(TEXT("Bip01-Head")))
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan,TEXT("Head Shot!"));
+		return EBoneHit::EB_HEAD;
+	}
+
+	else if (HitBoneName.Equals(TEXT("Bip01-Spine1")))
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Shot!"));
+		return EBoneHit::EB_NONE;
+	}
+
+	else if (HitBoneName.Equals(TEXT("Bip01-Pelvis")))
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Guts Shot!"));
+		return EBoneHit::EB_GUTS;
+	}
+
+	else
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Cyan, TEXT("Leg or Arm Shot!"));
+		return EBoneHit::EB_LEG;
+	}
+}
+```
+
+* 판정 처리 후 데미지 처리
+```
+	switch (HitType)
+	{
+	case EBoneHit::EB_HEAD:
+		CurrentHP -= FMath::RoundToInt(Damage * Penetration * 4.f);
+		//UE_LOG(LogTemp, Warning, TEXT("%d"), FMath::RoundToInt(Damage * Penetration * 4.f));
+		break;
+	case EBoneHit::EB_LEG:
+		CurrentHP -= FMath::RoundToInt(Damage * Penetration * 0.75f);
+		//UE_LOG(LogTemp, Warning, TEXT("%d"), FMath::RoundToInt(Damage * Penetration * 0.75f));
+		break;
+	default:
+		CurrentHP -= FMath::RoundToInt(Damage * Penetration);
+		//UE_LOG(LogTemp, Warning, TEXT("%d"), FMath::RoundToInt(Damage * Penetration));
+		break;
+	}
+```
+
 * MoveForward, MoveRight의 Value에 따라 CurrentLowerRotation 값을 수정시켜 Hips 본을 회전시킨다.
 
 <img src="https://user-images.githubusercontent.com/77636255/114875610-6d0f2b80-9e38-11eb-9ff5-6f0de5d53f75.gif" width = "500"> 이동방향에 따라 다리의 회전값이 달라진다. | <img src="https://user-images.githubusercontent.com/77636255/114875709-887a3680-9e38-11eb-8b2a-5c1b660ad13d.PNG" width = "500"> 애님 인스턴스 블루프린트
