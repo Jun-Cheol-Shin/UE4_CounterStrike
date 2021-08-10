@@ -114,6 +114,8 @@ public:
 	void SetKevlar(int16 Kevlar) { CurrentKevlar = Kevlar; }
 
 
+	UPROPERTY(BlueprintReadWrite)
+		bool bGodMode = false;
 
 	UPROPERTY(Replicated, BlueprintReadWrite)
 		int32 KillCount = 0;
@@ -135,8 +137,6 @@ private:
 
 	AFPSCharacter* Character = nullptr;
 	AActorPool* ActorPool;
-
-	bool bGodMode = false;
 	bool bIsDead = false;
 	
 	UPROPERTY(Replicated)

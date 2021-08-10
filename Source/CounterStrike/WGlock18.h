@@ -36,6 +36,10 @@ protected:
 		UAnimSequence* SingleShotAnim;
 
 public:
+	virtual ~AWGlock18()
+	{
+
+	}
 	AWGlock18();
 	virtual float GetDrawDelay() override;
 	virtual void ResetTimeHandle() override;

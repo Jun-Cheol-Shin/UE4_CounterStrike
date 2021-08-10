@@ -29,6 +29,10 @@ private:
 	bool bPossiblePick = true;
 
 public:
+	virtual ~AWBase()
+	{
+
+	}
 	// Sets default values for this actor's properties
 	AWBase();
 	UAnimSequence* CurrentPlayingAnim;

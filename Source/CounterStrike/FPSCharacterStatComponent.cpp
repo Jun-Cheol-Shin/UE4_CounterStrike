@@ -150,15 +150,13 @@ void UFPSCharacterStatComponent::GetDamage(int16 Damage, float Penetration, AAct
 		
 	if (!bGodMode)
 	{
-		CurrentKevlar -= FMath::RoundToInt(Damage * 0.5f);
 
-		if (CurrentKevlar < 0)
-		{
-			CurrentKevlar = 0;
-		}
+		if (CurrentKevlar < 0) CurrentKevlar = 0;
 
 		if (CurrentKevlar > 0)
 		{
+			CurrentKevlar -= FMath::RoundToInt(Damage * 0.5f);
+
 			switch (HitType)
 			{
 			case EBoneHit::EB_HEAD:
@@ -220,8 +218,8 @@ void UFPSCharacterStatComponent::GetDamage(int16 Damage, float Penetration, AAct
 				CauserFPS->GetFPSUIWidget()->SetAmmoCount(CauserFPS);
 			}
 
-			//	//Damaged->DoSomethingOnServer(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
-			//	//Damaged->KillEvent(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
+			////Damaged->DoSomethingOnServer(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
+			////Damaged->KillEvent(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
 			//}
 		}
 

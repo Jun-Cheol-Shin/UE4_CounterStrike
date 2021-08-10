@@ -42,7 +42,7 @@ private:
 	UAnimInstance* Instance;
 	UFPSCharacterAnimInstance* animInstance;
 	EWeaponNum CurrentGrenade = EWeaponNum::E_Knife;
-	UInputComponent* InputComponent;
+	//UInputComponent* InputComponent;
 	bool FirstView = true;
 	// Rotation hips variable..
 	bool rotating = false;

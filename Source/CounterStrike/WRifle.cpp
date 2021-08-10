@@ -152,9 +152,12 @@ void AWRifle::RecoilEndVec()
 		default:
 			if (RandomRecoil < RealHitImpactLimit)
 			{
+				// 반동 값에 가중치를 더한다
 				RandomRecoil += RecoilWeight;
+				// 가중치가 증가
 				RecoilWeight += .1f;
 
+				// 일정 수치 초과 시 수직 반동이 없어짐.
 				if (RandomRecoil > RealHitImpactLimit)
 				{
 					RandomRecoil = RealHitImpactLimit;
@@ -164,6 +167,7 @@ void AWRifle::RecoilEndVec()
 			}
 
 
+			// 카메라의 위치 값 조정
 			if (Player->IsCrouchHeld)
 			{
 				Rotation.Pitch += RandomRecoil * 0.6f;
@@ -179,8 +183,10 @@ void AWRifle::RecoilEndVec()
 
 		if (ShotCount > 1)
 		{
+			// RandomRecoil이 일정 수치를 초과 시 수평 반동의 방향을 결정 해 준다.
 			float a = RandomHorizontalDirection();
 			Rotation.Yaw += a;
+			// 카메라의 위치 값 조정
 			Player->AddControllerYawInput(a * 0.15f);
 		}
 	}

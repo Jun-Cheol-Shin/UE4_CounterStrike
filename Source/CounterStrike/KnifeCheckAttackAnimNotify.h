@@ -4,17 +4,21 @@
 
 #include "CoreMinimal.h"
 #include "FPSCharacterAnimNotify.h"
-#include "KnifeSetAttackAnimNotify.generated.h"
+#include "KnifeCheckAttackAnimNotify.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class COUNTERSTRIKE_API UKnifeSetAttackAnimNotify : public UFPSCharacterAnimNotify
+class COUNTERSTRIKE_API UKnifeCheckAttackAnimNotify : public UFPSCharacterAnimNotify
 {
 	GENERATED_BODY()
-
+	
 public:
+	virtual ~UKnifeCheckAttackAnimNotify()
+	{
+
+	}
 	virtual FString GetNotifyName_Implementation() const override;
 	virtual void Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation) override;
 };

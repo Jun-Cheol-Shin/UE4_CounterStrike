@@ -25,6 +25,10 @@ protected:
 		USoundBase* BangSound;
 
 public:
+	virtual ~AWFlash()
+	{
+
+	}
 	AWFlash();
 
 	virtual void Explosion() override;

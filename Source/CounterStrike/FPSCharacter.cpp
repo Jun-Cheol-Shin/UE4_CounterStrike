@@ -212,7 +212,6 @@ void AFPSCharacter::BeginPlay()
 	}
 
 	ChangeViewCamera(false);
-
 }
 
 
@@ -259,9 +258,9 @@ void AFPSCharacter::Tick(float DeltaTime)
 void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	InputComponent = PlayerInputComponent;
+	//InputComponent = PlayerInputComponent;
 
-	check(InputComponent);
+	//check(InputComponent);
 	// "movement" 바인딩을 구성합니다.
 	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
@@ -280,7 +279,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	PlayerInputComponent->BindAction("Walk", IE_Pressed, this, &AFPSCharacter::StartWalk);
 	PlayerInputComponent->BindAction("Walk", IE_Released, this, &AFPSCharacter::StopWalk);
 
-	//PlayerInputComponent->BindAction("ViewChange", IE_Pressed, this, &AFPSCharacter::ChangeViewCamera);
+	
 
 	PlayerInputComponent->BindAction("Shot", IE_Pressed, this, &AFPSCharacter::Shot);
 	PlayerInputComponent->BindAction("Shot", IE_Released, this, &AFPSCharacter::StopShot);
@@ -299,7 +298,10 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	//PlayerInputComponent->BindAction("Drop", IE_Pressed, this, &AFPSCharacter::Drop);
 	PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &AFPSCharacter::Reload);
 
-	//PlayerInputComponent->BindAction("Shop", IE_Pressed, this, &AFPSCharacter::Shop);
+
+
+	PlayerInputComponent->BindAction("Shop", IE_Pressed, this, &AFPSCharacter::Shop);
+	//PlayerInputComponent->BindAction("ViewChange", IE_Pressed, this, &AFPSCharacter::ChangeViewCamera);
 
 	//PlayerInputComponent->BindAction("Check", IE_Pressed, this, &AFPSCharacter::CheckMyWeapon);
 }
@@ -312,7 +314,7 @@ void AFPSCharacter::SetRagdoll()
 
 void AFPSCharacter::Shop()
 {
-	//PurchaseWeapon(ECreatWeaponNum::EC_AK);
+	PurchaseWeapon(ECreatWeaponNum::EC_AK);
 }
 
 void AFPSCharacter::Shot()
@@ -1975,11 +1977,13 @@ void AFPSCharacter::ServerSpawnPenetrateEffect_Implementation(UNiagaraSystem* Pa
 
 void AFPSCharacter::SyncClientSpawnMuzzleEffect_Implementation(UParticleSystem* MuzzleEffect, USkeletalMeshComponent* MeshComp, FName SocketName)
 {
+	// 클라이언트 -> 서버
 	ServerSpawnMuzzleEffect(MuzzleEffect, MeshComp, SocketName);
 }
 
 void AFPSCharacter::ServerSpawnMuzzleEffect_Implementation(UParticleSystem* MuzzleEffect, USkeletalMeshComponent* MeshComp, FName SocketName)
 {
+	// 서버 -> 멀티캐스트
 	if (!IsLocallyControlled())
 	{
 		UGameplayStatics::SpawnEmitterAttached(MuzzleEffect, MeshComp, SocketName);
@@ -2347,26 +2351,32 @@ void AFPSCharacter::SyncClientSendDamaged_Implementation(AFPSCharacter* Characte
 
 void AFPSCharacter::ServerGetDamaged_Implementation(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Causer, FVector Direction, float ReviveTime)
 {
+	// 멀티캐스트 함수에서 모든 플레이어의 컨트롤러를 찾는다.
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
 	{
-		//GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Yellow, TEXT("Go Method!!!"));
+		// AFPSCharcter를 캐스팅해 찾는다
 		if (AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Iterator->Get()->GetCharacter()))
 		{
+			// 매개변수로 받은 캐릭터 (데미지를 받아야하는 캐릭터)와 일치하는지 체크
 			if (DamagedCharacter == Character && DamagedCharacter->GetFPSUIWidget())
 			{
+				// 피격 UI ON, 데미지 처리
 				DamagedCharacter->GetFPSUIWidget()->SetDamageUI(DirectionType);
 				DamagedCharacter->GetFPSCharacterStatComponent()->SetHP(HP);
 				DamagedCharacter->GetFPSCharacterStatComponent()->SetKevlar(Kevlar);
 				DamagedCharacter->GetFPSUIWidget()->SetArmorAndHealth(DamagedCharacter);
 
+				// 체력이 없어서 사망한 경우
 				if (HP <= 0)
 				{
+					// 데스 모션 후 리스폰
 					DamagedCharacter->SyncClientDeath(DamagedCharacter, Direction, HitType, Causer);
 					DamagedCharacter->SyncClientRevive(DamagedCharacter, ReviveTime);
 
 					AFPSCharacter* CauserFPS = Cast<AFPSCharacter>(Causer);
 					if (CauserFPS)
 					{
+						// 킬 카운트를 UI에 연동
 						CauserFPS->GetFPSCharacterStatComponent()->SetKillCount();
 						DamagedCharacter->DoSomethingOnServer(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
 					}

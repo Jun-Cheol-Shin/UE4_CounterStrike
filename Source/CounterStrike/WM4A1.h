@@ -41,6 +41,10 @@ private:
 		UAnimSequence* SilenceDraw;
 
 public:
+	virtual ~AWM4A1()
+	{
+
+	}
 	AWM4A1();
 
 

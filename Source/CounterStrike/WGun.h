@@ -83,6 +83,12 @@ protected:
 	virtual void SpawnShell();
 
 public:
+	virtual ~AWGun()
+	{
+
+	}
+	AWGun();
+
 	void InitAmmoCount();
 	// Áß¿ä..
 	uint8 GetCurrentAmmoCount() { return CurrentOneMagazineAmmoCount; }
@@ -94,8 +100,6 @@ public:
 	uint8 GetShotCount() { return ShotCount; }
 	uint8 GetOneMagazineAmmo() { return OneMagazineAmmoCount; }
 	FName GetBackSocketName() { return BackSocketName; }
-
-	AWGun();
 
 	UPROPERTY(EditAnywhere)
 		UAnimSequence* AttackAnim_2;
@@ -139,8 +143,8 @@ protected:
 	void SpawnDecal(FHitResult Hit, EDecalPoolList Type);
 
 
-	bool CheckPenetrationShot(FHitResult Point, FVector Direction);
-	void PenetrationShot(FHitResult Point, FVector Direction, float Distance);
+	FHitResult CheckPenetrationShot(const TArray<FHitResult>& Point, const FVector& Direction);
+	TArray<FHitResult> PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance);
 
 
 	void SpawnNiagra(FVector ParticleStart, FVector ParitcleEnd);

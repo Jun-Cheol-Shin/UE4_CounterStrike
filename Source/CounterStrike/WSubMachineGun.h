@@ -16,6 +16,10 @@ class COUNTERSTRIKE_API AWSubMachineGun : public AWRifle
 	
 
 public:
+	virtual ~AWSubMachineGun()
+	{
+
+	}
 	AWSubMachineGun();
 	virtual void ChangeRecoilDirection() override;
 	virtual void SpawnShell() override;

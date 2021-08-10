@@ -42,6 +42,10 @@ protected:
 		UAnimSequence* SilenceDraw;
 
 public:
+	virtual ~AWUSP()
+	{
+
+	}
 	AWUSP();
 	virtual float GetDrawDelay() override;
 

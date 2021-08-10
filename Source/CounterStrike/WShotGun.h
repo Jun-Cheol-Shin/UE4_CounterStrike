@@ -30,6 +30,10 @@ protected:
 	virtual void SpawnShell() override;
 
 public:
+	virtual ~AWShotGun()
+	{
+
+	}
 	AWShotGun();
 
 	virtual void AmmoReload() override;

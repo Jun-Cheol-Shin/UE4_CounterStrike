@@ -43,6 +43,10 @@ protected:
 	virtual void SpawnShell() override;
 
 public:
+	virtual ~AWSniperRifle()
+	{
+
+	}
 	AWSniperRifle();
 
 	virtual void ShakingCamera() override;

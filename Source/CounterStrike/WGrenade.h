@@ -28,6 +28,10 @@ protected:
 		URadialForceComponent* RadialForce;
 
 public:
+	virtual ~AWGrenade()
+	{
+
+	}
 	AWGrenade();
 
 	float GetDistance(AFPSCharacter* DamagedActor);

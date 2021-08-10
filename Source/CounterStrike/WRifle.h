@@ -39,11 +39,14 @@ protected:
 	virtual void SpawnShell() override;
 
 public:
-	UPROPERTY(EditAnywhere)
-		UAnimSequence* AttackAnim_3;
+	virtual ~AWRifle()
+	{
 
+	}
 	AWRifle();
 
+	UPROPERTY(EditAnywhere)
+		UAnimSequence* AttackAnim_3;
 
 	virtual void ChangeRecoilDirection();
 	virtual void Reload() override;

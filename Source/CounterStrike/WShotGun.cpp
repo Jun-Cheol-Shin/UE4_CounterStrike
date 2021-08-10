@@ -129,43 +129,63 @@ void AWShotGun::GunShotMethod()
 
 		Particle->SetVectorParameter("BeamEnd", ModifyEnd);
 
-		if (bSucess)
+		if (bSucess && Hit.GetActor())
 		{
-			if (Hit.GetActor())
+			float Distance = Weapondistance;
+			bool flag = false;
+			FHitResult pPoint, Backup;
+			FVector dir = (End - Location).GetSafeNormal();
+
+			pPoint = Hit;
+			Backup = pPoint;
+
+			Distance -= FVector::Dist(Location, Hit.ImpactPoint) * PenatrateDecreaseDistanceRatio;
+
+			AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
+			AWBase* Hitweapon = Cast<AWBase>(Hit.GetActor());
+
+			if (DamagedCharacter)
 			{
-				float anotherDistance;
-				bool flag = false;
-
-				AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
-				if (DamagedCharacter)
-				{
-					//AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
-					if (ActorPool)
-					{
-						DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(GunDamage,
-							GunPenetration, Player, DamagedCharacter->CheckHit(*Hit.BoneName.ToString()), (End - Location).GetSafeNormal());
-						SpawnDecal(Hit, EDecalPoolList::EDP_BLOOD);
-					}
-					anotherDistance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * 10.f;
-				}
-
-				else
-				{
-					SpawnDecal(Hit, EDecalPoolList::EDP_BULLETHOLE);
-					flag = CheckPenetrationShot(Hit, (End - Location).GetSafeNormal());
-					anotherDistance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * 20.f;
-				}
-
-				if (anotherDistance > 0 && flag)
-				{
-					PenetrationShot(Hit, (End - Location).GetSafeNormal(), anotherDistance);
-				}
-
-				else
-				{
-					SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), Hit.ImpactPoint);
-				}
+				DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(GunDamage,
+					GunPenetration, Player, DamagedCharacter->CheckHit(*Hit.BoneName.ToString()), (End - Location).GetSafeNormal());
+				SpawnDecal(Hit, EDecalPoolList::EDP_BLOOD);
 			}
+
+			else
+			{
+				SpawnDecal(Hit, EDecalPoolList::EDP_BULLETHOLE);
+			}
+
+			if (!Hitweapon)
+			{
+				// 구조적으로 리팩토링이 필요 할 것 같다.
+
+				//// 현재 맞은 사물의 관통여부 확인
+				//pPoint = CheckPenetrationShot(pPoint, dir);
+
+				//// 유효거리가 남았고, 관통여부가 확인된다면 다음 샷을 진행
+				//while (Distance > 0.f && pPoint.GetActor())
+				//{
+				//	/*	DrawDebugPoint(GetWorld(),
+				//			pPoint.ImpactPoint, 10, FColor::Red, true);*/
+
+				//	// HitResult 값 백업
+				//	Backup = pPoint;
+				//	// 다음 샷을 통해 다음 맞은 곳을 리턴
+				//	pPoint = PenetrationShot(pPoint, dir, Distance);
+
+				//	// 맞았다면.. 관통여부 확인한다. 맞지 않았다면 브레이크
+				//	if (pPoint.GetActor())
+				//		pPoint = CheckPenetrationShot(pPoint, dir);
+				//	else break;
+				//}
+			}
+
+			if (pPoint.GetActor())
+				SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), pPoint.ImpactPoint - Location);
+
+			else
+				SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), Backup.ImpactPoint - Location);
 		}
 
 		else

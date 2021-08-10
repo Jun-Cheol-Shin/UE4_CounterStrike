@@ -31,6 +31,10 @@ private:
 	TArray<FHitResult> HitPoint;
 
 public:
+	virtual ~AWKnife()
+	{
+
+	}
 	AWKnife();
 	UPROPERTY(EditAnywhere)
 		float Penetration;

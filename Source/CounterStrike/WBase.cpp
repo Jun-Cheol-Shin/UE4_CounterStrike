@@ -185,12 +185,8 @@ void AWBase::Fire()
 
 			// 애니메이션 공격을 멈추도록 false
 			Player->AttackAnimCall = false;
-
 			// RPC 함수를 호출 다른 클라이언트들에게 보이는 공격 애니메이션 설정
-			if (Player->GetLocalRole() < ROLE_Authority && Player->IsLocallyControlled())
-			{
-				Player->SyncClientAttack(Player->AttackAnimCall, Player->DelayTime);
-			}
+			Player->SyncClientAttack(Player->AttackAnimCall, Player->DelayTime);
 
 			// 만약 마우스를 클릭하고 있다면...
 			if (Player->IsAttackHeld)

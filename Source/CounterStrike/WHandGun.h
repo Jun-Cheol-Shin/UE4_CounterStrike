@@ -20,6 +20,13 @@ protected:
 	virtual void SpawnShell() override;
 
 public:
+
+	virtual ~AWHandGun()
+	{
+
+	}
+	AWHandGun();
+
 	UPROPERTY(EditAnywhere)
 		float ShakingValue;
 
@@ -28,8 +35,6 @@ public:
 
 	UPROPERTY(EditAnywhere)
 		uint8 ShotRecoilStrength;
-
-	AWHandGun();
 
 	virtual void ShakingCamera() override;
 	virtual void ShuffleShotAnim() override;

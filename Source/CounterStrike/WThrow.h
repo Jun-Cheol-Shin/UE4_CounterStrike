@@ -38,6 +38,10 @@ protected:
 	UPROPERTY(EditAnywhere)
 		UAnimSequence* ThrowAnim;
 public:
+	virtual ~AWThrow()
+	{
+
+	}
 	AWThrow();
 
 	void ThrowProjectile();
