@@ -302,7 +302,7 @@ ___
 
 ![1](https://user-images.githubusercontent.com/77636255/128975597-92f6ffb0-1b42-449d-b62e-919996c30263.PNG)
 ```c++
-// 관통 확인 
+// 관통 여부 확인 함수
 FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FVector& Direction)
 {
 	FHitResult retval;
@@ -310,6 +310,8 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(Player);
+
+	FVector Start;
 
 	// 첫 사격을 MultiLineTrace를 이용해 결과값을 여러개 가져오도록 한다..
 	// 맨 앞에 충돌한 액터를 제외한 모든 액터들을 트레이싱에서 제외시킨다.
@@ -326,17 +328,21 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 		bSuccess = GetWorld()->LineTraceSingleByChannel(retval,
 			Point[1].ImpactPoint, Point[0].ImpactPoint,
 			ECollisionChannel::ECC_Visibility, params);
+
+		Start = Point[0].ImpactPoint;
 	}
 
 	else
 	{
 		bSuccess = GetWorld()->LineTraceSingleByChannel(retval,
-			Point[0].TraceEnd, Point[0].Location,
+			Point[0].TraceEnd, Point[0].ImpactPoint,
 			ECollisionChannel::ECC_Visibility, params);
+
+		Start = Point[0].ImpactPoint;
 	}
 
 	// 충돌했다면 관통 할 수 있다는 뜻이므로 데칼 생성(관통 데칼) 무기는 관통 X
-	if (bSuccess && retval.GetActor())
+	if (bSuccess && retval.GetActor() && FVector::Dist(Start, retval.ImpactPoint) < THICKNESS)
 	{
 		AWBase* Hitweapon = Cast<AWBase>(retval.GetActor());
 		if (Hitweapon) return FHitResult();
@@ -345,9 +351,10 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 			SpawnDecal(retval, EDecalPoolList::EDP_BLOOD);
 		else 
 			SpawnDecal(retval, EDecalPoolList::EDP_BULLETHOLE);
+		return retval;
 	}
 
-	return retval;
+	return FHitResult();
 }
 ```
 
