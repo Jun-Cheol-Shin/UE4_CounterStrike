@@ -298,7 +298,7 @@ ___
 
 ### 월 샷 매커니즘
 
-* 1. 관통 여부를 확인
+#### 1. 관통 여부를 확인
 
 ![1](https://user-images.githubusercontent.com/77636255/128975597-92f6ffb0-1b42-449d-b62e-919996c30263.PNG)
 ```c++
@@ -358,7 +358,7 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 }
 ```
 
-* 2. 관통 여부를 확인 후 다시 사격 진행
+#### 2. 관통 여부를 확인 후 다시 사격 진행
 
 ![2](https://user-images.githubusercontent.com/77636255/128975661-a0435e27-bd11-4db0-8bf3-0c9ea3475a8f.PNG)
 ```c++
@@ -417,7 +417,7 @@ TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector
 	return Hits;
 }
 ```
-* 3. 최종 매커니즘
+#### 3. 최종 매커니즘
 
 * 유효거리가 0보다 크고 관통이 가능하다면 계속 관통하도록 한다.
 
@@ -441,8 +441,7 @@ TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector
 	}
 ```
 
-* 4. 구현
-#### [구현 영상](https://youtu.be/1ThbfzGJHsE)
+#### [구현 사진 및 영상](https://youtu.be/1ThbfzGJHsE)
 
 <img src="https://user-images.githubusercontent.com/77636255/128977406-153e58dd-1f79-4a85-bef6-70887273150f.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/128977448-aa2180b2-3e3d-45c0-be54-dfef08aebf04.gif" width = "450">
 :-------------------------:|:-------------------------:
