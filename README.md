@@ -347,6 +347,63 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 	return retval;
 }
 ```
+
+```c++
+TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance)
+{
+	// 관통에 성공했다면 실행되는 함수..
+	TArray<FHitResult> Hits;
+	//FHitResult Hit;
+	bool bSuccess = false;
+	float DecreaseRatio = 0.15;
+
+	// 플레이어 자신과 관통되었던 액터를 제외
+	FCollisionQueryParams Param;
+	Param.AddIgnoredActor(Player);
+	Param.AddIgnoredActor(Point.GetActor());
+
+	FCollisionObjectQueryParams ObjectList;
+	ObjectList.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectList.AddObjectTypesToQuery(ECC_GameTraceChannel1);
+
+	bSuccess = GetWorld()->LineTraceMultiByObjectType(Hits, Point.ImpactPoint, Point.ImpactPoint + Direction * Distance,
+		ObjectList, Param);
+
+
+	if (bSuccess && Hits[0].GetActor())
+	{
+		// 캐릭터에 맞았다면..
+		if (Hits[0].GetActor()->IsA(AFPSCharacter::StaticClass()))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Character Hit!!!!"));
+			AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hits[0].GetActor());
+			SpawnDecal(Hits[0], EDecalPoolList::EDP_BLOOD);
+
+			// 무기마다 정해진 데미지, 방탄복 관통력을 감소시켜서 데미지를 적용시킨다.
+			DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(GunDamage - 3,
+				GunPenetration - DecreaseRatio, Player, DamagedCharacter->CheckHit(*(Hits[0].BoneName.ToString())));
+		}
+
+		// 그 외 물체에 맞았다면..
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Wall Hit!!!!"));
+			SpawnDecal(Hits[0], EDecalPoolList::EDP_BULLETHOLE);
+		}
+
+		//SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), Hit.ImpactPoint - Location);
+
+		// 충돌이 되었다면 무기의 유효거리 값 감소
+		Distance -= FVector::Dist(Point.ImpactPoint, Hits[0].ImpactPoint) * PenatrateDecreaseDistanceRatio;
+		DrawDebugLine(GetWorld(), Point.ImpactPoint, Hits[0].ImpactPoint, FColor::Blue, false, 10, 0, 1);
+	}
+
+	// 충돌할 액터가 없으므로 while 탈출을 위해 Distance를 0으로 만듬.
+	else Distance = 0.f;
+	
+	return Hits;
+}
+```
 ___
 
 ### 데칼 표현
