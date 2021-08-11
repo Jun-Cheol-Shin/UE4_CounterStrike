@@ -435,7 +435,7 @@ TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector
 
 * 4. 구현
 
-<img src="https://user-images.githubusercontent.com/77636255/113298891-4381da80-9337-11eb-877f-89cf31e546ba.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113298950-51cff680-9337-11eb-9041-a109eecea6c2.gif" width = "450">
+<img src="https://user-images.githubusercontent.com/77636255/128977406-153e58dd-1f79-4a85-bef6-70887273150f.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/128977448-aa2180b2-3e3d-45c0-be54-dfef08aebf04.gif" width = "450">
 :-------------------------:|:-------------------------:
 ___
 
