@@ -420,7 +420,7 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113445182-5af0be80-9430-11eb-8722-98c6e181f3f0.PNG" width = "500"> | <img src="https://user-images.githubusercontent.com/77636255/113445209-68a64400-9430-11eb-9237-2524614ae281.PNG" width = "500">
 :-------------------------:|:-------------------------:
 
-#### [CharacterMovement 컴포넌트의 가속도 변수를 참조해서 제작](https://github.com/Jun-Cheol-Shin/UE4_CounterStrike/blob/main/Source/CounterStrike/Private/FPSHUDWidget.cpp#L96)
+#### [CharacterMovement 컴포넌트의 가속도 변수를 참조해서 제작](https://github.com/Jun-Cheol-Shin/UE4_CounterStrike/blob/afc3431f5cd20247dd52fd8288586ad802cdc77a/Source/CounterStrike/FPSHUDWidget.cpp#L96)
 
 <img src="https://user-images.githubusercontent.com/77636255/113447185-53331900-9434-11eb-8d09-45701fbbf8e6.gif" width = "500">  움직임 보정| <img src="https://user-images.githubusercontent.com/77636255/113447207-5c23ea80-9434-11eb-988b-d793165640ea.gif" width = "500">  사격 보정
 :-------------------------:|:-------------------------:
