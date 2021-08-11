@@ -297,6 +297,25 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 ___
 
 ### 월 샷 매커니즘
+```c++
+// 현재 맞은 사물의 관통여부 확인 (핵심 부분)
+	pPoint = CheckPenetrationShot(Hits, dir);
+
+	 //유효거리가 남았고, 관통여부가 확인된다면 다음 샷을 진행
+	while (Distance > 0.f && pPoint.GetActor())
+	{
+		// HitResult 값 백업
+		Backup = pPoint;
+		// 다음 사물 맞은 곳을 리턴
+		pPoints = PenetrationShot(pPoint, dir, Distance);
+
+		// 맞았다면.. 관통여부 확인한다. 맞지 않았다면 브레이크
+		if (pPoints.Num() == 0)
+			break;
+		else
+			pPoint = CheckPenetrationShot(pPoints, dir);
+	}
+```
 
 ```c++
 // 관통 확인 
