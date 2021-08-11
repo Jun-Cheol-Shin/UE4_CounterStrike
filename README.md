@@ -160,17 +160,14 @@ ___
 ```
 
 ___
-
-### 월 샷 구현
-<img src="https://user-images.githubusercontent.com/77636255/113298891-4381da80-9337-11eb-877f-89cf31e546ba.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113298950-51cff680-9337-11eb-9041-a109eecea6c2.gif" width = "450">
-:-------------------------:|:-------------------------:
+~~### 월 샷 구현 (구버전)~~
+<img src="https://user-images.githubusercontent.com/77636255/113298891-4381da80-9337-11eb-877f-89cf31e546ba.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113298950-51cff680-9337-11eb-9041-a109eecea6c2.gif" width = "450">~~
+:-------------------------:|:-------------------------:~~
 
 ~~* 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (**빨간 선**)~~
 ~~* 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)~~
 ~~* 총알 쐈던 **반대 방향**으로 Trace를 실행 만약 맞았다면 관통에 성공했으므로 데칼을 생성~~
 ~~* 데칼을 생성한 지점에서 다시 Trace를 실행 (**파란 선**)~~
-
-* 8월 11일자 이후로 월 샷 매커니즘을 새롭게 수정했습니다.
 
 ```c++
 bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
@@ -214,7 +211,7 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 <img src="https://user-images.githubusercontent.com/77636255/116536517-fd14a100-a91f-11eb-80c5-172a0e8e1628.png" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/116536549-0b62bd00-a920-11eb-9e33-2ba7e61971b1.png" width = "450">
 :-------------------------:|:-------------------------:
 
-* 무기마다 정해진 **Weapondistance**에서 오브젝트 충돌 시 거리 값을 감소시켜 감소 시킨 거리 값 만큼 다시 총알이 나가도록 함.
+~~* 무기마다 정해진 **Weapondistance**에서 오브젝트 충돌 시 거리 값을 감소시켜 감소 시킨 거리 값 만큼 다시 총알이 나가도록 함.~~
 
 ```
 	else if(!Hitweapon)
