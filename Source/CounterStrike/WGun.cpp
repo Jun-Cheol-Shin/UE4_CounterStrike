@@ -23,6 +23,8 @@
 #include "Math/UnrealMathUtility.h"
 #include "FPSHUDWidget.h"
 
+#define THICKNESS 150
+
 AWGun::AWGun()
 {
 	Weapondistance = 10000.f;
@@ -279,7 +281,7 @@ void AWGun::GunShotMethod()
 		FVector dir = (End - Location).GetSafeNormal();
 
 		// 총알을 쏜 장소에서 부딪힌 사물의 거리만큼 빼준다.
-		Distance -= FVector::Dist(Location, Hits[0].ImpactPoint) * PenatrateDecreaseDistanceRatio;
+		Distance -= (FVector::Dist(Location, Hits[0].ImpactPoint) * PenatrateDecreaseDistanceRatio);
 
 		if (DamagedCharacter)
 		{
@@ -533,6 +535,13 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(Player);
 
+	FVector Start;
+
+	// 첫 사격을 MultiLineTrace를 이용해 결과값을 여러개 가져오도록 한다..
+	// 맨 앞에 충돌한 액터를 제외한 모든 액터들을 트레이싱에서 제외시킨다.
+	// 
+	// 결과값이 여러개 라면.. SingleTrace를 이용해서 처음 맞은 액터 <- 그 다음 액터 식으로 라인을 진행시킨다.
+	// 결과값이 하나라면.. SingleTrace를 이용해 처음 맞은 액터 Location 값 <- 처음 맞은 액터 TraceEnd 값으로 진행.
 	if (Point.Num() > 1)
 	{
 		for (int i = 1; i < Point.Num(); ++i)
@@ -543,17 +552,21 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 		bSuccess = GetWorld()->LineTraceSingleByChannel(retval,
 			Point[1].ImpactPoint, Point[0].ImpactPoint,
 			ECollisionChannel::ECC_Visibility, params);
+
+		Start = Point[0].ImpactPoint;
 	}
 
 	else
 	{
 		bSuccess = GetWorld()->LineTraceSingleByChannel(retval,
-			Point[0].TraceEnd, Point[0].Location,
+			Point[0].TraceEnd, Point[0].ImpactPoint,
 			ECollisionChannel::ECC_Visibility, params);
+
+		Start = Point[0].ImpactPoint;
 	}
 
-	// 관통 성공.. 동시에 물체의 반대편에 데칼 생성 (내가 총알을 맞춘 액터와 동일 액터라면...)
-	if (bSuccess && retval.GetActor())
+	// 충돌했다면 관통 할 수 있다는 뜻이므로 데칼 생성(관통 데칼) 무기는 관통 X
+	if (bSuccess && retval.GetActor() && FVector::Dist(Start, retval.ImpactPoint) < THICKNESS)
 	{
 		AWBase* Hitweapon = Cast<AWBase>(retval.GetActor());
 		if (Hitweapon) return FHitResult();
@@ -562,21 +575,21 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 			SpawnDecal(retval, EDecalPoolList::EDP_BLOOD);
 		else 
 			SpawnDecal(retval, EDecalPoolList::EDP_BULLETHOLE);
+		return retval;
 	}
 
-	return retval;
+	return FHitResult();
 }
 
 TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance)
 {
 	// 관통에 성공했다면 실행되는 함수..
-
-
 	TArray<FHitResult> Hits;
 	//FHitResult Hit;
 	bool bSuccess = false;
 	float DecreaseRatio = 0.15;
 
+	// 플레이어 자신과 관통되었던 액터를 제외
 	FCollisionQueryParams Param;
 	Param.AddIgnoredActor(Player);
 	Param.AddIgnoredActor(Point.GetActor());
@@ -610,13 +623,15 @@ TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector
 			SpawnDecal(Hits[0], EDecalPoolList::EDP_BULLETHOLE);
 		}
 
-		// 나이아가라 이펙트 호출
 		//SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), Hit.ImpactPoint - Location);
-		Distance -= FVector::Dist(Point.ImpactPoint, Hits[0].ImpactPoint) * PenatrateDecreaseDistanceRatio;
+
+		// 충돌이 되었다면 무기의 유효거리 값 감소
+		Distance -= (FVector::Dist(Point.ImpactPoint, Hits[0].ImpactPoint) * PenatrateDecreaseDistanceRatio);
 		DrawDebugLine(GetWorld(), Point.ImpactPoint, Hits[0].ImpactPoint, FColor::Blue, false, 10, 0, 1);
 	}
 
-	else Distance -= Distance;
+	// 충돌할 액터가 없으므로 while 탈출을 위해 Distance를 0으로 만듬.
+	else Distance = 0.f;
 	
 	return Hits;
 }

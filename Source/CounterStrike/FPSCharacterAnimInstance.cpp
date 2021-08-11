@@ -31,8 +31,11 @@ void UFPSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		eGunNumber = MyChar->CurrentAnimationWeaponNumber;
 		fStartTime = MyChar->ReloadStartTime;
-
-		deathNum = uint8(MyChar->GetFPSCharacterStatComponent()->GetDeathNum());
+		
+		if (MyChar->GetFPSCharacterStatComponent())
+		{
+			deathNum = uint8(MyChar->GetFPSCharacterStatComponent()->GetDeathNum());
+		}
 	}
 }
 

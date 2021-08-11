@@ -62,6 +62,8 @@ public:
 		EWeaponNum eWeaponNum;
 	UPROPERTY(EditAnywhere)
 		EGunNumber eGunNumber;
+	UPROPERTY(EditAnywhere)
+		ECreatWeaponNum eCreatedWeaponNum;
 
 	UPROPERTY(EditAnywhere)
 		class UStaticMeshComponent* WeaponComponent;

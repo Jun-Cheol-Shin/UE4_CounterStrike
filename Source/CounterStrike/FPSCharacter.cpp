@@ -97,6 +97,7 @@ AFPSCharacter::AFPSCharacter()
 
 
 		HandMesh->SetVisibility(false);
+		HandMesh->BoundsScale = 3.f;
 		//CaptureCamera->HideComponent(HandMesh);
 		FPSmesh.Add(HandMesh);
 
@@ -142,9 +143,6 @@ AFPSCharacter::AFPSCharacter()
 	GetCharacterMovement()->CrouchedHalfHeight = 60.f;
 	GetCharacterMovement()->JumpZVelocity = 500.f;
 
-
-
-
 	//static ConstructorHelpers::FClassFinder<UFPSHUDWidget> UI_HUD_C(TEXT("WidgetBlueprint'/Game/BluePrint/HUD/InGame/FPSUI.FPSUI_C'"));
 	//if (UI_HUD_C.Succeeded())
 	//{
@@ -160,8 +158,12 @@ AFPSCharacter::AFPSCharacter()
 	{
 		GetCharacterMovement()->NavAgentProps.bCanCrouch = true;
 		GetCharacterMovement()->MaxWalkSpeedCrouched = StatComponent->CrouchSpeed;
+		GetCharacterMovement()->JumpZVelocity = 600.f;
+		GetCharacterMovement()->AirControl = 0.3f;
+		GetCharacterMovement()->GravityScale = 1.5f;
 	}
 
+	Sensitive = 3;
  }
 
  void AFPSCharacter::SetFPSUIHUD(APlayerController* MyController)
@@ -223,12 +225,14 @@ void AFPSCharacter::Tick(float DeltaTime)
 
 	//SetCharacterState();
 
-	/*if (StatComponent)
+	if (StatComponent && StatComponent->GetWeaponArrayNum() > 0)
 	{
-		GEngine->AddOnScreenDebugMessage(1, 5.0f, FColor::Yellow, TEXT("UpperState : ") + GetStateAsString(StatComponent->GetCharacterUpperState()));
-		GEngine->AddOnScreenDebugMessage(2, 5.0f, FColor::Yellow, TEXT("LowerState : ") + GetStateAsString(StatComponent->GetCharacterLowerState()));
-		GEngine->AddOnScreenDebugMessage(3, 5.0f, FColor::Yellow, FString::Printf(TEXT("Velocity : %.1f"), GetMovementComponent()->Velocity.Size2D()));
-	}*/
+		for (int i = 0; i < StatComponent->GetWeaponArrayNum(); ++i)
+		{
+			GEngine->AddOnScreenDebugMessage(i, 3.f, FColor::Cyan,
+				FString::Printf(TEXT("Weapon Number %d : %s"), i + 1, *StatComponent->GetWeaponArray()[i]->GetName()));
+		}
+	}
 
 
 	RotatingLowerHips(DeltaTime);
@@ -300,7 +304,7 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 
 
-	PlayerInputComponent->BindAction("Shop", IE_Pressed, this, &AFPSCharacter::Shop);
+	//PlayerInputComponent->BindAction("Shop", IE_Pressed, this, &AFPSCharacter::Shop);
 	//PlayerInputComponent->BindAction("ViewChange", IE_Pressed, this, &AFPSCharacter::ChangeViewCamera);
 
 	//PlayerInputComponent->BindAction("Check", IE_Pressed, this, &AFPSCharacter::CheckMyWeapon);
@@ -315,6 +319,7 @@ void AFPSCharacter::SetRagdoll()
 void AFPSCharacter::Shop()
 {
 	PurchaseWeapon(ECreatWeaponNum::EC_AK);
+	PurchaseWeapon(ECreatWeaponNum::EC_FLASH);
 }
 
 void AFPSCharacter::Shot()
@@ -527,89 +532,82 @@ void AFPSCharacter::Swap_Granade()
 		return;
 	}
 
-	switch (CurrentGrenade)
+	//switch (CurrentGrenade)
+	//{
+	//case EWeaponNum::E_Grenade:
+	//	if (StatComponent->GetSelectWeapon(EWeaponNum::E_Smoke))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Smoke);
+	//		CurrentGrenade = EWeaponNum::E_Smoke;
+	//	}
+	//	else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Flash))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Flash);
+	//		CurrentGrenade = EWeaponNum::E_Flash;
+	//	}
+	//	break;
+	//case EWeaponNum::E_Smoke:
+	//	if (StatComponent->GetSelectWeapon(EWeaponNum::E_Flash))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Flash);
+	//		CurrentGrenade = EWeaponNum::E_Flash;
+	//	}
+	//	else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Grenade))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Grenade);
+	//		CurrentGrenade = EWeaponNum::E_Grenade;
+	//	}
+	//	break;
+	//case EWeaponNum::E_Flash:
+	//	if (StatComponent->GetSelectWeapon(EWeaponNum::E_Grenade))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Grenade);
+	//		CurrentGrenade = EWeaponNum::E_Grenade;
+	//	}
+	//	else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Smoke))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Smoke);
+	//		CurrentGrenade = EWeaponNum::E_Smoke;
+	//	}
+	//	break;
+	//default:
+	//	if (StatComponent->GetSelectWeapon(EWeaponNum::E_Grenade))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Grenade);
+	//		CurrentGrenade = EWeaponNum::E_Grenade;
+	//	}
+	//	else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Smoke))
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Smoke);
+	//		CurrentGrenade = EWeaponNum::E_Smoke;
+	//	}
+	//	else
+	//	{
+	//		ChangeWeapon(EWeaponNum::E_Flash);
+	//		CurrentGrenade = EWeaponNum::E_Flash;
+	//	}
+	//	break;
+	//}
+
+	// 수류탄 스위칭 수정 작업 필요!!!!!!!
+
+	if (StatComponent->GetSelectWeapon(EWeaponNum::E_Grenade))
 	{
-	case EWeaponNum::E_Grenade:
-		if (StatComponent->GetSelectWeapon(EWeaponNum::E_Smoke))
-		{
-			ChangeWeapon(EWeaponNum::E_Smoke);
-			CurrentGrenade = EWeaponNum::E_Smoke;
-		}
-
-		else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Flash))
-		{
-			ChangeWeapon(EWeaponNum::E_Flash);
-			CurrentGrenade = EWeaponNum::E_Flash;
-		}
-
-		else
-		{
-			return;
-		}
-
-		break;
-	case EWeaponNum::E_Smoke:
-		if (StatComponent->GetSelectWeapon(EWeaponNum::E_Flash))
-		{
-			ChangeWeapon(EWeaponNum::E_Flash);
-			CurrentGrenade = EWeaponNum::E_Flash;
-		}
-
-		else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Grenade))
-		{
-			ChangeWeapon(EWeaponNum::E_Grenade);
-			CurrentGrenade = EWeaponNum::E_Grenade;
-		}
-
-		else
-		{
-			return;
-		}
-		break;
-	case EWeaponNum::E_Flash:
-		if (StatComponent->GetSelectWeapon(EWeaponNum::E_Grenade))
-		{
-			ChangeWeapon(EWeaponNum::E_Grenade);
-			CurrentGrenade = EWeaponNum::E_Grenade;
-		}
-
-		else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Smoke))
-		{
-			ChangeWeapon(EWeaponNum::E_Smoke);
-			CurrentGrenade = EWeaponNum::E_Smoke;
-		}
-
-		else
-		{
-			return;
-		}
-		break;
-	default:
-		if (StatComponent->GetSelectWeapon(EWeaponNum::E_Grenade))
-		{
-			ChangeWeapon(EWeaponNum::E_Grenade);
-			CurrentGrenade = EWeaponNum::E_Grenade;
-		}
-
-		else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Smoke))
-		{
-			ChangeWeapon(EWeaponNum::E_Smoke);
-			CurrentGrenade = EWeaponNum::E_Smoke;
-		}
-
-		else if(StatComponent->GetSelectWeapon(EWeaponNum::E_Flash))
-		{
-			ChangeWeapon(EWeaponNum::E_Flash);
-			CurrentGrenade = EWeaponNum::E_Flash;
-		}
-
-		else
-		{
-			return;
-		}
-		break;
+		ChangeWeapon(EWeaponNum::E_Grenade);
+		CurrentGrenade = EWeaponNum::E_Grenade;
 	}
 
+	else if (StatComponent->GetSelectWeapon(EWeaponNum::E_Smoke))
+	{
+		ChangeWeapon(EWeaponNum::E_Smoke);
+		CurrentGrenade = EWeaponNum::E_Smoke;
+	}
+
+	else if(StatComponent->GetSelectWeapon(EWeaponNum::E_Flash))
+	{
+		ChangeWeapon(EWeaponNum::E_Flash);
+		CurrentGrenade = EWeaponNum::E_Flash;
+	}
 }
 
 void AFPSCharacter::Swap_Bomb()
@@ -1000,7 +998,6 @@ void AFPSCharacter::SmoothingCrouch(float DeltaTime)
 
 }
 
-
 void AFPSCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -1139,7 +1136,6 @@ void AFPSCharacter::CrouchMeshPos()
 	}
 }
 
-
 void AFPSCharacter::SyncClientCrouch_Implementation(bool flag, float Time)
 {
 	IsCrouchHeld = flag;
@@ -1230,7 +1226,7 @@ bool AFPSCharacter::PurchaseWeapon(ECreatWeaponNum WeaponNumber)
 			if (AWBase* Weapon = Cast<AWBase>(ActorArray[i]))
 			{
 				//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, FString::Printf(TEXT("%s"), *Weapon->GetSocketName().ToString()));
-				if (Weapon->GetSocketName().IsEqual(EqualWeapon->GetSocketName()))
+				if (Weapon->eCreatedWeaponNum == WeaponNumber)
 				{
 					SetWeaponMethod(Weapon, false);
 					return true;
@@ -1263,9 +1259,6 @@ bool AFPSCharacter::PurchaseWeapon(ECreatWeaponNum WeaponNumber)
 		//		}
 		//	}
 		//}
-
-
-		return false;
 	}
 
 	return false;
@@ -1310,7 +1303,6 @@ void AFPSCharacter::SetNewWeaponMesh(AWBase* WeaponActor)
 
 
 	ServerEquipWeapon(this, WeaponActor);
-
 }
 
 void AFPSCharacter::PutNewWeapon(AWBase* WeaponActor)
@@ -1468,7 +1460,6 @@ void AFPSCharacter::DropWeapon(EWeaponNum WeaponNum)
 
 
 }
-
 
 EWeaponNum AFPSCharacter::DropAndEnableChangeWeapon()
 {
@@ -1749,14 +1740,12 @@ void AFPSCharacter::MoveForward(float Value)
 	MoveForwardValue = Value;
 }
 
-
 void AFPSCharacter::SyncClientForward_Implementation(float Value)
 {
 	MoveForwardValue = Value;
 	AimOffsetPitch = 0.f;
 	AimOffsetYaw = 0.f;
 }
-
 
 void AFPSCharacter::MoveRight(float Value)
 {
@@ -1858,7 +1847,6 @@ void AFPSCharacter::AddControllerPitchInput(float Val)
 	}
 
 }
-
 // Aim offset..
 void AFPSCharacter::RotatingAimOffset(FRotator Actor, FRotator Control)
 {
@@ -1917,7 +1905,6 @@ void AFPSCharacter::SyncClientReload_Implementation(bool flag)
 {
 	bIsReloading = flag;
 }
-
 
 void AFPSCharacter::SyncClientRotation_Implementation(float Yaw, float Pitch)
 {
@@ -2005,7 +1992,6 @@ void AFPSCharacter::ServerSpawnDecal_Implementation(TSubclassOf<class ADecalActo
 		Decal->SetActorHiddenInGame(false);
 	}
 }
-
 
 void AFPSCharacter::SyncClientSpawnShell_Implementation(TSubclassOf<class AStaticMeshActor> ShellBlueprint, FVector Impulse, USkeletalMeshComponent* MeshComp)
 {
@@ -2160,6 +2146,7 @@ void AFPSCharacter::ClientTakeoutWeapon_Implementation(AFPSCharacter* Character,
 
 	else
 	{
+		uint8 num = uint8(Weapon->eWeaponNum) - 1;
 		switch (Weapon->eWeaponNum)
 		{
 		case EWeaponNum::E_Rifle:
@@ -2177,7 +2164,7 @@ void AFPSCharacter::ClientTakeoutWeapon_Implementation(AFPSCharacter* Character,
 			break;
 		}
 
-		Character->Thirdmesh[uint8(Weapon->eWeaponNum) - 1]->AttachToComponent(Character->GetMesh(),
+		Character->Thirdmesh[num]->AttachToComponent(Character->GetMesh(),
 			FAttachmentTransformRules::SnapToTargetNotIncludingScale, Weapon->GetSocketName());
 
 		if (Weapon->eWeaponNum != EWeaponNum::E_Rifle && Character->GetFPSCharacterStatComponent()->GetSelectWeapon(EWeaponNum::E_Rifle))
@@ -2186,8 +2173,8 @@ void AFPSCharacter::ClientTakeoutWeapon_Implementation(AFPSCharacter* Character,
 		}
 
 		Character->GetFPSCharacterStatComponent()->SetCharacterCurrentWeaponNum();
-		Character->FPSmesh[uint8(Weapon->eWeaponNum) - 1]->SetVisibility(true);
-		Character->Thirdmesh[uint8(Weapon->eWeaponNum) - 1]->SetVisibility(true);
+		Character->FPSmesh[num]->SetVisibility(true);
+		Character->Thirdmesh[num]->SetVisibility(true);
 
 
 		if (Character->GetPlayerController())
@@ -2398,7 +2385,6 @@ void AFPSCharacter::ServerDeathCharacter_Implementation(AFPSCharacter* DeathChar
 	DeathCharacter->GetFPSCharacterStatComponent()->Death(DeathCharacter, Direction, HitType, Causer);
 }
 
-
 void AFPSCharacter::SyncClientRevive_Implementation(AFPSCharacter* ReviveCharacter, float Sec)
 {
 	ServerCharacterRevive(ReviveCharacter, Sec);
@@ -2408,7 +2394,6 @@ void AFPSCharacter::ServerCharacterRevive_Implementation(AFPSCharacter* ReviveCh
 {
 	ReviveCharacter->GetFPSCharacterStatComponent()->Revive(ReviveCharacter, Sec);
 }
-
 
 void AFPSCharacter::DoSomethingOnServer_Implementation(int32 KillCount, AFPSCharacter* CauserCharacter)
 {

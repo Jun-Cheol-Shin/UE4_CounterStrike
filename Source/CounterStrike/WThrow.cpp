@@ -81,7 +81,6 @@ void AWThrow::ThrowProjectile()
 		FVector outVelocity = FVector::ZeroVector;   // 결과 Velocity
 
 		Player->GetController()->GetPlayerViewPoint(OUT startLoc, OUT Rotation);
-
 		FVector targetLoc = startLoc + Rotation.Vector() * Weapondistance;  // 타겟 지점.
 
 
@@ -115,7 +114,7 @@ void AWThrow::ThrowProjectile()
 			WeaponComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 			WeaponComponent->SetCollisionResponseToChannel(ECollisionChannel::ECC_WorldDynamic, ECollisionResponse::ECR_Overlap);
 
-			WeaponComponent->AddImpulse(outVelocity);
+			WeaponComponent->AddImpulse(outVelocity * (WeaponComponent->GetBodyInstance()->GetBodyMass() * 0.5f));
 
 			//EWeaponNum Num = Player->DropAndEnableChangeWeapon();
 
@@ -139,6 +138,7 @@ void AWThrow::ThrowProjectile()
 
 void AWThrow::Throw()
 {
+	
 	CurrentPlayingAnim = ThrowAnim;
 	PlayAnim(false);
 
@@ -148,6 +148,8 @@ void AWThrow::Throw()
 	Player->DelayTime = CurrentPlayingAnim->SequenceLength;
 
 	WeaponComponent->SetSimulatePhysics(true);
+	WeaponComponent->SetCollisionProfileName(TEXT("Weapon"));
+	//WeaponComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
 	ThrowProjectile();
 	Player->ChangeWeapon(EWeaponNum::E_Knife);
