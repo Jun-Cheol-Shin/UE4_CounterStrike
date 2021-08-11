@@ -419,7 +419,8 @@ TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector
 ```
 * 3. 최종 매커니즘
 
-![3](https://user-images.githubusercontent.com/77636255/128975834-721f2174-b6c3-48a4-adcd-42e5da73314b.PNG)
+* 유효거리가 0보다 크고 관통이 가능하다면 계속 관통하도록 한다.
+
 ```c++
 // 현재 맞은 사물의 관통여부 확인 (핵심 부분)
 	pPoint = CheckPenetrationShot(Hits, dir);
