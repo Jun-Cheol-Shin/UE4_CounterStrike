@@ -165,10 +165,12 @@ ___
 <img src="https://user-images.githubusercontent.com/77636255/113298891-4381da80-9337-11eb-877f-89cf31e546ba.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113298950-51cff680-9337-11eb-9041-a109eecea6c2.gif" width = "450">
 :-------------------------:|:-------------------------:
 
-* 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (**빨간 선**)
-* 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)
-* 총알 쐈던 **반대 방향**으로 Trace를 실행 만약 맞았다면 관통에 성공했으므로 데칼을 생성
-* 데칼을 생성한 지점에서 다시 Trace를 실행 (**파란 선**)
+~~* 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (**빨간 선**)
+~* 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)
+~* 총알 쐈던 **반대 방향**으로 Trace를 실행 만약 맞았다면 관통에 성공했으므로 데칼을 생성
+~* 데칼을 생성한 지점에서 다시 Trace를 실행 (**파란 선**)
+
+8월 11일자 이후로 월 샷 매커니즘을 새롭게 수정했습니다.
 
 ```c++
 bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
