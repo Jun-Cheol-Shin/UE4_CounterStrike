@@ -297,6 +297,10 @@ bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
 ___
 
 ### 월 샷 매커니즘
+
+* 1. 관통 여부를 확인
+* ![1](https://user-images.githubusercontent.com/77636255/128975597-92f6ffb0-1b42-449d-b62e-919996c30263.PNG)
+
 ```c++
 // 관통 확인 
 FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FVector& Direction)
@@ -346,6 +350,9 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 	return retval;
 }
 ```
+
+* 2. 관통 여부를 확인 후 다시 사격 진행
+![2](https://user-images.githubusercontent.com/77636255/128975661-a0435e27-bd11-4db0-8bf3-0c9ea3475a8f.PNG)
 
 ```c++
 TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance)
