@@ -242,7 +242,7 @@ ___
 
 #### 1. 관통 여부를 확인
 
-![1](https://user-images.githubusercontent.com/77636255/128975597-92f6ffb0-1b42-449d-b62e-919996c30263.PNG)
+![1](https://user-images.githubusercontent.com/77636255/129054239-9ee9b5d6-91ea-4ad3-a9cb-f79de75f4cd5.PNG)
 ```c++
 // 관통 여부 확인 함수
 FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FVector& Direction)
