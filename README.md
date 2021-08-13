@@ -250,6 +250,7 @@ if (FPSUIWidget)
 ```
 
 * 두번째로 UMG 세팅
+
 ![image](https://user-images.githubusercontent.com/77636255/129359135-c296691b-6259-41d9-8977-3ad9fe88324b.png)
 
 * 마지막으로 Opacatiy값을 타이머를 이용해 변경
@@ -287,6 +288,9 @@ void UFPSHUDWidget::FlashBang(AFPSCharacter* Player, float DeltaTime)
 	}
 }
 ```
+
+#### 3. 구현
+
 
 ___
 
