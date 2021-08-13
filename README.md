@@ -59,7 +59,7 @@ void UFPSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 
 		bIsReload = MyChar->bIsReloading;
 
-		eGunNumber = MyChar->CurrentAnimationWeaponNumber;
+		eGunNumber = MyChar->CurrentAnimationWeaponNumber;		// 이 변수를 활용해 애니메이션을 변경
 		fStartTime = MyChar->ReloadStartTime;
 		
 		if (MyChar->GetFPSCharacterStatComponent())
@@ -69,8 +69,7 @@ void UFPSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 	}
 }
 ```
-<img src="https://user-images.githubusercontent.com/77636255/129357668-7d266302-ee19-4b8f-ac57-d1b0cec8d1ae.PNG" width = "400" height = "450"> 
-
+![캡처1](https://user-images.githubusercontent.com/77636255/129358521-6dcba01c-800d-411f-b21c-a7cde8b718ed.PNG)
 
 * 3인칭 애니메이션 FSM 구조
 ![image](https://user-images.githubusercontent.com/77636255/129357945-0ed5de86-bdd1-401f-9fb4-a6765a6b1b92.png)
