@@ -34,9 +34,43 @@ ___
 ### 애니메이션 그래프 구조
 
 * AnimInstance 클래스에서 현재 내가 들고있는 무기(eGunNumber)를 업데이트 시켜 무기에 맞는 애니메이션이 작동
+```
+void UFPSCharacterAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
+{
+	Super::NativeUpdateAnimation(DeltaSeconds);
 
-<img src="https://user-images.githubusercontent.com/77636255/129357668-7d266302-ee19-4b8f-ac57-d1b0cec8d1ae.PNG" width = "350"> | <img src="(https://user-images.githubusercontent.com/77636255/129358042-4ef8b154-afb9-4b8a-9551-daeb8d9587ad.PNG" width = "350">
-:-------------------------:|:-------------------------:
+	if (MyChar)
+	{
+		bStartJump = MyChar->IsJumpHeld;
+		bCurrentFalling = MyChar->GetMovementComponent()->IsFalling();
+
+		bIsCrouching = MyChar->IsCrouchHeld;
+		bIsWalk = MyChar->IsWalkHeld;
+
+		fForwardVal = MyChar->MoveForwardValue;
+		fRightVal = MyChar->MoveRightValue;
+
+		fCurrentLowerRotation = MyChar->CurrentLowerHipsRotation;
+		fAimYaw = MyChar->AimOffsetYaw;
+		fAimPitch = MyChar->AimOffsetPitch;
+
+		ExitAnimDelayTime = MyChar->DelayTime;
+		bIsAttack = MyChar->AttackAnimCall;
+
+		bIsReload = MyChar->bIsReloading;
+
+		eGunNumber = MyChar->CurrentAnimationWeaponNumber;
+		fStartTime = MyChar->ReloadStartTime;
+		
+		if (MyChar->GetFPSCharacterStatComponent())
+		{
+			deathNum = uint8(MyChar->GetFPSCharacterStatComponent()->GetDeathNum());
+		}
+	}
+}
+```
+<img src="https://user-images.githubusercontent.com/77636255/129357668-7d266302-ee19-4b8f-ac57-d1b0cec8d1ae.PNG" width = "400" height = "450"> 
+
 
 * 3인칭 애니메이션 FSM 구조
 ![image](https://user-images.githubusercontent.com/77636255/129357945-0ed5de86-bdd1-401f-9fb4-a6765a6b1b92.png)
