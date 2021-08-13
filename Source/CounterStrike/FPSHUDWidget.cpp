@@ -81,7 +81,7 @@ void UFPSHUDWidget::FlashBang(AFPSCharacter* Player, float DeltaTime)
 
 		else if (isFlashing)
 		{
-			Flash->SetRenderOpacity(FMath::FInterpTo(Flash->GetRenderOpacity(), 0.f, DeltaTime, 1.f));
+			Flash->SetRenderOpacity(FMath::FInterpTo(Flash->GetRenderOpacity(), 0.f, DeltaTime, 0.8f));
 
 			if (FMath::IsNearlyZero(Flash->GetRenderOpacity()))
 			{

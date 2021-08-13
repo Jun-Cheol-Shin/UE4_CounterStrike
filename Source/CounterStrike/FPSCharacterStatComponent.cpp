@@ -144,7 +144,7 @@ EDamagedDirectionType UFPSCharacterStatComponent::CheckDirection(AFPSCharacter* 
 	return EDamagedDirectionType::EDDT_ALL;
 }
 
-void UFPSCharacterStatComponent::GetDamage(int16 Damage, float Penetration, AActor* Causer, EBoneHit HitType, FVector Direction)
+void UFPSCharacterStatComponent::GetDamage(int16 Damage, float Penetration, AFPSCharacter* Causer, EBoneHit HitType, FVector Direction)
 {
 	if (bIsDead) return;
 		
@@ -208,14 +208,14 @@ void UFPSCharacterStatComponent::GetDamage(int16 Damage, float Penetration, AAct
 			Death(Damaged, Direction, HitType, Causer);
 			Revive(Damaged, ReviveTime);
 
-			AFPSCharacter* CauserFPS = Cast<AFPSCharacter>(Causer);
-			if (CauserFPS)
+			//AFPSCharacter* CauserFPS = Cast<AFPSCharacter>(Causer);
+			if (Causer)
 			{
-				if (CauserFPS->GetFPSCharacterStatComponent()->GetCurrentGunWeapon())
+				if (Causer->GetFPSCharacterStatComponent()->GetCurrentGunWeapon())
 				{
-					CauserFPS->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->InitAmmoCount();
+					Causer->GetFPSCharacterStatComponent()->GetCurrentGunWeapon()->InitAmmoCount();
 				}
-				CauserFPS->GetFPSUIWidget()->SetAmmoCount(CauserFPS);
+				Causer->GetFPSUIWidget()->SetAmmoCount(Causer);
 			}
 
 			////Damaged->DoSomethingOnServer(CauserFPS->GetFPSCharacterStatComponent()->GetKillCount(), CauserFPS);
@@ -244,9 +244,9 @@ void UFPSCharacterStatComponent::GetDamage(int16 Damage, float Penetration, AAct
 			}
 		}*/
 
-		if (AFPSCharacter* CauserCharacter = Cast<AFPSCharacter>(Causer))
+		if (Causer)
 		{
-			CauserCharacter->SyncClientSendDamaged(Damaged, CheckDirection(Damaged, Direction), CurrentHP, CurrentKevlar, HitType, Causer, Direction, ReviveTime);
+			Causer->SyncClientSendDamaged(Damaged, CheckDirection(Damaged, Direction), CurrentHP, CurrentKevlar, HitType, Causer, Direction, ReviveTime);
 		}
 
 	}
@@ -314,7 +314,7 @@ void UFPSCharacterStatComponent::CheckDeath(AFPSCharacter* DeadActor, FVector Di
 }
 
 
-void UFPSCharacterStatComponent::Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType, AActor* Causer)
+void UFPSCharacterStatComponent::Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer)
 {
 	bIsDead = true;
 	DeathActor->ChangeViewCamera(false);

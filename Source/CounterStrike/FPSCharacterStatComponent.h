@@ -95,13 +95,13 @@ public:
 
 	EDamagedDirectionType CheckDirection(AFPSCharacter* DamagedActor, FVector Direction);
 
-	void GetDamage(int16 Damage, float Penetration, AActor* Causer, EBoneHit HitType = EBoneHit::EB_NONE, FVector Direction = FVector::ZeroVector);
+	void GetDamage(int16 Damage, float Penetration, AFPSCharacter* Causer, EBoneHit HitType = EBoneHit::EB_NONE, FVector Direction = FVector::ZeroVector);
 	void CheckDeath(AFPSCharacter* DeadActor, FVector Direction, EBoneHit HitType, AActor* Causer);
 
 	EKindOfDeath GetDeathNum() { return DeathNum; }
 
 
-	void Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType, AActor* Causer);
+	void Death(AFPSCharacter* DeathActor, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer);
 	void Revive(AFPSCharacter* ReviveActor, float ReviveSeconds);
 
 	virtual void GetLifetimeReplicatedProps(TArray <FLifetimeProperty>& OutLifetimeProps) const;

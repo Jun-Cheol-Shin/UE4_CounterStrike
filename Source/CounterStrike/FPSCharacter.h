@@ -233,7 +233,7 @@ public:
 
 	bool GetisFirstView() { return FirstView; }
 
-	EBoneHit CheckHit(FString HitBoneName);
+	EBoneHit CheckHit(const FString& HitBoneName);
 
 	void RestBackWeapon();
 
@@ -439,20 +439,20 @@ public:
 
 	// Send Damage... Death .. Revive..
 	UFUNCTION(Server, Reliable)
-		void SyncClientSendDamaged(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Causer, FVector Direction, float ReviveTime);
-	void SyncClientSendDamaged_Implementation(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Cause, FVector Direction, float ReviveTime);
+		void SyncClientSendDamaged(const AFPSCharacter* Character, const EDamagedDirectionType& DirectionType, const int16& HP, const int16& Kevlar, const EBoneHit& HitType, AFPSCharacter* Causer, const FVector& Direction, const float& ReviveTime);
+	void SyncClientSendDamaged_Implementation(const AFPSCharacter* Character, const EDamagedDirectionType& DirectionType, const int16& HP, const int16& Kevlar, const EBoneHit& HitType, AFPSCharacter* Causer, const FVector& Direction, const float& ReviveTime);
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ServerGetDamaged(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Causer, FVector Direction, float ReviveTime);
-	void ServerGetDamaged_Implementation(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Causer, FVector Direction, float ReviveTime);
+		void ServerGetDamaged(const AFPSCharacter* Character, const EDamagedDirectionType& DirectionType, const int16& HP, const int16& Kevlar, const EBoneHit& HitType, AFPSCharacter* Causer, const FVector& Direction, const float& ReviveTime);
+	void ServerGetDamaged_Implementation(const AFPSCharacter* Character, const EDamagedDirectionType& DirectionType, const int16& HP, const int16& Kevlar, const EBoneHit& HitType, AFPSCharacter* Causer, const FVector& Direction, const float& ReviveTime);
 
 	UFUNCTION(Server, Reliable)
-		void SyncClientDeath(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AActor* Causer);
-	void SyncClientDeath_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AActor* Causer);
+		void SyncClientDeath(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer);
+	void SyncClientDeath_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer);
 
 	UFUNCTION(NetMulticast, Reliable)
-		void ServerDeathCharacter(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AActor* Causer);
-	void ServerDeathCharacter_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AActor* Causer);
+		void ServerDeathCharacter(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer);
+	void ServerDeathCharacter_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer);
 
 	UFUNCTION(Server, Reliable)
 		void SyncClientRevive(AFPSCharacter* ReviveCharacter, float Sec);
@@ -461,5 +461,15 @@ public:
 	UFUNCTION(NetMulticast, Reliable)
 		void ServerCharacterRevive(AFPSCharacter* ReviveCharacter, float Sec);
 	void ServerCharacterRevive_Implementation(AFPSCharacter* ReviveCharacter, float Sec);
+
+
+	// 플래쉬 뱅 8/13자 작업
+	UFUNCTION(Server, Reliable)
+		void SyncClientSendFlashBang(USoundBase* Bangsound, const FVector& FlashLocation);
+	void SyncClientSendFlashBang_Implementation(USoundBase* Bangsound, const FVector& FlashLocation);
+
+	UFUNCTION(NetMulticast, Reliable)
+		void ServerGetFlashBang(USoundBase* Bangsound, const FVector& FlashLocation);
+	void ServerGetFlashBang_Implementation(USoundBase* Bangsound, const FVector& FlashLocation);
 
  };

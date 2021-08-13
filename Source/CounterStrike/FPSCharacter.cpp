@@ -1684,7 +1684,7 @@ AActorPool* AFPSCharacter::GetActorPool()
 	return Cast<AActorPool>(UGameplayStatics::GetActorOfClass(GetWorld(), AActorPool::StaticClass()));
 }
 
-EBoneHit AFPSCharacter::CheckHit(FString HitBoneName)
+EBoneHit AFPSCharacter::CheckHit(const FString& HitBoneName)
 {
 	if (HitBoneName.Equals(TEXT("Bip01-Head")))
 	{
@@ -2331,12 +2331,12 @@ void AFPSCharacter::ClientChangeWeapon_Implementation(AFPSCharacter* Charcter, E
 }
 
 
-void AFPSCharacter::SyncClientSendDamaged_Implementation(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Causer, FVector Direction, float ReviveTime)
+void AFPSCharacter::SyncClientSendDamaged_Implementation(const AFPSCharacter* Character, const EDamagedDirectionType& DirectionType, const int16& HP, const int16& Kevlar, const EBoneHit& HitType, AFPSCharacter* Causer, const FVector& Direction, const float& ReviveTime)
 {
 	ServerGetDamaged(Character, DirectionType, HP, Kevlar, HitType, Causer, Direction, ReviveTime);
 }
 
-void AFPSCharacter::ServerGetDamaged_Implementation(AFPSCharacter* Character, EDamagedDirectionType DirectionType, int16 HP, int16 Kevlar, EBoneHit HitType, AActor* Causer, FVector Direction, float ReviveTime)
+void AFPSCharacter::ServerGetDamaged_Implementation(const AFPSCharacter* Character, const EDamagedDirectionType& DirectionType, const int16& HP, const int16& Kevlar, const EBoneHit& HitType, AFPSCharacter* Causer, const FVector& Direction, const float& ReviveTime)
 {
 	// 멀티캐스트 함수에서 모든 플레이어의 컨트롤러를 찾는다.
 	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
@@ -2373,14 +2373,14 @@ void AFPSCharacter::ServerGetDamaged_Implementation(AFPSCharacter* Character, ED
 	}
 }
 
-void AFPSCharacter::SyncClientDeath_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AActor* Causer)
+void AFPSCharacter::SyncClientDeath_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer)
 {
 	ServerDeathCharacter(DeathCharacter, Direction, HitType, Causer);
 
 	//DeathCharacter->GetFPSCharacterStatComponent()->Death(DeathCharacter, Direction, HitType, Causer);
 }
 
-void AFPSCharacter::ServerDeathCharacter_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AActor* Causer)
+void AFPSCharacter::ServerDeathCharacter_Implementation(AFPSCharacter* DeathCharacter, FVector Direction, EBoneHit HitType, AFPSCharacter* Causer)
 {
 	DeathCharacter->GetFPSCharacterStatComponent()->Death(DeathCharacter, Direction, HitType, Causer);
 }
@@ -2401,28 +2401,32 @@ void AFPSCharacter::DoSomethingOnServer_Implementation(int32 KillCount, AFPSChar
 }
 
 
-// 블루프린트 변수 가져오기
-//void AFPSCharacter::GetBluePrintVariable(FString VariableName)
-//{
-//	// 변수의 이름으로 검색하여 UProperty 를 가져온다.
-//	UProperty* Prop = GetClass()->FindPropertyByName(*VariableName);
-//
-//	// 현재 클래스의 변수가 맞는지 비교
-//	if (Prop->GetClass() == UObjectProperty::StaticClass())
-//	{
-//		UObjectProperty* objectProp = Cast<UObjectProperty>(Prop);
-//
-//		// if (objectProp->PropertyClass == 원하는변수의 클래스형태::StaticClass())
-//		// 예제 시작
-//		if (objectProp->PropertyClass == UWidgetAnimation::StaticClass())
-//		{
-//			UObject* obj = objectProp->GetObjectPropertyValue_InContainer(this);
-//
-//			//UWidgetAnimation* WidgetAnim = Cast<UWidgetAnimation>(obj);
-//			//if (IsValid(WidgetAnim))
-//			//{
-//			//	// 예제 끝
-//			//}
-//		}
-//	}
-//}
+void AFPSCharacter::SyncClientSendFlashBang_Implementation(USoundBase* Bangsound, const FVector& FlashLocation)
+{
+	ServerGetFlashBang_Implementation(Bangsound, FlashLocation);
+}
+
+void AFPSCharacter::ServerGetFlashBang_Implementation(USoundBase* Bangsound, const FVector& FlashLocation)
+{
+	FVector DirectionCamToGrenade;
+
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		if (AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Iterator->Get()->GetCharacter()))
+		{
+			DirectionCamToGrenade = FlashLocation - DamagedCharacter->FPSCameraComponent->GetComponentLocation();
+			DirectionCamToGrenade.Normalize();
+
+			float Angle = 
+				FMath::RadiansToDegrees(acosf(FVector::DotProduct(
+					DamagedCharacter->FPSCameraComponent->GetForwardVector(), 
+					DirectionCamToGrenade)));
+
+			if (Angle <= 90.f)
+			{
+				DamagedCharacter->bIsFlashBang = true;
+				UGameplayStatics::SpawnSoundAttached(Bangsound, DamagedCharacter->GetMesh());
+			}
+		}
+	}
+}
