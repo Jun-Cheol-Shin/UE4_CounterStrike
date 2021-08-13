@@ -13,6 +13,7 @@
 
 ## 구현 내용
 * [총기 클래스 구조](#총기-클래스-구조)
+* [애니메이션 그래프 구조](#애니메이션-그래프-구조)
 * [총기 연사 및 단발 구현](#총기-연사-및-단발-구현)
 * [스프레이 패턴 구현](#스프레이-패턴-구현)
 * [월 샷 매커니즘](#월-샷-매커니즘)
@@ -26,6 +27,11 @@ ___
 * 총기류는 라이플, 샷건, 권총, 스나이퍼, SMG로 파생되고, 소음기가 달린 무기는 추가로 상속 (M4A1, USP)
 * 폭탄류는 데미지를 주는 Grenade와 섬광효과를 주는 Flash로 파생 (**현재 WSmoke 클래스는 삭제**)
 <img src="https://user-images.githubusercontent.com/77636255/116535832-2bde4780-a91f-11eb-81ab-501891c2e218.png" width = "800">
+
+___
+
+### 애니메이션 그래프 구조
+
 
 ___
 
@@ -156,83 +162,9 @@ ___
 ```
 
 ___
-~~### 월 샷 구현(구버전)~~
-<img src="https://user-images.githubusercontent.com/77636255/113298891-4381da80-9337-11eb-877f-89cf31e546ba.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/113298950-51cff680-9337-11eb-9041-a109eecea6c2.gif" width = "450">
-:-------------------------:|:-------------------------:
 
-~~* 처음 총을 발사 했을 때 캐릭터, 물체에 맞았을 경우 실행 (**빨간 선**)~~
-~~* 수치를 지정해서(**thickness**) 수치 만큼 이동한 벡터를 생성 (**Start**)~~
-~~* 총알 쐈던 **반대 방향**으로 Trace를 실행 만약 맞았다면 관통에 성공했으므로 데칼을 생성~~
-~~* 데칼을 생성한 지점에서 다시 Trace를 실행 (**파란 선**)~~
+### 섬광탄 구현
 
-```c++
-bool AWGun::CheckPenetrationShot(FHitResult Point, FVector Direction)
-{
-	// 총알이 물체 맞았다면 실행...
-
-	// 물체의 크기가 정해진 두께보다 얇다면...
-	float thickness = Point.GetActor()->GetActorScale3D().Size2D() * 150.f;
-	FHitResult FinalHit;
-	FVector Start = Point.ImpactPoint + Direction * thickness;
-
-	bool bSuccess = false;
-
-	bSuccess = GetWorld()->LineTraceSingleByChannel(FinalHit,
-		Start, Start - Direction * thickness,
-		ECollisionChannel::ECC_Visibility, FCollisionQueryParams());
-
-	// 관통 성공.. 동시에 물체의 반대편에 데칼 생성
-	if (bSuccess)
-	{
-		if (FinalHit.GetActor())
-		{
-			if (!FinalHit.GetActor()->IsA(AFPSCharacter::StaticClass()))
-			{
-				SpawnDecal(FinalHit, EDecalPoolList::EDP_BULLETHOLE);
-			}
-
-			else
-			{
-				SpawnDecal(FinalHit, EDecalPoolList::EDP_BLOOD);
-			}
-
-			return true;
-		}
-	}
-
-	return false;
-}
-```
-
-<img src="https://user-images.githubusercontent.com/77636255/116536517-fd14a100-a91f-11eb-80c5-172a0e8e1628.png" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/116536549-0b62bd00-a920-11eb-9e33-2ba7e61971b1.png" width = "450">
-:-------------------------:|:-------------------------:
-
-~~* 무기마다 정해진 **Weapondistance**에서 오브젝트 충돌 시 거리 값을 감소시켜 감소 시킨 거리 값 만큼 다시 총알이 나가도록 함.~~
-
-```
-	else if(!Hitweapon)
-	{
-		// 총알 자국 생성
-		SpawnDecal(Hit, EDecalPoolList::EDP_BULLETHOLE);
-		// 관통이 됐다면 관통된 곳을 리턴
-		pPoint = CheckPenetrationShot(Hit, (End - Location).GetSafeNormal());
-		// 총알을 쏜 장소에서 부딪힌 사물의 거리만큼 빼준다.
-		Distance = Weapondistance - FVector::Dist(Location, Hit.ImpactPoint) * PenatrateDecreaseDistanceRatio;
-	}
-
-	//DrawDebugLine(GetWorld(), Location, Hit.ImpactPoint, FColor::Red, false, 2, 0, 1);
-	GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Cyan, FString::Printf(TEXT("Remaining Distance : %.1f"), Distance));
-
-	// 거리가 남았고 총에 맞지 않았다면 (총은 관통을 막아주도록 구현)
-	if (Distance > 0 && !Hitweapon)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Penetrate!!!!"));
-		if (pPoint.GetActor())
-		{
-			PenetrationShot(pPoint, (End - Location).GetSafeNormal(), Distance);
-		}
-	}
-```
 ___
 
 ### 월 샷 매커니즘
