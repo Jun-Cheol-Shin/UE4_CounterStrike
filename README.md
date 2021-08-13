@@ -208,7 +208,8 @@ ___
 
 #### 1. 섬광탄 판정 여부를 확인
 
-![image](https://user-images.githubusercontent.com/77636255/129358756-dac7b06a-ffc9-4afc-9e13-1cc71c6f384c.png)
+![image](https://user-images.githubusercontent.com/77636255/129358756-dac7b06a-ffc9-4afc-9e13-1cc71c6f384c.png)![image](https://user-images.githubusercontent.com/77636255/129359839-11ada54f-c6e4-4c7f-bacd-81625f4013bf.png)
+
 ```
 void AFPSCharacter::ServerGetFlashBang_Implementation(USoundBase* Bangsound, const FVector& FlashLocation)
 {
