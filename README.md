@@ -206,6 +206,88 @@ ___
 
 ### 섬광탄 구현
 
+#### 1. 섬광탄 판정 여부를 확인
+
+![image](https://user-images.githubusercontent.com/77636255/129358756-dac7b06a-ffc9-4afc-9e13-1cc71c6f384c.png)
+```
+void AFPSCharacter::ServerGetFlashBang_Implementation(USoundBase* Bangsound, const FVector& FlashLocation)
+{
+	FVector DirectionCamToGrenade;
+
+	for (FConstPlayerControllerIterator Iterator = GetWorld()->GetPlayerControllerIterator(); Iterator; ++Iterator)
+	{
+		if (AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Iterator->Get()->GetCharacter()))
+		{
+			DirectionCamToGrenade = FlashLocation - DamagedCharacter->FPSCameraComponent->GetComponentLocation();
+			DirectionCamToGrenade.Normalize();
+
+			float Angle = 
+				FMath::RadiansToDegrees(acosf(FVector::DotProduct(
+					DamagedCharacter->FPSCameraComponent->GetForwardVector(), 
+					DirectionCamToGrenade)));
+
+			if (Angle <= 90.f)
+			{
+				DamagedCharacter->bIsFlashBang = true;
+				UGameplayStatics::SpawnSoundAttached(Bangsound, DamagedCharacter->GetMesh());
+			}
+		}
+	}
+}
+```
+
+#### 2. UI 작업
+* 첫번쨰로 캐릭터의 Tick함수에서 **bIsFlashBang**변수로 함수의 실행 결정
+```
+if (FPSUIWidget)
+{
+	FPSUIWidget->DynamicCrosshair(this, DeltaTime);
+	if (bIsFlashBang)
+	{
+		FPSUIWidget->FlashBang(this, DeltaTime);
+	}
+}
+```
+
+* 두번째로 UMG 세팅
+![image](https://user-images.githubusercontent.com/77636255/129359135-c296691b-6259-41d9-8977-3ad9fe88324b.png)
+
+* 마지막으로 Opacatiy값을 타이머를 이용해 변경
+```
+void UFPSHUDWidget::FlashBang(AFPSCharacter* Player, float DeltaTime)
+{
+	if (Player)
+	{
+		if (Flash->GetRenderOpacity() < 1.f && !isFlashing)
+		{
+			Flash->SetRenderOpacity(1.f);
+
+			if (!GetWorld()->GetTimerManager().IsTimerActive(FlashBack))
+			{
+				GetWorld()->GetTimerManager().SetTimer(FlashBack, [this]() {
+
+					GetWorld()->GetTimerManager().ClearTimer(FlashBack);
+					isFlashing = true;
+
+				}, 1.1f, false);
+			}
+		}
+
+		else if (isFlashing)
+		{
+			Flash->SetRenderOpacity(FMath::FInterpTo(Flash->GetRenderOpacity(), 0.f, DeltaTime, 0.8f));
+
+			if (FMath::IsNearlyZero(Flash->GetRenderOpacity()))
+			{
+				Player->bIsFlashBang = false;
+				isFlashing = false;
+				return;
+			}
+		}
+	}
+}
+```
+
 ___
 
 ### 월 샷 매커니즘
