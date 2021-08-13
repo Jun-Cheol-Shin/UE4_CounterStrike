@@ -33,6 +33,13 @@ ___
 
 ### 애니메이션 그래프 구조
 
+* AnimInstance 클래스에서 현재 내가 들고있는 무기(eGunNumber)를 업데이트 시켜 무기에 맞는 애니메이션이 작동
+
+<img src="https://user-images.githubusercontent.com/77636255/129357668-7d266302-ee19-4b8f-ac57-d1b0cec8d1ae.PNG" width = "450"> | <img src="(https://user-images.githubusercontent.com/77636255/129357700-06038fe7-5ced-422c-a385-700777f8ab48.PNG" width = "450">
+:-------------------------:|:-------------------------:
+
+* 3인칭 애니메이션 FSM 구조
+![image](https://user-images.githubusercontent.com/77636255/129357945-0ed5de86-bdd1-401f-9fb4-a6765a6b1b92.png)
 
 ___
 
