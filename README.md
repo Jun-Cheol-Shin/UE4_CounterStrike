@@ -292,7 +292,7 @@ void UFPSHUDWidget::FlashBang(AFPSCharacter* Player, float DeltaTime)
 
 #### [3. 구현 사진 및 영상](https://youtu.be/bnLI7hJwByk)
 
-<img src="https://user-images.githubusercontent.com/77636255/128977406-153e58dd-1f79-4a85-bef6-70887273150f.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/128977448-aa2180b2-3e3d-45c0-be54-dfef08aebf04.gif" width = "450">
+<img src="https://user-images.githubusercontent.com/77636255/129361988-23f6840c-868c-49b2-84c8-1dee39db077a.gif" width = "450"> | <img src="https://user-images.githubusercontent.com/77636255/129362020-9adae806-7be5-41fa-848e-4f82b5322837.gif" width = "450">
 :-------------------------:|:-------------------------:
 ___
 
