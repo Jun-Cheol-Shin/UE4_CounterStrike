@@ -33,7 +33,7 @@ ___
 ___
 
 ### UI 구조
-![image](https://user-images.githubusercontent.com/77636255/129560091-b20b6ae2-9922-4d1f-9284-3961a56651f7.png)
+![image](https://user-images.githubusercontent.com/77636255/129560893-ae0d00c3-1dc5-4063-bcd3-79c9c71b9bd7.png)
 
 ___
 
