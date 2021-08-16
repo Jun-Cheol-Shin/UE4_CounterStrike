@@ -33,7 +33,7 @@ ___
 ___
 
 ### UI 구조
-![image](https://user-images.githubusercontent.com/77636255/129560893-ae0d00c3-1dc5-4063-bcd3-79c9c71b9bd7.png)
+![image](https://user-images.githubusercontent.com/77636255/129561535-c87d5af4-cdb5-469e-a844-c677b7d898f7.png)
 
 ```
 void AFPSCharacter::SetFPSUIHUD(APlayerController* MyController)
