@@ -35,6 +35,30 @@ ___
 ### UI 구조
 ![image](https://user-images.githubusercontent.com/77636255/129560893-ae0d00c3-1dc5-4063-bcd3-79c9c71b9bd7.png)
 
+```
+void AFPSCharacter::SetFPSUIHUD(APlayerController* MyController)
+{
+	 if (HUDWidgetClass)
+	 {
+		 HUDWidget = CreateWidget(MyController, HUDWidgetClass);
+		 if (HUDWidget)
+		 {
+			 HUDWidget->AddToViewport(1);
+		 }
+		 else
+		 {
+			 GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Not HUDWidgetClass"));
+		 }
+	 }
+
+	 FPSUIWidget = Cast<UFPSHUDWidget>(HUDWidget);
+	 if (FPSUIWidget)
+	 {
+		 FPSUIWidget->Init(this);
+		 //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Init HUD %s"), *GetPlayerState()->GetPlayerName()));
+	 }
+}
+```
 ___
 
 ### 애니메이션 그래프 구조
