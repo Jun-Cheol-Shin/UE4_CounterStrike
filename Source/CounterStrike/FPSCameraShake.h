@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Camera/CameraShake.h"
 #include "FPSCameraShake.generated.h"
 
 /**
@@ -11,10 +10,10 @@
  */
 
 UCLASS()
-class COUNTERSTRIKE_API UFPSCameraShake : public UCameraShake
+class COUNTERSTRIKE_API UFPSCameraShake : public UCameraShakeBase
 {
 	GENERATED_BODY()
 
 public:
-	UFPSCameraShake();
+	//UFPSCameraShake();
 };

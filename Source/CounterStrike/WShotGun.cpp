@@ -158,23 +158,23 @@ void AWShotGun::GunShotMethod()
 
 			if (!Hitweapon)
 			{
-				// ±¸Á¶ÀûÀ¸·Î ¸®ÆÑÅä¸µÀÌ ÇÊ¿ä ÇÒ °Í °°´Ù.
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ä¸µï¿½ï¿½ ï¿½Ê¿ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 
-				//// ÇöÀç ¸ÂÀº »ç¹°ÀÇ °üÅë¿©ºÎ È®ÀÎ
+				//// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ç¹°ï¿½ï¿½ ï¿½ï¿½ï¿½ë¿©ï¿½ï¿½ È®ï¿½ï¿½
 				//pPoint = CheckPenetrationShot(pPoint, dir);
 
-				//// À¯È¿°Å¸®°¡ ³²¾Ò°í, °üÅë¿©ºÎ°¡ È®ÀÎµÈ´Ù¸é ´ÙÀ½ ¼¦À» ÁøÇà
+				//// ï¿½ï¿½È¿ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò°ï¿½, ï¿½ï¿½ï¿½ë¿©ï¿½Î°ï¿½ È®ï¿½ÎµÈ´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				//while (Distance > 0.f && pPoint.GetActor())
 				//{
 				//	/*	DrawDebugPoint(GetWorld(),
 				//			pPoint.ImpactPoint, 10, FColor::Red, true);*/
 
-				//	// HitResult °ª ¹é¾÷
+				//	// HitResult ï¿½ï¿½ ï¿½ï¿½ï¿½
 				//	Backup = pPoint;
-				//	// ´ÙÀ½ ¼¦À» ÅëÇØ ´ÙÀ½ ¸ÂÀº °÷À» ¸®ÅÏ
+				//	// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				//	pPoint = PenetrationShot(pPoint, dir, Distance);
 
-				//	// ¸Â¾Ò´Ù¸é.. °üÅë¿©ºÎ È®ÀÎÇÑ´Ù. ¸ÂÁö ¾Ê¾Ò´Ù¸é ºê·¹ÀÌÅ©
+				//	// ï¿½Â¾Ò´Ù¸ï¿½.. ï¿½ï¿½ï¿½ë¿©ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´Ù¸ï¿½ ï¿½ê·¹ï¿½ï¿½Å©
 				//	if (pPoint.GetActor())
 				//		pPoint = CheckPenetrationShot(pPoint, dir);
 				//	else break;
@@ -199,7 +199,7 @@ void AWShotGun::ShakingCamera()
 {
 	if (CamShake)
 	{
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), ShakingValue);
+		//GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), ShakingValue);
 	}
 }
 

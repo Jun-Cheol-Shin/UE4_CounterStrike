@@ -69,20 +69,7 @@ void AWM4A1::ResetTimeHandle()
 
 void AWM4A1::ChangeRecoilDirection()
 {
-	if (ShotCount > 17)
-	{
-		Direction = false;
-	}
-
-	else if (ShotCount > 11)
-	{
-		Direction = true;
-	}
-
-	else if (ShotCount > 5)
-	{
-		Direction = false;
-	}
+	Super::ChangeRecoilDirection();
 }
 
 void AWM4A1::PlayShotSound()

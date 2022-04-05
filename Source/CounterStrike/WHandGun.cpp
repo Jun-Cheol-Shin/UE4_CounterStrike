@@ -27,7 +27,7 @@ void AWHandGun::ShakingCamera()
 {
 	if (CamShake)
 	{
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), ShakingValue);
+		//GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), ShakingValue);
 	}
 }
 

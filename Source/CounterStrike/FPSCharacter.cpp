@@ -168,11 +168,14 @@ AFPSCharacter::AFPSCharacter()
 
  void AFPSCharacter::SetFPSUIHUD(APlayerController* MyController)
  {
+	 // 미리 받은 TSubclassof 변수에 대해 null Check..
 	 if (HUDWidgetClass)
 	 {
+		 // 위젯 생성
 		 HUDWidget = CreateWidget(MyController, HUDWidgetClass);
 		 if (HUDWidget)
 		 {
+			 // 뷰포트 설정
 			 HUDWidget->AddToViewport(1);
 		 }
 		 else
@@ -181,9 +184,11 @@ AFPSCharacter::AFPSCharacter()
 		 }
 	 }
 
+	 // 클래스로 캐스팅해서..
 	 FPSUIWidget = Cast<UFPSHUDWidget>(HUDWidget);
 	 if (FPSUIWidget)
 	 {
+		 // 원하는 함수 실행
 		 FPSUIWidget->Init(this);
 		 //GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Init HUD %s"), *GetPlayerState()->GetPlayerName()));
 	 }

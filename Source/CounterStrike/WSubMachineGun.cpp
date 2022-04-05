@@ -18,15 +18,7 @@ AWSubMachineGun::AWSubMachineGun()
 
 void AWSubMachineGun::ChangeRecoilDirection()
 {
-	//if (ShotCount >)
-	//{
-	//	Direction = true;
-	//}
-
-	if (ShotCount > 15)
-	{
-		Direction = false;
-	}
+	Super::ChangeRecoilDirection();
 }
 
 void AWSubMachineGun::SpawnShell()

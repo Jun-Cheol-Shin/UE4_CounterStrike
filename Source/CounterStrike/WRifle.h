@@ -6,6 +6,14 @@
 #include "WGun.h"
 #include "WRifle.generated.h"
 
+UENUM()
+enum class EC_Direction
+{
+	LEFT = 0,
+	RIGHT = 1,
+	MIDDLE = 2
+};
+
 /**
  * 
  */
@@ -18,15 +26,19 @@ private:
 	//bool WeightSquare = false;
 
 protected:
+	
 	UPROPERTY(EditAnywhere)
 		float HorizontalRandomValue = 0.7f;
 
+	// 수직 한계
 	UPROPERTY(EditAnywhere)
 		float RealHitImpactLimit = 6.f;
 
+	// 수평 한계
 	UPROPERTY(EditAnywhere)
-		float RealHitImpackHorizontalLimit = 5.f;
+		float RealHitImpackHorizontalLimit = 4.f;
 
+	// 랜덤 리코일 한계
 	UPROPERTY(EditAnywhere)
 		float MouseFocusingLimit = 6.f;
 
@@ -35,7 +47,8 @@ protected:
 	float RandomHorizontalRecoil = 0.f;
 	float RecoilHorizontalWeight = 1.f;
 
-	bool Direction = true;
+
+	EC_Direction dir = EC_Direction::RIGHT;
 	virtual void SpawnShell() override;
 
 public:
@@ -53,7 +66,7 @@ public:
 
 	virtual void ShuffleShotAnim() override;
 
-	float RandomHorizontalDirection();
+	void RandomHorizontalDirection();
 
 	virtual void RecoilEndVec() override;
 	virtual void StopFire() override;

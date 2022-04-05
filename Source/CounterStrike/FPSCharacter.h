@@ -72,9 +72,9 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = CameraShake)
-		TSubclassOf<UCameraShake> FPSCameraAttack;
+		TSubclassOf<UCameraShakeBase> FPSCameraAttack;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = UI)	
 		TSubclassOf<UFPSHUDWidget> HUDWidgetClass;
 	UPROPERTY(BlueprintReadWrite)
 		UUserWidget* HUDWidget;
@@ -130,7 +130,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 		FORCEINLINE UFPSCharacterStatComponent* GetFPSCharacterStatComponent() { return StatComponent; }
-	FORCEINLINE TSubclassOf<class UCameraShake> GetFPSCameraAttack() { return FPSCameraAttack; }
+	FORCEINLINE TSubclassOf<class UCameraShakeBase> GetFPSCameraAttack() { return FPSCameraAttack; }
 	FORCEINLINE APlayerController* GetPlayerController() { return Cast<APlayerController>(GetController()); }
 
 	void SetUpperState(UPPER_STATE ChangeState);
@@ -463,7 +463,7 @@ public:
 	void ServerCharacterRevive_Implementation(AFPSCharacter* ReviveCharacter, float Sec);
 
 
-	// ÇÃ·¡½¬ ¹ð 8/13ÀÚ ÀÛ¾÷
+	// ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ 8/13ï¿½ï¿½ ï¿½Û¾ï¿½
 	UFUNCTION(Server, Reliable)
 		void SyncClientSendFlashBang(USoundBase* Bangsound, const FVector& FlashLocation);
 	void SyncClientSendFlashBang_Implementation(USoundBase* Bangsound, const FVector& FlashLocation);

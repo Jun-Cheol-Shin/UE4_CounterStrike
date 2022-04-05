@@ -9,9 +9,8 @@
 /**
  * 
  */
-class UFPSCameraShake;
+class UMyMatineeCameraShake;
 class USoundBase;
-class UFPSCameraShake;
 class UDecalComponent;
 class AActorPool;
 class ADecalActor;
@@ -48,7 +47,7 @@ protected:
 	bool RandomRecoilFlag = false;
 	FTimerHandle ResetRecoilTimer;
 
-	UFPSCameraShake* CamShake;
+	UMyMatineeCameraShake* CamShake;
 
 
 	uint8 ShotCount = 0;
@@ -90,7 +89,7 @@ public:
 	AWGun();
 
 	void InitAmmoCount();
-	// Áß¿ä..
+	// ï¿½ß¿ï¿½..
 	uint8 GetCurrentAmmoCount() { return CurrentOneMagazineAmmoCount; }
 	uint8 GetElseAmmoCount() { return ElseAmmoCount; }
 
@@ -132,7 +131,7 @@ public:
 	virtual void ResetTimeHandle() override;
 
 	void RefreshAmmoCount();
-	void SetCamShake(TSubclassOf<UCameraShake> CamComp);
+	void SetCamShake(TSubclassOf<UCameraShakeBase> CamComp);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

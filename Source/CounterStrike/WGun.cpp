@@ -22,6 +22,8 @@
 #include "Engine/StaticMeshActor.h"
 #include "Math/UnrealMathUtility.h"
 #include "FPSHUDWidget.h"
+#include "MatineeCameraShake.h"
+#include "MyMatineeCameraShake.h"
 
 #define THICKNESS 150
 
@@ -127,10 +129,10 @@ void AWGun::RefreshAmmoCount()
 	}
 }
 
-void AWGun::SetCamShake(TSubclassOf<UCameraShake> CamComp)
+void AWGun::SetCamShake(TSubclassOf<UCameraShakeBase> CamComp)
 {
 
-	CamShake = Cast<UFPSCameraShake>(CamComp.GetDefaultObject());
+	CamShake = Cast<UMyMatineeCameraShake>(CamComp.GetDefaultObject());
 
 	//if (CamShake)
 	//{
@@ -198,15 +200,14 @@ void AWGun::ShakingCamera()
 {
 	if (CamShake)
 	{
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), ShotCount + 9.f);
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(Player->GetFPSCameraAttack(), ShotCount + 9.f);
 	}
 
 	else
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("No Camera"));
 		SetCamShake(Player->GetFPSCameraAttack());
-
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), ShotCount + 9.f);
+		GetWorld()->GetFirstPlayerController()->ClientStartCameraShake(Player->GetFPSCameraAttack(), ShotCount + 9.f);
 	}
 }
 
@@ -280,7 +281,7 @@ void AWGun::GunShotMethod()
 		float Distance = Weapondistance;
 		FVector dir = (End - Location).GetSafeNormal();
 
-		// ÃÑ¾ËÀ» ½ð Àå¼Ò¿¡¼­ ºÎµúÈù »ç¹°ÀÇ °Å¸®¸¸Å­ »©ÁØ´Ù.
+		// ï¿½Ñ¾ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ò¿ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½ ï¿½ç¹°ï¿½ï¿½ ï¿½Å¸ï¿½ï¿½ï¿½Å­ ï¿½ï¿½ï¿½Ø´ï¿½.
 		Distance -= (FVector::Dist(Location, Hits[0].ImpactPoint) * PenatrateDecreaseDistanceRatio);
 
 		if (DamagedCharacter)
@@ -303,18 +304,18 @@ void AWGun::GunShotMethod()
 
 		if (!Hitweapon)
 		{
-			// ÇöÀç ¸ÂÀº »ç¹°ÀÇ °üÅë¿©ºÎ È®ÀÎ
+			// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ç¹°ï¿½ï¿½ ï¿½ï¿½ï¿½ë¿©ï¿½ï¿½ È®ï¿½ï¿½
 			pPoint = CheckPenetrationShot(Hits, dir);
 
-			 //À¯È¿°Å¸®°¡ ³²¾Ò°í, °üÅë¿©ºÎ°¡ È®ÀÎµÈ´Ù¸é ´ÙÀ½ ¼¦À» ÁøÇà
+			 //ï¿½ï¿½È¿ï¿½Å¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò°ï¿½, ï¿½ï¿½ï¿½ë¿©ï¿½Î°ï¿½ È®ï¿½ÎµÈ´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			while (Distance > 0.f && pPoint.GetActor())
 			{
-				// HitResult °ª ¹é¾÷
+				// HitResult ï¿½ï¿½ ï¿½ï¿½ï¿½
 				Backup = pPoint;
-				// ´ÙÀ½ »ç¹° ¸ÂÀº °÷À» ¸®ÅÏ
+				// ï¿½ï¿½ï¿½ï¿½ ï¿½ç¹° ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 				pPoints = PenetrationShot(pPoint, dir, Distance);
 
-				// ¸Â¾Ò´Ù¸é.. °üÅë¿©ºÎ È®ÀÎÇÑ´Ù. ¸ÂÁö ¾Ê¾Ò´Ù¸é ºê·¹ÀÌÅ©
+				// ï¿½Â¾Ò´Ù¸ï¿½.. ï¿½ï¿½ï¿½ë¿©ï¿½ï¿½ È®ï¿½ï¿½ï¿½Ñ´ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¾Ò´Ù¸ï¿½ ï¿½ê·¹ï¿½ï¿½Å©
 				if (pPoints.Num() == 0)
 					break;
 				else
@@ -537,11 +538,11 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 
 	FVector Start;
 
-	// Ã¹ »ç°ÝÀ» MultiLineTrace¸¦ ÀÌ¿ëÇØ °á°ú°ªÀ» ¿©·¯°³ °¡Á®¿Àµµ·Ï ÇÑ´Ù..
-	// ¸Ç ¾Õ¿¡ Ãæµ¹ÇÑ ¾×ÅÍ¸¦ Á¦¿ÜÇÑ ¸ðµç ¾×ÅÍµéÀ» Æ®·¹ÀÌ½Ì¿¡¼­ Á¦¿Ü½ÃÅ²´Ù.
+	// Ã¹ ï¿½ï¿½ï¿½ï¿½ï¿½ MultiLineTraceï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ñ´ï¿½..
+	// ï¿½ï¿½ ï¿½Õ¿ï¿½ ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ Æ®ï¿½ï¿½ï¿½Ì½Ì¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ü½ï¿½Å²ï¿½ï¿½.
 	// 
-	// °á°ú°ªÀÌ ¿©·¯°³ ¶ó¸é.. SingleTrace¸¦ ÀÌ¿ëÇØ¼­ Ã³À½ ¸ÂÀº ¾×ÅÍ <- ±× ´ÙÀ½ ¾×ÅÍ ½ÄÀ¸·Î ¶óÀÎÀ» ÁøÇà½ÃÅ²´Ù.
-	// °á°ú°ªÀÌ ÇÏ³ª¶ó¸é.. SingleTrace¸¦ ÀÌ¿ëÇØ Ã³À½ ¸ÂÀº ¾×ÅÍ Location °ª <- Ã³À½ ¸ÂÀº ¾×ÅÍ TraceEnd °ªÀ¸·Î ÁøÇà.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½.. SingleTraceï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ <- ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å²ï¿½ï¿½.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ï¿½.. SingleTraceï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Location ï¿½ï¿½ <- Ã³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ TraceEnd ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	if (Point.Num() > 1)
 	{
 		for (int i = 1; i < Point.Num(); ++i)
@@ -565,7 +566,7 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 		Start = Point[0].ImpactPoint;
 	}
 
-	// Ãæµ¹Çß´Ù¸é °üÅë ÇÒ ¼ö ÀÖ´Ù´Â ¶æÀÌ¹Ç·Î µ¥Ä® »ý¼º(°üÅë µ¥Ä®) ¹«±â´Â °üÅë X
+	// ï¿½æµ¹ï¿½ß´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´Ù´ï¿½ ï¿½ï¿½ï¿½Ì¹Ç·ï¿½ ï¿½ï¿½Ä® ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä®) ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ X
 	if (bSuccess && retval.GetActor() && FVector::Dist(Start, retval.ImpactPoint) < THICKNESS)
 	{
 		AWBase* Hitweapon = Cast<AWBase>(retval.GetActor());
@@ -583,13 +584,13 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 
 TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance)
 {
-	// °üÅë¿¡ ¼º°øÇß´Ù¸é ½ÇÇàµÇ´Â ÇÔ¼ö..
+	// ï¿½ï¿½ï¿½ë¿¡ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ ï¿½Ô¼ï¿½..
 	TArray<FHitResult> Hits;
 	//FHitResult Hit;
 	bool bSuccess = false;
 	float DecreaseRatio = 0.15;
 
-	// ÇÃ·¹ÀÌ¾î ÀÚ½Å°ú °üÅëµÇ¾ú´ø ¾×ÅÍ¸¦ Á¦¿Ü
+	// ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½Ú½Å°ï¿½ ï¿½ï¿½ï¿½ï¿½Ç¾ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½ï¿½
 	FCollisionQueryParams Param;
 	Param.AddIgnoredActor(Player);
 	Param.AddIgnoredActor(Point.GetActor());
@@ -604,33 +605,33 @@ TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector
 
 	if (bSuccess && Hits[0].GetActor())
 	{
-		// Ä³¸¯ÅÍ¿¡ ¸Â¾Ò´Ù¸é..
+		// Ä³ï¿½ï¿½ï¿½Í¿ï¿½ ï¿½Â¾Ò´Ù¸ï¿½..
 		if (Hits[0].GetActor()->IsA(AFPSCharacter::StaticClass()))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Character Hit!!!!"));
+			//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Character Hit!!!!"));
 			AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hits[0].GetActor());
 			SpawnDecal(Hits[0], EDecalPoolList::EDP_BLOOD);
 
-			// ¹«±â¸¶´Ù Á¤ÇØÁø µ¥¹ÌÁö, ¹æÅºº¹ °üÅë·ÂÀ» °¨¼Ò½ÃÄÑ¼­ µ¥¹ÌÁö¸¦ Àû¿ë½ÃÅ²´Ù.
+			// ï¿½ï¿½ï¿½â¸¶ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½Åºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ò½ï¿½ï¿½Ñ¼ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Å²ï¿½ï¿½.
 			DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(GunDamage - 3,
 				GunPenetration - DecreaseRatio, Player, DamagedCharacter->CheckHit(*(Hits[0].BoneName.ToString())));
 		}
 
-		// ±× ¿Ü ¹°Ã¼¿¡ ¸Â¾Ò´Ù¸é..
+		// ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½ï¿½ ï¿½Â¾Ò´Ù¸ï¿½..
 		else
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Wall Hit!!!!"));
+			//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Wall Hit!!!!"));
 			SpawnDecal(Hits[0], EDecalPoolList::EDP_BULLETHOLE);
 		}
 
 		//SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), Hit.ImpactPoint - Location);
 
-		// Ãæµ¹ÀÌ µÇ¾ú´Ù¸é ¹«±âÀÇ À¯È¿°Å¸® °ª °¨¼Ò
+		// ï¿½æµ¹ï¿½ï¿½ ï¿½Ç¾ï¿½ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½È¿ï¿½Å¸ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		Distance -= (FVector::Dist(Point.ImpactPoint, Hits[0].ImpactPoint) * PenatrateDecreaseDistanceRatio);
 		DrawDebugLine(GetWorld(), Point.ImpactPoint, Hits[0].ImpactPoint, FColor::Blue, false, 10, 0, 1);
 	}
 
-	// Ãæµ¹ÇÒ ¾×ÅÍ°¡ ¾øÀ¸¹Ç·Î while Å»ÃâÀ» À§ÇØ Distance¸¦ 0À¸·Î ¸¸µë.
+	// ï¿½æµ¹ï¿½ï¿½ ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ while Å»ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Distanceï¿½ï¿½ 0ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	else Distance = 0.f;
 	
 	return Hits;

@@ -45,7 +45,7 @@ void AWSniperRifle::ShakingCamera()
 {
 	if (CamShake)
 	{
-		GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), NoScopeVerticalRecoilValue + 15.f);
+		//GetWorld()->GetFirstPlayerController()->PlayerCameraManager->PlayCameraShake(Player->GetFPSCameraAttack(), NoScopeVerticalRecoilValue + 15.f);
 	}
 }
 
