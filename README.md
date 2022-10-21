@@ -1,5 +1,5 @@
 # 목차
-* [플레이 영상](https://youtu.be/MGhXNbpuY7g)
+## [유튜브 플레이 영상](https://youtu.be/MGhXNbpuY7g)
 * [소개](#소개)
 * [구현 내용](#구현-내용)
 * [어려웠던 점](#어려웠던-점)
