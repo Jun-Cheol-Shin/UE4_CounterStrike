@@ -1,7 +1,7 @@
 #                 #### 카운터 스트라이크 ####
 ![image](https://user-images.githubusercontent.com/77636255/197424044-a1ce8236-45cb-4eb5-9ce3-6c1ab9c0e38c.png)
+### [유튜브 플레이 영상](https://youtu.be/MGhXNbpuY7g)
 # 목차
-## [유튜브 플레이 영상](https://youtu.be/MGhXNbpuY7g)
 * [소개](#소개)
 * [구현 내용](#구현-내용)
 * [어려웠던 점](#어려웠던-점)
