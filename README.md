@@ -1,5 +1,5 @@
-#                 #### 카운터 스트라이크 모작 ####
-![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/77636255/197424010-c4c3cabe-9208-44f2-975c-d276bbc70c30.gif)
+#                 #### 카운터 스트라이크 ####
+![image](https://user-images.githubusercontent.com/77636255/197424044-a1ce8236-45cb-4eb5-9ce3-6c1ab9c0e38c.png)
 # 목차
 ## [유튜브 플레이 영상](https://youtu.be/MGhXNbpuY7g)
 * [소개](#소개)
