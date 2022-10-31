@@ -582,7 +582,60 @@ FHitResult AWGun::CheckPenetrationShot(const TArray<FHitResult>& Point, const FV
 	return FHitResult();
 }
 
-TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance)
+FHitResult AWGun::PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance)
+{
+	FHitResult Hit;
+	bool bSuccess = false;
+	float DecreaseRatio = 0.15;
+
+	// 플레이어 캐릭터와 라인이 실행되는 액터를 트레이스에서 제외
+	FCollisionQueryParams Param;
+	Param.AddIgnoredActor(Player);
+	Param.AddIgnoredActor(Point.GetActor());
+
+	FCollisionObjectQueryParams ObjectList;
+	ObjectList.AddObjectTypesToQuery(ECC_WorldStatic);
+	ObjectList.AddObjectTypesToQuery(ECC_GameTraceChannel1);
+
+	bSuccess = GetWorld()->LineTraceSingleByObjectType(Hit, Point.ImpactPoint, Point.ImpactPoint + Direction * Distance,
+		ObjectList, Param);
+
+
+	if (bSuccess && Hit.GetActor())
+	{
+		// 캐릭터에 맞았다면..
+		if (Hit.GetActor()->IsA(AFPSCharacter::StaticClass()))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Character Hit!!!!"));
+			AFPSCharacter* DamagedCharacter = Cast<AFPSCharacter>(Hit.GetActor());
+			SpawnDecal(Hit, EDecalPoolList::EDP_BLOOD);
+
+			// 데미지 적용 함수
+			DamagedCharacter->GetFPSCharacterStatComponent()->GetDamage(GunDamage - 3,
+				GunPenetration - DecreaseRatio, Player, DamagedCharacter->CheckHit(*(Hit.BoneName.ToString())));
+		}
+
+		// 그 외 물체에는 총알 자국 데칼 생성.
+		else
+		{
+			//GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Yellow, TEXT("Penetrate Wall Hit!!!!"));
+			SpawnDecal(Hit, EDecalPoolList::EDP_BULLETHOLE);
+		}
+
+		SpawnNiagra(Player->GetCurrentFPSMesh()->GetSocketLocation(MuzzleSocketName), Hit.ImpactPoint - Location);
+
+		// 충돌 되었다면 유효 거리 감소
+		Distance -= (FVector::Dist(Point.ImpactPoint, Hit.ImpactPoint) * PenatrateDecreaseDistanceRatio);
+		DrawDebugLine(GetWorld(), Point.ImpactPoint, Hit.ImpactPoint, FColor::Blue, false, 10, 0, 1);
+	}
+
+	// 충돌이 아니라면 While문 탈출을 위해 유효거리를 없앤다.
+	else Distance = 0.f;
+
+	return Hit;
+}
+
+/*TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance)
 {
 	// ���뿡 �����ߴٸ� ����Ǵ� �Լ�..
 	TArray<FHitResult> Hits;
@@ -635,7 +688,7 @@ TArray<FHitResult> AWGun::PenetrationShot(const FHitResult& Point, const FVector
 	else Distance = 0.f;
 	
 	return Hits;
-}
+}*/
 
 void AWGun::SpawnNiagra(FVector ParticleStart, FVector ParitcleEnd)
 {

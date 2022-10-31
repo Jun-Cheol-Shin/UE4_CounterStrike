@@ -143,7 +143,7 @@ protected:
 
 
 	FHitResult CheckPenetrationShot(const TArray<FHitResult>& Point, const FVector& Direction);
-	TArray<FHitResult> PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance);
+	FHitResult PenetrationShot(const FHitResult& Point, const FVector& Direction, float& Distance);
 
 
 	void SpawnNiagra(FVector ParticleStart, FVector ParitcleEnd);
